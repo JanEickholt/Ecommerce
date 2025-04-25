@@ -17,34 +17,27 @@ import { AuthService } from "../../../core/services/auth.service";
 export class CheckoutComponent implements OnInit, OnDestroy {
   @ViewChild("stepper") stepper: any;
 
-  // Form groups for each step
   shippingForm!: FormGroup;
   paymentForm!: FormGroup;
 
-  // Cart data
   cartItems: CartItem[] = [];
   appliedCoupon: Coupon | null = null;
 
-  // Order summary values
   subtotal: number = 0;
   discount: number = 0;
   tax: number = 0;
 
-  // Shipping costs
   standardShippingCost: number = 0;
   expressShippingCost: number = 29.99;
   overnightShippingCost: number = 49.99;
 
-  // States for UI
   isSubmitting: boolean = false;
   termsAgreed: boolean = false;
 
-  // Order confirmation data
   orderNumber: string = "";
   orderDate: Date = new Date();
   estimatedDelivery: Date = new Date();
 
-  // Form options
   states = [
     { name: "Alabama", value: "AL" },
     { name: "Alaska", value: "AK" },
@@ -108,23 +101,19 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    // Initialize forms
     this.initForms();
 
-    // Subscribe to cart items
     this.subscriptions.add(
       this.cartService.cartItems$.subscribe((items) => {
         this.cartItems = items;
         this.updateOrderSummary();
 
-        // Redirect to cart if empty
         if (items.length === 0) {
           this.router.navigate(["/cart"]);
         }
       }),
     );
 
-    // Subscribe to applied coupon
     this.subscriptions.add(
       this.cartService.appliedCoupon$.subscribe((coupon) => {
         this.appliedCoupon = coupon;
@@ -132,10 +121,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }),
     );
 
-    // Get shipping cost
     this.standardShippingCost = this.cartService.calculateShipping();
 
-    // Check if user is logged in and pre-fill forms
     if (this.authService.isLoggedIn()) {
       const user = this.authService.currentUserValue;
       if (user) {
@@ -153,7 +140,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   initForms(): void {
-    // Shipping form
     this.shippingForm = this.formBuilder.group({
       email: ["", [Validators.required, Validators.email]],
       phone: ["", [Validators.required]],
@@ -168,7 +154,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       shippingMethod: ["standard", [Validators.required]],
     });
 
-    // Payment form
     this.paymentForm = this.formBuilder.group({
       paymentType: [0, [Validators.required]],
       cardNumber: ["", [Validators.required]],
@@ -183,7 +168,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       billingCountry: ["US"],
     });
 
-    // Add conditional validators for billing address fields
     this.paymentForm
       .get("sameAsShipping")
       ?.valueChanges.subscribe((sameAsShipping) => {
@@ -226,7 +210,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   getCountryName(countryCode: string): string {
-    // Simplified for now with only US
     return countryCode === "US" ? "United States" : countryCode;
   }
 
@@ -270,7 +253,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     const sameAsShipping = this.paymentForm.get("sameAsShipping")?.value;
 
     if (sameAsShipping) {
-      // Copy shipping address to billing address
       this.paymentForm.patchValue({
         billingAddress: this.shippingForm.get("address1")?.value,
         billingCity: this.shippingForm.get("city")?.value,
@@ -283,13 +265,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   openTerms(event: Event): void {
     event.preventDefault();
-    // Open terms modal or navigate to terms page
     alert("Terms & Conditions");
   }
 
   openPrivacy(event: Event): void {
     event.preventDefault();
-    // Open privacy modal or navigate to privacy page
     alert("Privacy Policy");
   }
 
@@ -300,13 +280,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.isSubmitting = true;
 
-    // Generate a random order number
     this.orderNumber = "ORD-" + Math.floor(100000 + Math.random() * 900000);
 
-    // Set order date to today
     this.orderDate = new Date();
 
-    // Calculate estimated delivery date based on shipping method
     const shippingMethod = this.shippingForm.get("shippingMethod")?.value;
     const estDelivery = new Date();
 
@@ -324,14 +301,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.estimatedDelivery = estDelivery;
 
-    // Simulate API call
     setTimeout(() => {
       if (this.stepper) {
         this.stepper.next();
       }
       this.isSubmitting = false;
 
-      // Clear cart after successful order
       this.cartService.clearCart();
     }, 2000);
   }

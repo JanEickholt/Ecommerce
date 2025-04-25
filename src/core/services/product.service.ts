@@ -1,4 +1,3 @@
-// src/core/services/product.service.ts
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { delay } from "rxjs/operators";
@@ -60,7 +59,6 @@ export interface Product {
   bestSeller?: boolean;
 }
 
-// Filter state interface
 export interface ProductFilterState {
   categories: string[];
   priceRange: { min: number; max: number };
@@ -78,7 +76,6 @@ export class ProductService {
   private productsSubject = new BehaviorSubject<Product[]>([]);
   public products$: Observable<Product[]> = this.productsSubject.asObservable();
 
-  // Mock product data - in a real app, this would be fetched from an API
   private mockProducts: Product[] = [
     {
       id: "1",
@@ -222,7 +219,6 @@ export class ProductService {
     },
   ];
 
-  // Filter options derived from products
   private categoriesSubject = new BehaviorSubject<
     { label: string; value: string; count: number }[]
   >([]);
@@ -241,7 +237,6 @@ export class ProductService {
   );
   public priceRange$ = this.priceRangeSubject.asObservable();
 
-  // Current filter state
   private filterStateSubject = new BehaviorSubject<ProductFilterState>({
     categories: [],
     priceRange: { min: 0, max: 5000 },
@@ -254,15 +249,12 @@ export class ProductService {
   public filterState$ = this.filterStateSubject.asObservable();
 
   constructor() {
-    // Initialize products
     this.productsSubject.next(this.mockProducts);
 
-    // Initialize filter options
     this.updateFilterOptions();
   }
 
   private updateFilterOptions(): void {
-    // Categories
     const categoriesMap = new Map<string, number>();
     this.mockProducts.forEach((product) => {
       const count = categoriesMap.get(product.category) || 0;
@@ -278,7 +270,6 @@ export class ProductService {
     );
     this.categoriesSubject.next(categories);
 
-    // Colors (unique across all products)
     const uniqueColors = new Map<string, ProductColor>();
     this.mockProducts.forEach((product) => {
       if (product.colors) {
@@ -291,7 +282,6 @@ export class ProductService {
     });
     this.colorsSubject.next(Array.from(uniqueColors.values()));
 
-    // Materials
     const materialsMap = new Map<string, number>();
     this.mockProducts.forEach((product) => {
       if (product.materials) {
@@ -311,14 +301,12 @@ export class ProductService {
     );
     this.materialsSubject.next(materials);
 
-    // Price range
     const prices = this.mockProducts.map((p) => p.price);
     const minPrice = Math.floor(Math.min(...prices));
     const maxPrice = Math.ceil(Math.max(...prices));
 
     this.priceRangeSubject.next({ min: minPrice, max: maxPrice });
 
-    // Update filter state with initial price range
     const currentFilter = this.filterStateSubject.value;
     this.filterStateSubject.next({
       ...currentFilter,
@@ -327,10 +315,6 @@ export class ProductService {
   }
 
   getProducts(filters?: Partial<ProductFilterState>): Observable<Product[]> {
-    // In a real app, this would make an HTTP request with filter parameters
-    // For now, we'll apply filters to our mock data
-
-    // If filters are provided, update the filter state
     if (filters) {
       this.filterStateSubject.next({
         ...this.filterStateSubject.value,
@@ -342,7 +326,6 @@ export class ProductService {
 
     let filteredProducts = this.mockProducts;
 
-    // Apply category filter
     if (filterState.categories.length > 0) {
       filteredProducts = filteredProducts.filter((product) =>
         filterState.categories.includes(
@@ -351,14 +334,12 @@ export class ProductService {
       );
     }
 
-    // Apply price range filter
     filteredProducts = filteredProducts.filter(
       (product) =>
         product.price >= filterState.priceRange.min &&
         product.price <= filterState.priceRange.max,
     );
 
-    // Apply color filter
     if (filterState.colors.length > 0) {
       filteredProducts = filteredProducts.filter(
         (product) =>
@@ -369,7 +350,6 @@ export class ProductService {
       );
     }
 
-    // Apply material filter
     if (filterState.materials.length > 0) {
       filteredProducts = filteredProducts.filter(
         (product) =>
@@ -382,14 +362,12 @@ export class ProductService {
       );
     }
 
-    // Apply rating filter
     if (filterState.rating > 0) {
       filteredProducts = filteredProducts.filter(
         (product) => product.rating >= filterState.rating,
       );
     }
 
-    // Apply features filter
     if (filterState.features.length > 0) {
       filteredProducts = filteredProducts.filter((product) => {
         for (const feature of filterState.features) {
@@ -402,7 +380,6 @@ export class ProductService {
       });
     }
 
-    // Apply sorting
     switch (filterState.sortBy) {
       case "price-low":
         filteredProducts.sort((a, b) => a.price - b.price);
@@ -411,7 +388,6 @@ export class ProductService {
         filteredProducts.sort((a, b) => b.price - a.price);
         break;
       case "newest":
-        // For mock data, we'll sort by ID assuming higher IDs are newer
         filteredProducts.sort((a, b) => parseInt(b.id) - parseInt(a.id));
         break;
       case "rating":
@@ -419,40 +395,33 @@ export class ProductService {
         break;
       case "popular":
       default:
-        // For mock data, we'll sort by review count for popularity
         filteredProducts.sort((a, b) => b.reviewCount - a.reviewCount);
     }
 
-    // Simulate API delay
     return of(filteredProducts).pipe(delay(500));
   }
 
   getProduct(id: string): Observable<Product | undefined> {
-    // In a real app, this would make an HTTP request to get a specific product
     const product = this.mockProducts.find((p) => p.id === id);
     return of(product).pipe(delay(300));
   }
 
   getFeaturedProducts(): Observable<Product[]> {
-    // In a real app, this would make an HTTP request to get featured products
     const featuredProducts = this.mockProducts.filter((p) => p.featured);
     return of(featuredProducts).pipe(delay(300));
   }
 
   getNewArrivals(): Observable<Product[]> {
-    // In a real app, this would make an HTTP request to get new arrivals
     const newArrivals = this.mockProducts.filter((p) => p.new);
     return of(newArrivals).pipe(delay(300));
   }
 
   getBestSellers(): Observable<Product[]> {
-    // In a real app, this would make an HTTP request to get bestsellers
     const bestSellers = this.mockProducts.filter((p) => p.bestSeller);
     return of(bestSellers).pipe(delay(300));
   }
 
   getRelatedProducts(productId: string): Observable<Product[]> {
-    // In a real app, this would make an HTTP request to get related products
     const product = this.mockProducts.find((p) => p.id === productId);
 
     if (

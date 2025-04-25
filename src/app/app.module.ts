@@ -1,10 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppRoutingModule } from "./app-routing.module";
-
-// Angular Material Modules
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -15,11 +11,7 @@ import { MatDividerModule } from "@angular/material/divider";
   declarations: [],
   imports: [
     CommonModule,
-    BrowserModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
-
-    // Material Modules
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
@@ -27,7 +19,7 @@ import { MatDividerModule } from "@angular/material/divider";
     MatDividerModule,
   ],
   exports: [
-    // Export material modules so they are available to the entire application
+    AppRoutingModule,
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
@@ -35,4 +27,4 @@ import { MatDividerModule } from "@angular/material/divider";
     MatDividerModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

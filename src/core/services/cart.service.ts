@@ -26,7 +26,6 @@ export class CartService {
   private appliedCouponSubject = new BehaviorSubject<Coupon | null>(null);
   public appliedCoupon$ = this.appliedCouponSubject.asObservable();
 
-  // Mock coupons for testing
   private availableCoupons: Coupon[] = [
     {
       code: "WELCOME10",
@@ -51,7 +50,6 @@ export class CartService {
   ];
 
   constructor() {
-    // Load cart from localStorage on service initialization
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       try {
@@ -62,7 +60,6 @@ export class CartService {
       }
     }
 
-    // Load applied coupon from localStorage
     const savedCoupon = localStorage.getItem("appliedCoupon");
     if (savedCoupon) {
       try {
@@ -81,7 +78,6 @@ export class CartService {
   addToCart(item: CartItem): void {
     const currentCart = this.cartItemsSubject.value;
 
-    // Check if the product is already in the cart with the same options
     const existingItemIndex = currentCart.findIndex(
       (cartItem) =>
         cartItem.product.id === item.product.id &&
@@ -89,17 +85,14 @@ export class CartService {
     );
 
     if (existingItemIndex !== -1) {
-      // Update quantity if item exists
       const updatedCart = [...currentCart];
       updatedCart[existingItemIndex].quantity += item.quantity;
 
       this.cartItemsSubject.next(updatedCart);
     } else {
-      // Add new item if it doesn't exist
       this.cartItemsSubject.next([...currentCart, item]);
     }
 
-    // Save to localStorage
     this.saveCartToLocalStorage();
   }
 
@@ -110,7 +103,6 @@ export class CartService {
       updatedCart[index].quantity = quantity;
       this.cartItemsSubject.next(updatedCart);
 
-      // Save to localStorage
       this.saveCartToLocalStorage();
     }
   }
@@ -121,7 +113,6 @@ export class CartService {
     );
     this.cartItemsSubject.next(updatedCart);
 
-    // Save to localStorage
     this.saveCartToLocalStorage();
   }
 
@@ -129,20 +120,17 @@ export class CartService {
     this.cartItemsSubject.next([]);
     this.appliedCouponSubject.next(null);
 
-    // Remove from localStorage
     localStorage.removeItem("cart");
     localStorage.removeItem("appliedCoupon");
   }
 
   applyCoupon(code: string): boolean {
-    // Find coupon by code
     const coupon = this.availableCoupons.find((c) => c.code === code);
 
     if (!coupon) {
       return false;
     }
 
-    // Check if coupon has minimum order value
     if (
       coupon.minOrderValue &&
       this.calculateSubtotal() < coupon.minOrderValue
@@ -185,12 +173,10 @@ export class CartService {
   calculateShipping(): number {
     const subtotal = this.calculateSubtotal();
 
-    // Free shipping for orders over $999
     if (subtotal >= 999) {
       return 0;
     }
 
-    // Basic shipping calculation
     const baseShipping = 19.99;
     const itemCount = this.cartItemsSubject.value.reduce(
       (count, item) => count + item.quantity,
@@ -201,7 +187,6 @@ export class CartService {
   }
 
   calculateTax(): number {
-    // Simple tax calculation (e.g., 8.25% sales tax)
     const taxRate = 0.0825;
     return (this.calculateSubtotal() - this.calculateDiscount()) * taxRate;
   }
@@ -230,7 +215,6 @@ export class CartService {
     if (!options1 || !options2) return false;
     if (options1.length !== options2.length) return false;
 
-    // Sort both arrays for consistent comparison
     const sortedOptions1 = [...options1].sort((a, b) =>
       a.name.localeCompare(b.name),
     );
@@ -238,7 +222,6 @@ export class CartService {
       a.name.localeCompare(b.name),
     );
 
-    // Compare each option
     return sortedOptions1.every(
       (option, index) =>
         option.name === sortedOptions2[index].name &&
