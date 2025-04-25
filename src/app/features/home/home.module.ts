@@ -8,7 +8,7 @@ import { HomeComponent } from "./home.component";
 
 import { HeaderComponent } from "../../shared/components/header/header.component";
 import { HeroComponent } from "./components/hero/hero.component";
-import { FeaturedProductsComponent } from "./components/featured-products/featured-products.component";
+import { FeaturedProductsComponent } from "../../shared/components/featured-products/featured-products.component";
 import { CategoriesShowcaseComponent } from "./components/categories-showcase/categories-showcase.component";
 import { TestimonialsComponent } from "./components/testimonials/testimonials.component";
 import { NewsletterComponent } from "../../shared/components/newsletter/newsletter.component";

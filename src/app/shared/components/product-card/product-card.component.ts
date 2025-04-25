@@ -4,9 +4,9 @@ import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { Product } from "../../../core/services/product.service";
-import { CartService } from "../../../core/services/cart.service";
-import { WishlistService } from "../../../core/services/wishlist.service";
+import { Product } from "src/core/services/product.service";
+import { CartService } from "src/core/services/cart.service";
+import { WishlistService } from "src/core/services/wishlist.service";
 
 @Component({
   selector: "app-product-card",
@@ -19,7 +19,7 @@ import { WishlistService } from "../../../core/services/wishlist.service";
     MatTooltipModule,
   ],
   templateUrl: "./product-card.component.html",
-  styleUrl: "./product-card.component.scss",
+  styleUrls: ["./product-card.component.scss"],
 })
 export class ProductCardComponent {
   @Input() product!: Product;
