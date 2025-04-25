@@ -1,1 +1,88 @@
-<p>product-card works!</p>
+<div class="product-card neumorph-card">
+  <div
+    *ngIf="product.badge"
+    class="product-badge"
+    [ngClass]="product.badgeType"
+  >
+    {{ product.badge }}
+  </div>
+
+  <div class="product-img-container">
+    <img
+      [src]="product.imageUrl || '/api/placeholder/300/300'"
+      [alt]="product.name"
+      class="product-img"
+    />
+    <div class="product-actions-overlay">
+      <button
+        mat-mini-fab
+        aria-label="Add to wishlist"
+        class="action-button wishlist-btn"
+        (click)="addToWishlist($event)"
+      >
+        <mat-icon>favorite_border</mat-icon>
+      </button>
+      <button
+        mat-mini-fab
+        aria-label="Quick view"
+        class="action-button quick-view-btn"
+        (click)="quickView($event)"
+      >
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button
+        mat-mini-fab
+        aria-label="Add to cart"
+        class="action-button cart-btn"
+        (click)="addToCart($event)"
+      >
+        <mat-icon>add_shopping_cart</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="product-content">
+    <h3 class="product-title">
+      <a [routerLink]="['/product', product.id]">{{ product.name }}</a>
+    </h3>
+
+    <div class="product-rating">
+      <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+        <mat-icon *ngIf="i <= product.rating">star</mat-icon>
+        <mat-icon *ngIf="i > product.rating && i - 1 < product.rating"
+          >star_half</mat-icon
+        >
+        <mat-icon *ngIf="i > product.rating && i - 1 >= product.rating"
+          >star_outline</mat-icon
+        >
+      </ng-container>
+      <span class="rating-count" *ngIf="product.reviewCount"
+        >({{ product.reviewCount }})</span
+      >
+    </div>
+
+    <p class="product-price">
+      <span class="old-price" *ngIf="product.oldPrice"
+        >${{ product.oldPrice.toFixed(2) }}</span
+      >
+      ${{ product.price.toFixed(2) }}
+    </p>
+
+    <div class="product-colors" *ngIf="product.colors && product.colors.length">
+      <span
+        class="color-swatch"
+        *ngFor="let color of product.colors"
+        [style.background-color]="color.code"
+        [attr.title]="color.name"
+      >
+      </span>
+    </div>
+
+    <a
+      [routerLink]="['/product', product.id]"
+      class="neumorph-button product-cta"
+    >
+      View Details
+    </a>
+  </div>
+</div>

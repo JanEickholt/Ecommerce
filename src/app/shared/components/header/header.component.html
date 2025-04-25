@@ -1,1 +1,87 @@
-<p>header works!</p>
+<header class="site-header">
+  <mat-toolbar>
+    <div class="container header-container">
+      <div class="logo-container">
+        <a routerLink="/">
+          <h1 class="logo">Comfort<span class="highlight">Haven</span></h1>
+        </a>
+      </div>
+
+      <nav class="main-navigation">
+        <ul class="nav-links">
+          <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+          <li><a routerLink="/products" routerLinkActive="active">Shop</a></li>
+          <li><a routerLink="/about" routerLinkActive="active">About</a></li>
+          <li>
+            <a routerLink="/contact" routerLinkActive="active">Contact</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button mat-icon-button class="search-button" aria-label="Search">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button mat-icon-button routerLink="/wishlist" aria-label="Wishlist">
+          <mat-icon
+            [matBadge]="wishlistCount"
+            matBadgeSize="small"
+            matBadgeColor="warn"
+            [matBadgeHidden]="!wishlistCount"
+            >favorite</mat-icon
+          >
+        </button>
+        <button mat-icon-button routerLink="/cart" aria-label="Shopping cart">
+          <mat-icon
+            [matBadge]="cartItemCount"
+            matBadgeSize="small"
+            matBadgeColor="warn"
+            [matBadgeHidden]="!cartItemCount"
+            >shopping_cart</mat-icon
+          >
+        </button>
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="userMenu"
+          aria-label="User account"
+        >
+          <mat-icon>person</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item routerLink="/auth/login">
+            <mat-icon>login</mat-icon>
+            <span>Login</span>
+          </button>
+          <button mat-menu-item routerLink="/auth/register">
+            <mat-icon>person_add</mat-icon>
+            <span>Register</span>
+          </button>
+          <button mat-menu-item routerLink="/profile">
+            <mat-icon>account_circle</mat-icon>
+            <span>My Profile</span>
+          </button>
+          <button mat-menu-item routerLink="/orders">
+            <mat-icon>receipt_long</mat-icon>
+            <span>My Orders</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+      </div>
+
+      <button
+        mat-icon-button
+        class="mobile-menu-toggle"
+        aria-label="Toggle mobile menu"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <div class="mobile-nav">
+    <!-- Mobile navigation content here -->
+  </div>
+</header>

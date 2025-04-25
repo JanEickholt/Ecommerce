@@ -1,0 +1,269 @@
+.home-page {
+  overflow-x: hidden;
+  
+  .section-padding {
+    padding: 80px 0;
+    
+    @media (max-width: 768px) {
+      padding: 60px 0;
+    }
+  }
+  
+  // Banner Section
+  .banner-section {
+    .banner-wrapper {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 0;
+      
+      @media (max-width: 992px) {
+        flex-direction: column;
+      }
+      
+      .banner-content {
+        flex: 1;
+        padding: 40px;
+        
+        @media (max-width: 768px) {
+          padding: 30px;
+        }
+        
+        .banner-subtitle {
+          display: inline-block;
+          padding: 5px 15px;
+          background-color: var(--accent-warm);
+          color: var(--text-light);
+          font-size: 0.9rem;
+          font-weight: 500;
+          border-radius: 30px;
+          margin-bottom: 15px;
+        }
+        
+        .banner-title {
+          font-size: 2.5rem;
+          font-weight: 400;
+          color: var(--text-primary);
+          margin-bottom: 15px;
+          line-height: 1.2;
+          
+          @media (max-width: 768px) {
+            font-size: 2rem;
+          }
+        }
+        
+        .banner-text {
+          font-size: 1.1rem;
+          color: var(--text-secondary);
+          margin-bottom: 25px;
+          max-width: 500px;
+          line-height: 1.6;
+        }
+        
+        .banner-cta {
+          padding: 12px 30px;
+          font-size: 1rem;
+          background-color: var(--primary-color);
+          color: var(--text-light);
+          display: inline-block;
+          
+          &:hover {
+            background-color: var(--primary-dark);
+          }
+        }
+      }
+      
+      .banner-image {
+        flex: 1;
+        position: relative;
+        height: 100%;
+        min-height: 300px;
+        background-color: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+  
+  // Benefits Section
+  .benefits-section {
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      
+      @media (max-width: 992px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      @media (max-width: 576px) {
+        grid-template-columns: 1fr;
+      }
+      
+      .benefit-card {
+        padding: 30px;
+        text-align: center;
+        transition: transform 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-10px);
+        }
+        
+        .benefit-icon {
+          width: 70px;
+          height: 70px;
+          background-color: var(--primary-light);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 20px;
+          
+          mat-icon {
+            font-size: 30px;
+            width: 30px;
+            height: 30px;
+            color: var(--primary-dark);
+          }
+        }
+        
+        .benefit-title {
+          font-size: 1.3rem;
+          font-weight: 500;
+          color: var(--text-primary);
+          margin-bottom: 15px;
+        }
+        
+        .benefit-text {
+          color: var(--text-secondary);
+          line-height: 1.6;
+          margin: 0;
+        }
+      }
+    }
+  }
+  
+  // Instagram Section
+  .instagram-section {
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+      
+      .section-title {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: var(--text-primary);
+        position: relative;
+        display: inline-block;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          width: 80px;
+          height: 3px;
+          background-color: var(--primary-color);
+          bottom: -10px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
+      
+      .section-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 20px auto 0;
+      }
+    }
+    
+    .instagram-gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      margin-bottom: 30px;
+      
+      @media (max-width: 992px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      @media (max-width: 576px) {
+        grid-template-columns: 1fr;
+      }
+      
+      .instagram-item {
+        position: relative;
+        overflow: hidden;
+        padding: 0;
+        border-radius: 15px;
+        aspect-ratio: 1 / 1;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease;
+        }
+        
+        .instagram-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.4);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 15px;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          
+          mat-icon {
+            color: white;
+          }
+          
+          span {
+            color: white;
+            font-weight: 500;
+            margin-right: 15px;
+          }
+        }
+        
+        &:hover {
+          img {
+            transform: scale(1.1);
+          }
+          
+          .instagram-overlay {
+            opacity: 1;
+          }
+        }
+      }
+    }
+    
+    .instagram-cta {
+      text-align: center;
+      
+      a {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 25px;
+        background-color: var(--neutral-light);
+        color: var(--text-primary);
+        
+        &:hover {
+          background-color: var(--primary-light);
+          color: var(--primary-dark);
+        }
+      }
+    }
+  }
+}

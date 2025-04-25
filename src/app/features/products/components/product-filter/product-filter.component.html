@@ -1,1 +1,144 @@
-<p>product-filter works!</p>
+<div class="filter-sidebar neumorph-card">
+  <div class="sidebar-header">
+    <h3>Filter Products</h3>
+    <button
+      mat-icon-button
+      class="close-filter"
+      *ngIf="isMobile"
+      (click)="closeFilter()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="filter-section">
+    <h4 class="filter-title">Categories</h4>
+    <mat-selection-list
+      [multiple]="true"
+      [(ngModel)]="selectedCategories"
+      (selectionChange)="filterChange()"
+    >
+      <mat-list-option
+        *ngFor="let category of categories"
+        [value]="category.value"
+      >
+        {{ category.label }} <span class="count">({{ category.count }})</span>
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="filter-section">
+    <h4 class="filter-title">Price Range</h4>
+    <div class="price-slider">
+      <mat-slider
+        [min]="priceRange.min"
+        [max]="priceRange.max"
+        [step]="10"
+        [discrete]="true"
+        class="neumorph-slider"
+        (change)="filterChange()"
+      >
+        <input matSliderStartThumb [(ngModel)]="selectedPriceRange.min" />
+        <input matSliderEndThumb [(ngModel)]="selectedPriceRange.max" />
+      </mat-slider>
+      <div class="price-range-values">
+        <span>${{ selectedPriceRange.min }}</span>
+        <span>${{ selectedPriceRange.max }}</span>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="filter-section">
+    <h4 class="filter-title">Colors</h4>
+    <div class="color-options">
+      <div
+        *ngFor="let color of colors"
+        class="color-option"
+        [style.background-color]="color.code"
+        [class.selected]="isColorSelected(color)"
+        [attr.title]="color.name"
+        (click)="toggleColor(color)"
+      >
+        <mat-icon *ngIf="isColorSelected(color)">check</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="filter-section">
+    <h4 class="filter-title">Materials</h4>
+    <mat-selection-list
+      [multiple]="true"
+      [(ngModel)]="selectedMaterials"
+      (selectionChange)="filterChange()"
+    >
+      <mat-list-option
+        *ngFor="let material of materials"
+        [value]="material.value"
+      >
+        {{ material.label }} <span class="count">({{ material.count }})</span>
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="filter-section">
+    <h4 class="filter-title">Rating</h4>
+    <div class="rating-options">
+      <div
+        *ngFor="let rating of ratings"
+        class="rating-option"
+        [class.selected]="selectedRating === rating.value"
+        (click)="selectRating(rating.value)"
+      >
+        <div class="stars">
+          <mat-icon *ngFor="let i of [1, 2, 3, 4, 5]">
+            {{ i <= rating.value ? "star" : "star_border" }}
+          </mat-icon>
+        </div>
+        <span class="count">& Up ({{ rating.count }})</span>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="filter-section">
+    <h4 class="filter-title">Features</h4>
+    <mat-selection-list
+      [multiple]="true"
+      [(ngModel)]="selectedFeatures"
+      (selectionChange)="filterChange()"
+    >
+      <mat-list-option *ngFor="let feature of features" [value]="feature.value">
+        {{ feature.label }} <span class="count">({{ feature.count }})</span>
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+
+  <div class="filter-actions">
+    <button
+      mat-stroked-button
+      class="neumorph-button clear-btn"
+      (click)="clearFilters()"
+    >
+      Clear All
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      class="neumorph-button apply-btn"
+      (click)="applyFilters()"
+    >
+      Apply Filters
+    </button>
+  </div>
+</div>
