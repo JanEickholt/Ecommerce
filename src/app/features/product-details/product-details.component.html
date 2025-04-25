@@ -51,9 +51,9 @@
           <div class="product-rating">
             <div class="stars">
               <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-                <span *ngIf="i <= product?.rating">★</span>
-                <span *ngIf="i > product?.rating && i - 1 < product?.rating">★</span>
-                <span *ngIf="i > product?.rating && i - 1 >= product?.rating">☆</span>
+                <span *ngIf="product && i <= product.rating">★</span>
+                <span *ngIf="product && i > product.rating && i - 1 < product.rating">★</span>
+                <span *ngIf="product && i > product.rating && i - 1 >= product.rating">☆</span>
               </ng-container>
             </div>
             <a href="#reviews" class="review-count"
@@ -65,7 +65,7 @@
             class="product-availability"
             [ngClass]="{
               'in-stock': product?.inStock,
-              'out-of-stock': !product?.inStock,
+              'out-of-stock': !product?.inStock
             }"
           >
             <span *ngIf="product?.inStock">✓</span>
@@ -89,14 +89,15 @@
         </div>
 
         <div class="product-options">
+          <!-- Use a safe check that Angular's type checker can understand -->
           <div
             class="option-group"
-            *ngIf="product?.colors && product?.colors.length"
+            *ngIf="product && product.colors && product.colors.length > 0"
           >
             <h3 class="option-title">Color</h3>
             <div class="color-options">
               <div
-                *ngFor="let color of product?.colors"
+                *ngFor="let color of product.colors"
                 class="color-option"
                 [style.background-color]="color.code"
                 [class.selected]="selectedColor === color.name"
@@ -108,14 +109,15 @@
             </div>
           </div>
 
+          <!-- Use a safe check that Angular's type checker can understand -->
           <div
             class="option-group"
-            *ngIf="product?.materials && product?.materials.length"
+            *ngIf="product && product.materials && product.materials.length > 0"
           >
             <h3 class="option-title">Material</h3>
             <div class="material-options">
               <button
-                *ngFor="let material of product?.materials"
+                *ngFor="let material of product.materials"
                 [class.selected]="selectedMaterial === material"
                 (click)="selectedMaterial = material"
               >

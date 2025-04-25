@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
-  selector: 'app-hero',
+  selector: "app-hero",
   standalone: true,
-  imports: [],
-  templateUrl: './hero.component.html',
-  styleUrl: './hero.component.scss'
+  imports: [CommonModule, RouterModule, MatIconModule],
+  templateUrl: "./hero.component.html",
+  styleUrls: ["./hero.component.scss"],
 })
 export class HeroComponent {
-
+  // Minimal implementation
 }
