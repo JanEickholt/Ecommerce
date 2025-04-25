@@ -20,6 +20,7 @@ import { FooterComponent } from "../../shared/components/footer/footer.component
     CommonModule,
     HomeRoutingModule,
     MatIconModule,
+    RouterModule,
     HeaderComponent,
     HeroComponent,
     FeaturedProductsComponent,
@@ -27,7 +28,6 @@ import { FooterComponent } from "../../shared/components/footer/footer.component
     TestimonialsComponent,
     NewsletterComponent,
     FooterComponent,
-    RouterModule,
   ],
 })
 export class HomeModule { }

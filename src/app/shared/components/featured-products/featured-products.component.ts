@@ -9,8 +9,9 @@ import { Subscription } from "rxjs";
 import {
   ProductService,
   Product,
-} from "../../../core/services/product.service";
+} from "../../../../core/services/product.service";
 import { ProductCardComponent } from "../product-card/product-card.component";
+import { inject } from "@angular/core";
 
 @Component({
   selector: "app-featured-products",
@@ -35,27 +36,26 @@ export class FeaturedProductsComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
-  constructor(private productService: ProductService) { }
+  private productService: ProductService = inject(ProductService);
 
   ngOnInit(): void {
-    // Load featured products
     this.subscriptions.add(
-      this.productService.getFeaturedProducts().subscribe((products) => {
-        this.featuredProducts = products;
-        this.isLoading = false;
-      }),
+      this.productService
+        .getFeaturedProducts()
+        .subscribe((products: Product[]) => {
+          this.featuredProducts = products;
+          this.isLoading = false;
+        }),
     );
 
-    // Load new arrivals
     this.subscriptions.add(
-      this.productService.getNewArrivals().subscribe((products) => {
+      this.productService.getNewArrivals().subscribe((products: Product[]) => {
         this.newArrivals = products;
       }),
     );
 
-    // Load best sellers
     this.subscriptions.add(
-      this.productService.getBestSellers().subscribe((products) => {
+      this.productService.getBestSellers().subscribe((products: Product[]) => {
         this.bestSellers = products;
       }),
     );
@@ -70,7 +70,6 @@ export class FeaturedProductsComponent implements OnInit, OnDestroy {
   }
 
   openQuickView(product: Product): void {
-    // This would typically open a dialog to show a quick view of the product
     console.log("Quick view", product);
   }
 }

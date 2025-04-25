@@ -1,12 +1,12 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter, inject } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { Product } from "src/core/services/product.service";
-import { CartService } from "src/core/services/cart.service";
-import { WishlistService } from "src/core/services/wishlist.service";
+import { Product } from "../../../../core/services/product.service";
+import { CartService } from "../../../../core/services/cart.service";
+import { WishlistService } from "../../../../core/services/wishlist.service";
 
 @Component({
   selector: "app-product-card",
@@ -25,10 +25,8 @@ export class ProductCardComponent {
   @Input() product!: Product;
   @Output() quickViewClicked = new EventEmitter<Product>();
 
-  constructor(
-    private cartService: CartService,
-    private wishlistService: WishlistService,
-  ) { }
+  private cartService: CartService = inject(CartService);
+  private wishlistService: WishlistService = inject(WishlistService);
 
   addToCart(event: Event): void {
     event.preventDefault();
