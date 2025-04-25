@@ -1,1 +1,221 @@
-<p>register works!</p>
+<div class="auth-page">
+  <div class="container">
+    <div class="auth-container">
+      <div class="auth-card neumorph-card">
+        <div class="auth-header">
+          <h1 class="auth-title">Create Account</h1>
+          <p class="auth-subtitle">
+            Join ComfortHaven for a better shopping experience
+          </p>
+        </div>
+
+        <div class="social-login">
+          <button mat-stroked-button class="social-btn google-btn">
+            <mat-icon>smart_toy</mat-icon>
+            <span>Continue with Google</span>
+          </button>
+          <button mat-stroked-button class="social-btn facebook-btn">
+            <mat-icon>facebook</mat-icon>
+            <span>Continue with Facebook</span>
+          </button>
+        </div>
+
+        <div class="divider">
+          <span>or sign up with email</span>
+        </div>
+
+        <form
+          [formGroup]="registerForm"
+          (ngSubmit)="onSubmit()"
+          class="auth-form"
+        >
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="neumorph-input">
+              <mat-label>First Name</mat-label>
+              <input matInput formControlName="firstName" placeholder="John" />
+              <mat-icon matPrefix>person</mat-icon>
+              <mat-error
+                *ngIf="registerForm.get('firstName')?.hasError('required')"
+              >
+                First name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="neumorph-input">
+              <mat-label>Last Name</mat-label>
+              <input matInput formControlName="lastName" placeholder="Doe" />
+              <mat-icon matPrefix>person</mat-icon>
+              <mat-error
+                *ngIf="registerForm.get('lastName')?.hasError('required')"
+              >
+                Last name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="neumorph-input">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                formControlName="email"
+                type="email"
+                placeholder="your.email@example.com"
+              />
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error
+                *ngIf="registerForm.get('email')?.hasError('required')"
+              >
+                Email is required
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
+                Please enter a valid email address
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="neumorph-input">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                formControlName="password"
+                [type]="hidePassword ? 'password' : 'text'"
+                placeholder="Create a strong password"
+              />
+              <mat-icon matPrefix>lock</mat-icon>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="hidePassword = !hidePassword"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hidePassword"
+              >
+                <mat-icon>{{
+                  hidePassword ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+              <mat-error
+                *ngIf="registerForm.get('password')?.hasError('required')"
+              >
+                Password is required
+              </mat-error>
+              <mat-error
+                *ngIf="registerForm.get('password')?.hasError('minlength')"
+              >
+                Password must be at least 8 characters
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="neumorph-input">
+              <mat-label>Confirm Password</mat-label>
+              <input
+                matInput
+                formControlName="confirmPassword"
+                [type]="hideConfirmPassword ? 'password' : 'text'"
+                placeholder="Repeat your password"
+              />
+              <mat-icon matPrefix>lock</mat-icon>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="hideConfirmPassword = !hideConfirmPassword"
+                [attr.aria-label]="'Hide confirm password'"
+                [attr.aria-pressed]="hideConfirmPassword"
+              >
+                <mat-icon>{{
+                  hideConfirmPassword ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+              <mat-error
+                *ngIf="
+                  registerForm.get('confirmPassword')?.hasError('required')
+                "
+              >
+                Please confirm your password
+              </mat-error>
+              <mat-error
+                *ngIf="
+                  registerForm
+                    .get('confirmPassword')
+                    ?.hasError('passwordsMismatch')
+                "
+              >
+                Passwords do not match
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-options">
+            <mat-checkbox formControlName="termsAccepted" color="primary">
+              I agree to the <a href="#">Terms of Service</a> and
+              <a href="#">Privacy Policy</a>
+            </mat-checkbox>
+          </div>
+
+          <div class="error-message" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+
+          <button
+            type="submit"
+            mat-raised-button
+            color="primary"
+            class="neumorph-button submit-btn"
+            [disabled]="registerForm.invalid || isSubmitting"
+          >
+            <mat-spinner
+              *ngIf="isSubmitting"
+              diameter="20"
+              class="spinner"
+            ></mat-spinner>
+            <span *ngIf="!isSubmitting">Create Account</span>
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <p>
+            Already have an account?
+            <a routerLink="/auth/login">Sign In</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="auth-info neumorph-card">
+        <div class="auth-info-content">
+          <div class="logo">ComfortHaven</div>
+          <h2>Join Our Community</h2>
+          <p>Creating an account gives you access to:</p>
+          <ul class="benefits-list">
+            <li>
+              <mat-icon>check_circle</mat-icon>
+              <span>Faster checkout process</span>
+            </li>
+            <li>
+              <mat-icon>check_circle</mat-icon>
+              <span>Order tracking and history</span>
+            </li>
+            <li>
+              <mat-icon>check_circle</mat-icon>
+              <span>Personalized recommendations</span>
+            </li>
+            <li>
+              <mat-icon>check_circle</mat-icon>
+              <span>Special offers and discounts</span>
+            </li>
+          </ul>
+          <div class="auth-image">
+            <img
+              src="/api/placeholder/400/300"
+              alt="Comfortable home interior"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

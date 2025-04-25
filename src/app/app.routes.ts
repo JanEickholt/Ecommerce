@@ -1,76 +1,81 @@
-import { Routes } from '@angular/router';
+import { Routes } from "@angular/router";
+import { authGuard } from "../core/guards/auth.guard";
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: "", redirectTo: "home", pathMatch: "full" },
   {
-    path: 'home',
+    path: "home",
     loadChildren: () =>
-      import('./features/home/home.module').then((m) => m.HomeModule),
+      import("./features/home/home.module").then((m) => m.HomeModule),
   },
   {
-    path: 'products',
+    path: "products",
     loadChildren: () =>
-      import('./features/products/products.module').then(
+      import("./features/products/products.module").then(
         (m) => m.ProductsModule,
       ),
   },
   {
-    path: 'product/:id',
+    path: "product/:id",
     loadChildren: () =>
-      import('./features/product-details/product-details.module').then(
+      import("./features/product-details/product-details.module").then(
         (m) => m.ProductDetailsModule,
       ),
   },
   {
-    path: 'cart',
+    path: "cart",
     loadChildren: () =>
-      import('./features/cart/cart.module').then((m) => m.CartModule),
+      import("./features/cart/cart.module").then((m) => m.CartModule),
   },
   {
-    path: 'checkout',
+    path: "checkout",
     loadChildren: () =>
-      import('./features/checkout/checkout.module').then(
+      import("./features/checkout/checkout.module").then(
         (m) => m.CheckoutModule,
       ),
+    canActivate: [authGuard],
   },
   {
-    path: 'auth',
+    path: "auth",
     loadChildren: () =>
-      import('./features/auth/auth.module').then((m) => m.AuthModule),
+      import("./features/auth/auth.module").then((m) => m.AuthModule),
   },
   {
-    path: 'contact',
+    path: "contact",
     loadChildren: () =>
-      import('./features/contact/contact.module').then((m) => m.ContactModule),
+      import("./features/contact/contact.module").then((m) => m.ContactModule),
   },
   {
-    path: 'about',
+    path: "about",
     loadChildren: () =>
-      import('./features/about/about.module').then((m) => m.AboutModule),
+      import("./features/about/about.module").then((m) => m.AboutModule),
   },
   {
-    path: 'profile',
+    path: "profile",
     loadChildren: () =>
-      import('./features/user-profile/user-profile.module').then(
+      import("./features/user-profile/user-profile.module").then(
         (m) => m.UserProfileModule,
       ),
+    canActivate: [authGuard],
   },
   {
-    path: 'wishlist',
+    path: "wishlist",
     loadChildren: () =>
-      import('./features/wishlist/wishlist.module').then(
+      import("./features/wishlist/wishlist.module").then(
         (m) => m.WishlistModule,
       ),
+    canActivate: [authGuard],
   },
   {
-    path: 'orders',
+    path: "orders",
     loadChildren: () =>
-      import('./features/orders/orders.module').then((m) => m.OrdersModule),
+      import("./features/orders/orders.module").then((m) => m.OrdersModule),
+    canActivate: [authGuard],
   },
   {
-    path: '**',
+    path: "**",
     loadChildren: () =>
-      import('./features/not-found/not-found.module').then(
+      import("./features/not-found/not-found.module").then(
         (m) => m.NotFoundModule,
       ),
   },
