@@ -60,10 +60,14 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   updateOrderSummary(): void {
-    this.subtotal = this.cartService.calculateSubtotal();
+    this.subtotal = this.calculateSubtotal();
     this.discount = this.cartService.calculateDiscount();
     this.shipping = this.cartService.calculateShipping();
     this.tax = this.cartService.calculateTax();
+  }
+
+  calculateSubtotal(): number {
+    return this.cartService.calculateSubtotal();
   }
 
   calculateTotal(): number {

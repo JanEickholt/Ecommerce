@@ -2,15 +2,15 @@
   <div class="container">
     <div class="breadcrumb-nav">
       <a routerLink="/home">Home</a>
-      <mat-icon>chevron_right</mat-icon>
+      <span> > </span>
       <a routerLink="/products">Shop</a>
-      <mat-icon>chevron_right</mat-icon>
+      <span> > </span>
       <a
         routerLink="/products"
         [queryParams]="{ category: product?.category }"
         >{{ product?.category }}</a
       >
-      <mat-icon>chevron_right</mat-icon>
+      <span> > </span>
       <span class="current">{{ product?.name }}</span>
     </div>
 
@@ -51,14 +51,9 @@
           <div class="product-rating">
             <div class="stars">
               <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-                <mat-icon *ngIf="i <= product?.rating">star</mat-icon>
-                <mat-icon *ngIf="i > product?.rating && i - 1 < product?.rating"
-                  >star_half</mat-icon
-                >
-                <mat-icon
-                  *ngIf="i > product?.rating && i - 1 >= product?.rating"
-                  >star_outline</mat-icon
-                >
+                <span *ngIf="i <= product?.rating">★</span>
+                <span *ngIf="i > product?.rating && i - 1 < product?.rating">★</span>
+                <span *ngIf="i > product?.rating && i - 1 >= product?.rating">☆</span>
               </ng-container>
             </div>
             <a href="#reviews" class="review-count"
@@ -73,8 +68,8 @@
               'out-of-stock': !product?.inStock,
             }"
           >
-            <mat-icon *ngIf="product?.inStock">check_circle</mat-icon>
-            <mat-icon *ngIf="!product?.inStock">cancel</mat-icon>
+            <span *ngIf="product?.inStock">✓</span>
+            <span *ngIf="!product?.inStock">✗</span>
             <span>{{ product?.inStock ? "In Stock" : "Out of Stock" }}</span>
           </div>
         </div>
@@ -108,7 +103,7 @@
                 [attr.title]="color.name"
                 (click)="selectColor(color.name)"
               >
-                <mat-icon *ngIf="selectedColor === color.name">check</mat-icon>
+                <span *ngIf="selectedColor === color.name">✓</span>
               </div>
             </div>
           </div>
@@ -118,36 +113,32 @@
             *ngIf="product?.materials && product?.materials.length"
           >
             <h3 class="option-title">Material</h3>
-            <mat-button-toggle-group
-              class="material-options"
-              [(ngModel)]="selectedMaterial"
-            >
-              <mat-button-toggle
+            <div class="material-options">
+              <button
                 *ngFor="let material of product?.materials"
-                [value]="material"
+                [class.selected]="selectedMaterial === material"
+                (click)="selectedMaterial = material"
               >
                 {{ material }}
-              </mat-button-toggle>
-            </mat-button-toggle-group>
+              </button>
+            </div>
           </div>
 
           <div class="option-group">
             <h3 class="option-title">Quantity</h3>
             <div class="quantity-selector">
               <button
-                mat-icon-button
                 (click)="decreaseQuantity()"
                 [disabled]="quantity <= 1"
               >
-                <mat-icon>remove</mat-icon>
+                -
               </button>
               <input type="number" [(ngModel)]="quantity" min="1" max="10" />
               <button
-                mat-icon-button
                 (click)="increaseQuantity()"
                 [disabled]="quantity >= 10"
               >
-                <mat-icon>add</mat-icon>
+                +
               </button>
             </div>
           </div>
@@ -155,42 +146,37 @@
 
         <div class="product-actions">
           <button
-            mat-raised-button
-            color="primary"
             class="neumorph-button add-to-cart-btn"
             [disabled]="!product?.inStock"
             (click)="addToCart()"
           >
-            <mat-icon>shopping_cart</mat-icon>
-            Add to Cart
+            🛒 Add to Cart
           </button>
           <button
-            mat-stroked-button
             class="neumorph-button wishlist-btn"
             (click)="addToWishlist()"
           >
-            <mat-icon>favorite_border</mat-icon>
-            Add to Wishlist
+            ♥ Add to Wishlist
           </button>
         </div>
 
         <div class="product-features">
           <div class="feature">
-            <mat-icon>local_shipping</mat-icon>
+            <span>🚚</span>
             <div class="feature-text">
               <h4>Free Shipping</h4>
               <p>On orders over $999</p>
             </div>
           </div>
           <div class="feature">
-            <mat-icon>access_time</mat-icon>
+            <span>⏱️</span>
             <div class="feature-text">
               <h4>Easy Returns</h4>
               <p>30-day return policy</p>
             </div>
           </div>
           <div class="feature">
-            <mat-icon>verified_user</mat-icon>
+            <span>✓</span>
             <div class="feature-text">
               <h4>Warranty</h4>
               <p>3-year warranty</p>
@@ -202,16 +188,16 @@
           <span>Share:</span>
           <div class="share-buttons">
             <a href="#" class="share-button" title="Share on Facebook">
-              <mat-icon>facebook</mat-icon>
+              F
             </a>
             <a href="#" class="share-button" title="Share on Twitter">
-              <mat-icon>chat</mat-icon>
+              T
             </a>
             <a href="#" class="share-button" title="Share on Pinterest">
-              <mat-icon>dashboard</mat-icon>
+              P
             </a>
             <a href="#" class="share-button" title="Share by Email">
-              <mat-icon>email</mat-icon>
+              ✉
             </a>
           </div>
         </div>
@@ -219,173 +205,23 @@
     </div>
 
     <div class="product-details-tabs">
-      <mat-tab-group animationDuration="500ms" class="neumorph-tabs">
-        <mat-tab label="Description">
-          <div class="tab-content">
-            <div class="product-full-description">
-              <div [innerHTML]="product?.description"></div>
-            </div>
-          </div>
-        </mat-tab>
-
-        <mat-tab label="Specifications">
-          <div class="tab-content">
-            <div class="product-specs">
-              <div
-                class="spec-group"
-                *ngFor="let group of product?.specifications"
-              >
-                <h3 class="spec-group-title">{{ group.title }}</h3>
-                <div class="spec-list">
-                  <div class="spec-item" *ngFor="let spec of group.items">
-                    <span class="spec-name">{{ spec.name }}</span>
-                    <span class="spec-value">{{ spec.value }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </mat-tab>
-
-        <mat-tab label="Reviews" id="reviews">
-          <div class="tab-content">
-            <div class="product-reviews">
-              <div class="reviews-summary">
-                <div class="average-rating">
-                  <div class="rating-value">
-                    {{ product?.rating?.toFixed(1) }}
-                  </div>
-                  <div class="rating-stars">
-                    <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-                      <mat-icon *ngIf="i <= product?.rating">star</mat-icon>
-                      <mat-icon
-                        *ngIf="i > product?.rating && i - 1 < product?.rating"
-                        >star_half</mat-icon
-                      >
-                      <mat-icon
-                        *ngIf="i > product?.rating && i - 1 >= product?.rating"
-                        >star_outline</mat-icon
-                      >
-                    </ng-container>
-                  </div>
-                  <div class="rating-count">
-                    Based on {{ product?.reviewCount }} reviews
-                  </div>
-                </div>
-
-                <div class="rating-breakdown">
-                  <div class="rating-bar" *ngFor="let i of [5, 4, 3, 2, 1]">
-                    <div class="star-label">
-                      {{ i }} <mat-icon>star</mat-icon>
-                    </div>
-                    <div class="bar-container">
-                      <div
-                        class="bar"
-                        [style.width.%]="calculateRatingPercentage(i)"
-                      ></div>
-                    </div>
-                    <div class="bar-count">{{ getRatingCount(i) }}</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="review-form-section neumorph-card">
-                <h3>Write a Review</h3>
-                <form class="review-form">
-                  <div class="form-group">
-                    <label>Your Rating</label>
-                    <div class="rating-selector">
-                      <mat-icon
-                        *ngFor="let i of [1, 2, 3, 4, 5]"
-                        (click)="setRating(i)"
-                        [class.active]="i <= userRating"
-                        >star</mat-icon
-                      >
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Your Name</mat-label>
-                      <input matInput placeholder="Enter your name" />
-                    </mat-form-field>
-                  </div>
-
-                  <div class="form-group">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Review Title</mat-label>
-                      <input matInput placeholder="Summarize your review" />
-                    </mat-form-field>
-                  </div>
-
-                  <div class="form-group">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Your Review</mat-label>
-                      <textarea
-                        matInput
-                        rows="5"
-                        placeholder="Write your review here"
-                      ></textarea>
-                    </mat-form-field>
-                  </div>
-
-                  <button
-                    mat-raised-button
-                    color="primary"
-                    class="neumorph-button"
-                  >
-                    Submit Review
-                  </button>
-                </form>
-              </div>
-
-              <div class="customer-reviews">
-                <h3>Customer Reviews</h3>
-
-                <div
-                  class="review-item neumorph-card"
-                  *ngFor="let review of product?.reviews"
-                >
-                  <div class="review-header">
-                    <div class="reviewer-info">
-                      <h4 class="reviewer-name">{{ review.name }}</h4>
-                      <span class="review-date">{{ review.date }}</span>
-                    </div>
-                    <div class="review-rating">
-                      <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-                        <mat-icon *ngIf="i <= review.rating">star</mat-icon>
-                        <mat-icon *ngIf="i > review.rating"
-                          >star_outline</mat-icon
-                        >
-                      </ng-container>
-                    </div>
-                  </div>
-
-                  <h5 class="review-title">{{ review.title }}</h5>
-                  <p class="review-content">{{ review.content }}</p>
-
-                  <div class="review-footer">
-                    <button mat-button class="helpful-btn">
-                      <mat-icon>thumb_up</mat-icon> Helpful ({{
-                        review.helpfulCount
-                      }})
-                    </button>
-                    <button mat-button class="report-btn">
-                      <mat-icon>flag</mat-icon> Report
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
+      <div class="tabs-header">
+        <button class="tab-button active">Description</button>
+        <button class="tab-button">Specifications</button>
+        <button class="tab-button" id="reviews">Reviews</button>
+      </div>
+      
+      <div class="tab-content">
+        <div class="product-full-description">
+          <div [innerHTML]="product?.description"></div>
+        </div>
+      </div>
     </div>
 
     <div class="related-products">
       <h2 class="section-title">You May Also Like</h2>
       <div class="products-grid">
-        <!-- Use ProductCard component here for related products -->
+        <!-- Product cards for related products -->
         <div
           *ngFor="let relatedProduct of relatedProducts"
           class="product-card-wrapper"

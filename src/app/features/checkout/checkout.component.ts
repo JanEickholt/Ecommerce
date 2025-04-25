@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { MatStepper } from "@angular/material/stepper";
 import { Subscription } from "rxjs";
 import {
   CartService,
@@ -16,7 +15,7 @@ import { AuthService } from "../../../core/services/auth.service";
   styleUrl: "./checkout.component.scss",
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
-  @ViewChild("stepper") stepper!: MatStepper;
+  @ViewChild("stepper") stepper: any;
 
   // Form groups for each step
   shippingForm!: FormGroup;
@@ -208,9 +207,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   updateOrderSummary(): void {
-    this.subtotal = this.cartService.calculateSubtotal();
+    this.subtotal = this.calculateSubtotal();
     this.discount = this.cartService.calculateDiscount();
-    this.tax = this.cartService.calculateTax();
+    this.tax = this.calculateTax();
+  }
+
+  calculateSubtotal(): number {
+    return this.cartService.calculateSubtotal();
+  }
+
+  calculateTax(): number {
+    return this.cartService.calculateTax();
   }
 
   getStateName(stateCode: string): string {
@@ -238,19 +245,25 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   calculateTotal(): number {
-    return this.subtotal - this.discount + this.getShippingCost() + this.tax;
+    return this.cartService.calculateTotal();
   }
 
   nextStep(): void {
-    this.stepper.next();
+    if (this.stepper) {
+      this.stepper.next();
+    }
   }
 
   prevStep(): void {
-    this.stepper.previous();
+    if (this.stepper) {
+      this.stepper.previous();
+    }
   }
 
   editStep(index: number): void {
-    this.stepper.selectedIndex = index;
+    if (this.stepper) {
+      this.stepper.selectedIndex = index;
+    }
   }
 
   onSameAsShippingChange(): void {
@@ -313,7 +326,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     // Simulate API call
     setTimeout(() => {
-      this.stepper.next();
+      if (this.stepper) {
+        this.stepper.next();
+      }
       this.isSubmitting = false;
 
       // Clear cart after successful order

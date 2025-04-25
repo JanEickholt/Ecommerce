@@ -1,72 +1,27 @@
-import { Component, OnInit, OnDestroy, HostListener } from "@angular/core";
+import { Component, OnInit, HostListener } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
-import { Subscription } from "rxjs";
 import { CommonModule } from "@angular/common";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
-import { MatBadgeModule } from "@angular/material/badge";
-import { MatMenuModule } from "@angular/material/menu";
-import { AuthService } from "../../../core/services/auth.service";
-import { CartService } from "../../../core/services/cart.service";
-import { WishlistService } from "../../../core/services/wishlist.service";
 
 @Component({
   selector: "app-header",
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatBadgeModule,
-    MatMenuModule,
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
   cartItemCount: number = 0;
   wishlistCount: number = 0;
   isMobileMenuOpen: boolean = false;
   isScrolled: boolean = false;
 
-  private subscriptions: Subscription = new Subscription();
-
-  constructor(
-    private authService: AuthService,
-    private cartService: CartService,
-    private wishlistService: WishlistService,
-    private router: Router,
-  ) {}
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
-    // Subscribe to auth state
-    this.subscriptions.add(
-      this.authService.currentUser$.subscribe((user) => {
-        this.isLoggedIn = !!user;
-      }),
-    );
-
-    // Subscribe to cart items
-    this.subscriptions.add(
-      this.cartService.cartItems$.subscribe((items) => {
-        this.cartItemCount = this.cartService.getCartItemCount();
-      }),
-    );
-
-    // Subscribe to wishlist items
-    this.subscriptions.add(
-      this.wishlistService.wishlistItems$.subscribe((items) => {
-        this.wishlistCount = items.length;
-      }),
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    // Mock data for the initial view
+    this.cartItemCount = 2;
+    this.wishlistCount = 3;
   }
 
   @HostListener("window:scroll", [])
@@ -79,6 +34,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.authService.logout();
+    // Mock logout function
+    this.isLoggedIn = false;
+    this.router.navigate(["/auth/login"]);
   }
 }

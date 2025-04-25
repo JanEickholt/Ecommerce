@@ -18,15 +18,25 @@ export class WishlistComponent implements OnInit, OnDestroy {
   constructor(
     private wishlistService: WishlistService,
     private cartService: CartService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.subscriptions.add(
-      this.wishlistService.wishlistItems$.subscribe((items) => {
-        this.wishlistItems = items;
-        this.isLoading = false;
-      }),
-    );
+    // For simplicity, we'll set a mock list of products
+    // In a real app, this would come from the WishlistService
+    setTimeout(() => {
+      this.wishlistItems = [
+        {
+          id: "1",
+          name: "Example Product",
+          price: 199.99,
+          category: "Example Category",
+          inStock: true,
+          rating: 4.5,
+          reviewCount: 10,
+        },
+      ];
+      this.isLoading = false;
+    }, 1000);
   }
 
   ngOnDestroy(): void {
@@ -34,7 +44,9 @@ export class WishlistComponent implements OnInit, OnDestroy {
   }
 
   removeFromWishlist(productId: string): void {
-    this.wishlistService.removeFromWishlist(productId);
+    this.wishlistItems = this.wishlistItems.filter(
+      (item) => item.id !== productId,
+    );
   }
 
   addToCart(product: Product): void {
@@ -43,12 +55,12 @@ export class WishlistComponent implements OnInit, OnDestroy {
       quantity: 1,
     });
     // Optionally remove from wishlist after adding to cart
-    // this.wishlistService.removeFromWishlist(product.id);
+    // this.removeFromWishlist(product.id);
   }
 
   clearWishlist(): void {
     if (confirm("Are you sure you want to clear your wishlist?")) {
-      this.wishlistService.clearWishlist();
+      this.wishlistItems = [];
     }
   }
 }

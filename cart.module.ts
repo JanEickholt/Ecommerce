@@ -2,8 +2,8 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { CheckoutRoutingModule } from "./checkout-routing.module";
-import { CheckoutComponent } from "./checkout.component";
+import { CartRoutingModule } from "./cart-routing.module";
+import { CartComponent } from "./cart.component";
 
 // Angular Material Imports
 import { MatIconModule } from "@angular/material/icon";
@@ -12,30 +12,22 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
-import { MatRadioModule } from "@angular/material/radio";
-import { MatStepperModule } from "@angular/material/stepper";
-import { MatTabsModule } from "@angular/material/tabs";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @NgModule({
-  declarations: [CheckoutComponent],
+  declarations: [CartComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    CheckoutRoutingModule,
+    CartRoutingModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatButtonModule,
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatStepperModule,
-    MatTabsModule,
-    MatCheckboxModule,
+    MatTooltipModule,
   ],
 })
-export class CheckoutModule { }
+export class CartModule { }
