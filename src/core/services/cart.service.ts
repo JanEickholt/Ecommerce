@@ -1,20 +1,11 @@
-import { Injectable, PLATFORM_ID, Inject } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { Product, ProductOption } from "./product.service";
-import { isPlatformBrowser } from "@angular/common";
+import { Product, ProductOption } from "../models/product";
 
 export interface CartItem {
   product: Product;
   quantity: number;
   options?: ProductOption[];
-}
-
-export interface Coupon {
-  code: string;
-  description: string;
-  discountType: "percentage" | "fixed";
-  discountValue: number;
-  minOrderValue?: number;
 }
 
 @Injectable({
@@ -24,56 +15,15 @@ export class CartService {
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
   public cartItems$ = this.cartItemsSubject.asObservable();
 
-  private appliedCouponSubject = new BehaviorSubject<Coupon | null>(null);
-  public appliedCoupon$ = this.appliedCouponSubject.asObservable();
-
-  private isBrowser: boolean;
-
-  private availableCoupons: Coupon[] = [
-    {
-      code: "WELCOME10",
-      description: "10% off your first order",
-      discountType: "percentage",
-      discountValue: 10,
-    },
-    {
-      code: "SAVE20",
-      description: "20% off orders over $500",
-      discountType: "percentage",
-      discountValue: 20,
-      minOrderValue: 500,
-    },
-    {
-      code: "FLAT50",
-      description: "$50 off orders over $200",
-      discountType: "fixed",
-      discountValue: 50,
-      minOrderValue: 200,
-    },
-  ];
-
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-
-    if (this.isBrowser) {
-      const savedCart = localStorage.getItem("cart");
-      if (savedCart) {
-        try {
-          this.cartItemsSubject.next(JSON.parse(savedCart));
-        } catch (error) {
-          console.error("Error parsing cart from localStorage", error);
-          this.cartItemsSubject.next([]);
-        }
-      }
-
-      const savedCoupon = localStorage.getItem("appliedCoupon");
-      if (savedCoupon) {
-        try {
-          this.appliedCouponSubject.next(JSON.parse(savedCoupon));
-        } catch (error) {
-          console.error("Error parsing coupon from localStorage", error);
-          this.appliedCouponSubject.next(null);
-        }
+  constructor() {
+    // Load cart from localStorage if available
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      try {
+        this.cartItemsSubject.next(JSON.parse(savedCart));
+      } catch (error) {
+        console.error("Error parsing cart from localStorage", error);
+        this.cartItemsSubject.next([]);
       }
     }
   }
@@ -125,38 +75,7 @@ export class CartService {
 
   clearCart(): void {
     this.cartItemsSubject.next([]);
-    this.appliedCouponSubject.next(null);
-
-    if (this.isBrowser) {
-      localStorage.removeItem("cart");
-      localStorage.removeItem("appliedCoupon");
-    }
-  }
-
-  applyCoupon(code: string): boolean {
-    const coupon = this.availableCoupons.find((c) => c.code === code);
-
-    if (!coupon) {
-      return false;
-    }
-
-    if (
-      coupon.minOrderValue &&
-      this.calculateSubtotal() < coupon.minOrderValue
-    ) {
-      return false;
-    }
-
-    this.appliedCouponSubject.next(coupon);
-    this.saveAppliedCouponToLocalStorage();
-    return true;
-  }
-
-  removeCoupon(): void {
-    this.appliedCouponSubject.next(null);
-    if (this.isBrowser) {
-      localStorage.removeItem("appliedCoupon");
-    }
+    localStorage.removeItem("cart");
   }
 
   calculateSubtotal(): number {
@@ -166,55 +85,23 @@ export class CartService {
     );
   }
 
-  calculateDiscount(): number {
-    const coupon = this.appliedCouponSubject.value;
-    const subtotal = this.calculateSubtotal();
-
-    if (!coupon) {
-      return 0;
-    }
-
-    if (coupon.discountType === "percentage") {
-      return subtotal * (coupon.discountValue / 100);
-    } else {
-      return coupon.discountValue;
-    }
+  calculateTax(): number {
+    const taxRate = 0.0825; // Example tax rate 8.25%
+    return this.calculateSubtotal() * taxRate;
   }
 
   calculateShipping(): number {
+    // Free shipping over $999
     const subtotal = this.calculateSubtotal();
-
     if (subtotal >= 999) {
       return 0;
     }
-
-    const baseShipping = 19.99;
-    const itemCount = this.cartItemsSubject.value.reduce(
-      (count, item) => count + item.quantity,
-      0,
-    );
-
-    return baseShipping + (itemCount > 1 ? (itemCount - 1) * 5 : 0);
-  }
-
-  calculateTax(): number {
-    const taxRate = 0.0825;
-    return (this.calculateSubtotal() - this.calculateDiscount()) * taxRate;
+    return 19.99; // Default shipping cost
   }
 
   calculateTotal(): number {
     return (
-      this.calculateSubtotal() -
-      this.calculateDiscount() +
-      this.calculateShipping() +
-      this.calculateTax()
-    );
-  }
-
-  getCartItemCount(): number {
-    return this.cartItemsSubject.value.reduce(
-      (count, item) => count + item.quantity,
-      0,
+      this.calculateSubtotal() + this.calculateTax() + this.calculateShipping()
     );
   }
 
@@ -241,17 +128,6 @@ export class CartService {
   }
 
   private saveCartToLocalStorage(): void {
-    if (this.isBrowser) {
-      localStorage.setItem("cart", JSON.stringify(this.cartItemsSubject.value));
-    }
-  }
-
-  private saveAppliedCouponToLocalStorage(): void {
-    if (this.isBrowser) {
-      localStorage.setItem(
-        "appliedCoupon",
-        JSON.stringify(this.appliedCouponSubject.value),
-      );
-    }
+    localStorage.setItem("cart", JSON.stringify(this.cartItemsSubject.value));
   }
 }

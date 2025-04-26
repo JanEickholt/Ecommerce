@@ -1,81 +1,12 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { delay } from "rxjs/operators";
-
-export interface ProductOption {
-  name: string;
-  value: string;
-}
-
-export interface ProductColor {
-  name: string;
-  code: string;
-}
-
-export interface ProductImage {
-  url: string;
-  alt: string;
-}
-
-export interface ProductSpecGroup {
-  title: string;
-  items: { name: string; value: string }[];
-}
-
-export interface ProductReview {
-  id: string;
-  name: string;
-  rating: number;
-  date: string;
-  title: string;
-  content: string;
-  helpfulCount: number;
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  oldPrice?: number;
-  discount?: number;
-  imageUrl?: string;
-  images?: string[];
-  shortDescription?: string;
-  description?: string;
-  category: string;
-  subCategory?: string;
-  inStock: boolean;
-  badge?: string;
-  badgeType?: "sale" | "new" | "bestseller" | "limited";
-  rating: number;
-  reviewCount: number;
-  reviews?: ProductReview[];
-  colors?: ProductColor[];
-  materials?: string[];
-  specifications?: ProductSpecGroup[];
-  relatedProducts?: string[];
-  featured?: boolean;
-  new?: boolean;
-  bestSeller?: boolean;
-}
-
-export interface ProductFilterState {
-  categories: string[];
-  priceRange: { min: number; max: number };
-  colors: string[];
-  materials: string[];
-  rating: number;
-  features: string[];
-  sortBy: string;
-}
+import { Product } from "../models/product";
 
 @Injectable({
   providedIn: "root",
 })
 export class ProductService {
-  private productsSubject = new BehaviorSubject<Product[]>([]);
-  public products$: Observable<Product[]> = this.productsSubject.asObservable();
-
   private mockProducts: Product[] = [
     {
       id: "1",
@@ -147,15 +78,12 @@ export class ProductService {
         },
       ],
       relatedProducts: ["2", "3", "4"],
-      featured: true,
-      new: true,
     },
     {
       id: "2",
       name: "Cloud Nine Armchair",
       price: 699.99,
       oldPrice: 899.99,
-      discount: 22,
       imageUrl:
         "https://i.pinimg.com/736x/75/19/ac/7519ac455517df51bf7cf2145d69f285.jpg",
       shortDescription: "Stylish armchair that provides exceptional comfort.",
@@ -165,7 +93,7 @@ export class ProductService {
       badgeType: "sale",
       rating: 5,
       reviewCount: 37,
-      featured: true,
+      relatedProducts: ["1", "3"],
     },
     {
       id: "3",
@@ -181,8 +109,7 @@ export class ProductService {
       badgeType: "bestseller",
       rating: 4.5,
       reviewCount: 56,
-      featured: true,
-      bestSeller: true,
+      relatedProducts: ["1", "2"],
     },
     {
       id: "4",
@@ -196,259 +123,19 @@ export class ProductService {
       inStock: true,
       rating: 4,
       reviewCount: 28,
-      featured: true,
-    },
-    {
-      id: "5",
-      name: "Modern Accent Chair",
-      price: 499.99,
-      imageUrl:
-        "https://static.iwmbuzz.com/wp-content/uploads/2022/06/5-most-comfortable-sofas-for-your-living-room-2-920x920.jpg",
-      shortDescription:
-        "Eye-catching accent chair to add personality to any room.",
-      category: "Accent Chairs",
-      inStock: true,
-      rating: 4.2,
-      reviewCount: 19,
-      badge: "Bestseller",
-      badgeType: "bestseller",
-      bestSeller: true,
-    },
-    {
-      id: "6",
-      name: "Cozy Loveseat",
-      price: 899.99,
-      imageUrl:
-        "https://assets.ad-magazin.de/photos/6666ae63a527a30d56a7f3d1/16:9/w_2240,c_limit/ATD_Little%20Petra_VB2_Sillon_SC50_Drop%20Leaf_HM5_Tripod_HM8_Loafer_SC23_Lucca_SC51_Amore_SC50_&amp;Tradition%20Collect%20Cotton%20Throw%20SC32%20.jpg",
-      shortDescription: "Compact two-seater perfect for smaller spaces.",
-      category: "Loveseats",
-      inStock: true,
-      rating: 4.6,
-      reviewCount: 31,
-      badge: "New",
-      badgeType: "new",
-      new: true,
+      relatedProducts: ["2", "3"],
     },
   ];
 
-  private categoriesSubject = new BehaviorSubject<
-    { label: string; value: string; count: number }[]
-  >([]);
-  public categories$ = this.categoriesSubject.asObservable();
+  constructor() { }
 
-  private colorsSubject = new BehaviorSubject<ProductColor[]>([]);
-  public colors$ = this.colorsSubject.asObservable();
-
-  private materialsSubject = new BehaviorSubject<
-    { label: string; value: string; count: number }[]
-  >([]);
-  public materials$ = this.materialsSubject.asObservable();
-
-  private priceRangeSubject = new BehaviorSubject<{ min: number; max: number }>(
-    { min: 0, max: 0 },
-  );
-  public priceRange$ = this.priceRangeSubject.asObservable();
-
-  private filterStateSubject = new BehaviorSubject<ProductFilterState>({
-    categories: [],
-    priceRange: { min: 0, max: 5000 },
-    colors: [],
-    materials: [],
-    rating: 0,
-    features: [],
-    sortBy: "popular",
-  });
-  public filterState$ = this.filterStateSubject.asObservable();
-
-  constructor() {
-    this.productsSubject.next(this.mockProducts);
-
-    this.updateFilterOptions();
-  }
-
-  private updateFilterOptions(): void {
-    const categoriesMap = new Map<string, number>();
-    this.mockProducts.forEach((product) => {
-      const count = categoriesMap.get(product.category) || 0;
-      categoriesMap.set(product.category, count + 1);
-    });
-
-    const categories = Array.from(categoriesMap.entries()).map(
-      ([name, count]) => ({
-        label: name,
-        value: name.toLowerCase().replace(/\s+/g, "-"),
-        count,
-      }),
-    );
-    this.categoriesSubject.next(categories);
-
-    const uniqueColors = new Map<string, ProductColor>();
-    this.mockProducts.forEach((product) => {
-      if (product.colors) {
-        product.colors.forEach((color) => {
-          if (!uniqueColors.has(color.name)) {
-            uniqueColors.set(color.name, color);
-          }
-        });
-      }
-    });
-    this.colorsSubject.next(Array.from(uniqueColors.values()));
-
-    const materialsMap = new Map<string, number>();
-    this.mockProducts.forEach((product) => {
-      if (product.materials) {
-        product.materials.forEach((material) => {
-          const count = materialsMap.get(material) || 0;
-          materialsMap.set(material, count + 1);
-        });
-      }
-    });
-
-    const materials = Array.from(materialsMap.entries()).map(
-      ([name, count]) => ({
-        label: name,
-        value: name.toLowerCase().replace(/\s+/g, "-"),
-        count,
-      }),
-    );
-    this.materialsSubject.next(materials);
-
-    const prices = this.mockProducts.map((p) => p.price);
-    const minPrice = Math.floor(Math.min(...prices));
-    const maxPrice = Math.ceil(Math.max(...prices));
-
-    this.priceRangeSubject.next({ min: minPrice, max: maxPrice });
-
-    const currentFilter = this.filterStateSubject.value;
-    this.filterStateSubject.next({
-      ...currentFilter,
-      priceRange: { min: minPrice, max: maxPrice },
-    });
-  }
-
-  getProducts(filters?: Partial<ProductFilterState>): Observable<Product[]> {
-    if (filters) {
-      this.filterStateSubject.next({
-        ...this.filterStateSubject.value,
-        ...filters,
-      });
-    }
-
-    const filterState = this.filterStateSubject.value;
-
-    let filteredProducts = this.mockProducts;
-
-    if (filterState.categories.length > 0) {
-      filteredProducts = filteredProducts.filter((product) =>
-        filterState.categories.includes(
-          product.category.toLowerCase().replace(/\s+/g, "-"),
-        ),
-      );
-    }
-
-    filteredProducts = filteredProducts.filter(
-      (product) =>
-        product.price >= filterState.priceRange.min &&
-        product.price <= filterState.priceRange.max,
-    );
-
-    if (filterState.colors.length > 0) {
-      filteredProducts = filteredProducts.filter(
-        (product) =>
-          product.colors &&
-          product.colors.some((color) =>
-            filterState.colors.includes(color.name),
-          ),
-      );
-    }
-
-    if (filterState.materials.length > 0) {
-      filteredProducts = filteredProducts.filter(
-        (product) =>
-          product.materials &&
-          product.materials.some((material) =>
-            filterState.materials.includes(
-              material.toLowerCase().replace(/\s+/g, "-"),
-            ),
-          ),
-      );
-    }
-
-    if (filterState.rating > 0) {
-      filteredProducts = filteredProducts.filter(
-        (product) => product.rating >= filterState.rating,
-      );
-    }
-
-    if (filterState.features.length > 0) {
-      filteredProducts = filteredProducts.filter((product) => {
-        for (const feature of filterState.features) {
-          if (feature === "featured" && !product.featured) return false;
-          if (feature === "new" && !product.new) return false;
-          if (feature === "bestseller" && !product.bestSeller) return false;
-          if (feature === "inStock" && !product.inStock) return false;
-        }
-        return true;
-      });
-    }
-
-    switch (filterState.sortBy) {
-      case "price-low":
-        filteredProducts.sort((a, b) => a.price - b.price);
-        break;
-      case "price-high":
-        filteredProducts.sort((a, b) => b.price - a.price);
-        break;
-      case "newest":
-        filteredProducts.sort((a, b) => parseInt(b.id) - parseInt(a.id));
-        break;
-      case "rating":
-        filteredProducts.sort((a, b) => b.rating - a.rating);
-        break;
-      case "popular":
-      default:
-        filteredProducts.sort((a, b) => b.reviewCount - a.reviewCount);
-    }
-
-    return of(filteredProducts).pipe(delay(500));
+  getProducts(): Observable<Product[]> {
+    return of(this.mockProducts).pipe(delay(500));
   }
 
   getProduct(id: string): Observable<Product | undefined> {
     const product = this.mockProducts.find((p) => p.id === id);
     return of(product).pipe(delay(300));
-  }
-
-  getFeaturedProducts(): Observable<Product[]> {
-    const featuredProducts = this.mockProducts
-      .filter((p) => p.featured)
-      .map((product) => this.ensureProductImage(product));
-
-    return of(featuredProducts).pipe(delay(300));
-  }
-
-  getNewArrivals(): Observable<Product[]> {
-    const newArrivals = this.mockProducts
-      .filter((p) => p.new)
-      .map((product) => this.ensureProductImage(product));
-
-    return of(newArrivals).pipe(delay(300));
-  }
-
-  getBestSellers(): Observable<Product[]> {
-    const bestSellers = this.mockProducts
-      .filter((p) => p.bestSeller)
-      .map((product) => this.ensureProductImage(product));
-
-    return of(bestSellers).pipe(delay(300));
-  }
-
-  private ensureProductImage(product: Product): Product {
-    return {
-      ...product,
-      imageUrl: product.imageUrl || "/api/placeholder/300/300",
-      images:
-        product.images?.map((img) => img || "/api/placeholder/300/300") || [],
-    };
   }
 
   getRelatedProducts(productId: string): Observable<Product[]> {
@@ -467,30 +154,5 @@ export class ProductService {
     );
 
     return of(relatedProducts).pipe(delay(300));
-  }
-
-  updateFilterState(filterState: Partial<ProductFilterState>): void {
-    this.filterStateSubject.next({
-      ...this.filterStateSubject.value,
-      ...filterState,
-    });
-  }
-
-  getFilterState(): ProductFilterState {
-    return this.filterStateSubject.value;
-  }
-
-  resetFilters(): void {
-    const priceRange = this.priceRangeSubject.value;
-
-    this.filterStateSubject.next({
-      categories: [],
-      priceRange,
-      colors: [],
-      materials: [],
-      rating: 0,
-      features: [],
-      sortBy: "popular",
-    });
   }
 }

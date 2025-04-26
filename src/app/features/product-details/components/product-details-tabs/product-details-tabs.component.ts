@@ -8,19 +8,16 @@ import {
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import {
-  ProductService,
-  Product,
-  ProductReview,
-} from "../../../../core/services/product.service";
+import { Product, ProductReview } from "../../../../core/models/product";
 import { CartService } from "../../../../core/services/cart.service";
 import { WishlistService } from "../../../../core/services/wishlist.service";
+import { ProductService } from "../../../../core/services/product.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-product-details",
   templateUrl: "./product-details.component.html",
-  styleUrl: "./product-details.component.scss",
+  styleUrls: ["./product-details.component.scss"],
 })
 export class ProductDetailsComponent
   implements OnInit, OnDestroy, AfterViewInit {
