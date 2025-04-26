@@ -1,1 +1,57 @@
-<p>products works!</p>
+<div class="products-page-container">
+  <mat-drawer-container class="drawer-container">
+    <!-- Filter Sidebar -->
+    <mat-drawer #filterDrawer mode="side" [opened]="!isMobile" class="filter-drawer">
+      <app-product-filter
+        [categories]="categories"
+        [priceRange]="priceRange"
+        [colors]="colors" 
+        [materials]="materials"
+        [ratings]="ratings"
+        [features]="features"
+        [filterState]="filterState"
+        (filterChanged)="applyFilters($event)"
+        (clearFilters)="clearFilters()"
+        [isMobile]="isMobile"
+        (close)="filterDrawer.close()"
+      ></app-product-filter>
+    </mat-drawer>
+
+    <!-- Main Content -->
+    <mat-drawer-content class="main-content">
+      <div class="toolbar">
+        <!-- Mobile Filter Toggle -->
+        <button 
+          *ngIf="isMobile" 
+          mat-raised-button 
+          color="primary" 
+          class="filter-toggle-btn"
+          (click)="filterDrawer.toggle()">
+          <mat-icon>filter_list</mat-icon> Filters
+        </button>
+
+        <!-- Product Sort -->
+        <app-product-sort
+          [sortOption]="filterState.sortBy"
+          (sortChanged)="sortProducts($event)"
+        ></app-product-sort>
+      </div>
+
+      <!-- Product Grid -->
+      <app-product-grid
+        [products]="products"
+        [totalProducts]="totalProducts"
+        [isLoading]="isLoading"
+        [viewMode]="viewMode"
+        [pageSize]="pageSize"
+        (viewModeChanged)="setViewMode($event)"
+        (pageChanged)="onPageChange($event)"
+        (productAdded)="addToCart($event)"
+        (productWishlisted)="addToWishlist($event)"
+        (productQuickViewed)="quickView($event)"
+        (productCompared)="addToCompare($event)"
+        (clearAllFilters)="clearFilters()"
+      ></app-product-grid>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

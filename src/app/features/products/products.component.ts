@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  HostListener,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import {
@@ -6,6 +12,7 @@ import {
   Product,
   ProductFilterState,
 } from "../../../core/services/product.service";
+import { MatDrawer } from "@angular/material/sidenav";
 
 @Component({
   selector: "app-products",
@@ -13,9 +20,12 @@ import {
   styleUrl: "./products.component.scss",
 })
 export class ProductsComponent implements OnInit, OnDestroy {
+  @ViewChild("filterDrawer") filterDrawer!: MatDrawer;
+
   products: Product[] = [];
   totalProducts: number = 0;
   isLoading: boolean = true;
+  isMobile: boolean = false;
 
   // Pagination settings
   pageSize: number = 12;
@@ -61,7 +71,18 @@ export class ProductsComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private route: ActivatedRoute,
     private router: Router,
-  ) { }
+  ) {
+    this.checkScreenSize();
+  }
+
+  @HostListener("window:resize")
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize(): void {
+    this.isMobile = window.innerWidth < 992;
+  }
 
   ngOnInit(): void {
     // Subscribe to query parameters
@@ -241,6 +262,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
     if (filters.sortBy) {
       queryParams.sortBy = filters.sortBy;
+    }
+
+    // If on mobile, close the filter drawer after applying filters
+    if (this.isMobile && this.filterDrawer) {
+      this.filterDrawer.close();
     }
 
     this.updateQueryParams(queryParams);

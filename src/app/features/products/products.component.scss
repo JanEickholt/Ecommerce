@@ -1,0 +1,106 @@
+.products-page-container {
+  width: 100%;
+  height: calc(100vh - 64px); 
+  
+  .drawer-container {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    
+    .filter-drawer {
+      width: 280px;
+      border-right: none;
+      background-color: transparent;
+      box-shadow: none;
+      
+      @media (max-width: 992px) {
+        width: 100%;
+      }
+    }
+    
+    .main-content {
+      padding: 0 20px;
+      background-color: transparent;
+      
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding: 1rem 0;
+        
+        .filter-toggle-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          
+          mat-icon {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .mat-drawer-backdrop.mat-drawer-shown {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .mat-drawer-container {
+    background-color: transparent;
+  }
+  
+  .mat-drawer {
+    border-radius: 8px;
+  }
+  
+  .mat-drawer-content {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 992px) {
+  .products-page-container {
+    height: calc(100vh - 56px); 
+    
+    .drawer-container {
+      .filter-drawer {
+        width: 100%;
+        max-width: 100%;
+      }
+      
+      .main-content {
+        padding: 0 10px;
+      }
+    }
+  }
+}
+
+.neumorph-card {
+  background-color: var(--background-light, #f0f4f8);
+  border-radius: 12px;
+  box-shadow: 
+    8px 8px 16px rgba(174, 174, 192, 0.4),
+    -8px -8px 16px rgba(255, 255, 255, 0.8);
+}
+
+.neumorph-button {
+  box-shadow: 
+    4px 4px 8px rgba(174, 174, 192, 0.4),
+    -4px -4px 8px rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 
+      6px 6px 12px rgba(174, 174, 192, 0.5),
+      -6px -6px 12px rgba(255, 255, 255, 0.9);
+  }
+  
+  &:active {
+    box-shadow: 
+      inset 4px 4px 8px rgba(174, 174, 192, 0.5),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+  }
+}

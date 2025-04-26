@@ -1,1 +1,12 @@
-<p>product-sort works!</p>
+<div class="sort-container">
+  <span class="sort-label">Sort By:</span>
+  <mat-form-field appearance="outline" class="sort-selector">
+    <mat-select [value]="sortOption" (selectionChange)="onSortChange($event)">
+      <mat-option value="popular">Most Popular</mat-option>
+      <mat-option value="newest">Newest First</mat-option>
+      <mat-option value="price-low">Price: Low to High</mat-option>
+      <mat-option value="price-high">Price: High to Low</mat-option>
+      <mat-option value="rating">Highest Rated</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
