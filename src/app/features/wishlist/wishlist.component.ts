@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { WishlistService } from "../../../core/services/wishlist.service";
 import { CartService } from "../../../core/services/cart.service";
-import { Product } from "../../../core/models/product";
+import { Product } from "../../core/models/product";
 
 @Component({
   selector: "app-wishlist",

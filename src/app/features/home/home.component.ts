@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { ProductService } from "../../../core/services/product.service";
-import { Product } from "../../../core/models/product";
+import { Product } from "../../core/models/product";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
