@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { ProductService } from "../../../core/services/product.service";
-import { Product } from "../../../core/models/product";
+import { Product } from "../../core/models/product";
 import { MatDrawer } from "@angular/material/sidenav";
 import { isPlatformBrowser } from "@angular/common";
 

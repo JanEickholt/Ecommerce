@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, of, BehaviorSubject } from "rxjs";
 import { delay } from "rxjs/operators";
-import { Product } from "../models/product";
+import { Product } from "../../app/core/models/product";
 
 export interface ProductFilterState {
   categories: string[];
@@ -196,7 +196,7 @@ export class ProductService {
   public materials$ = this.materialsSubject.asObservable();
   public priceRange$ = this.priceRangeSubject.asObservable();
 
-  constructor() {}
+  constructor() { }
 
   updateFilterState(filterState: Partial<ProductFilterState>): void {
     this.filterStateSubject.next({
