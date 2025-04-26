@@ -4,6 +4,8 @@ import {
   OnDestroy,
   ViewChild,
   HostListener,
+  PLATFORM_ID,
+  Inject,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -13,6 +15,7 @@ import {
   ProductFilterState,
 } from "../../../core/services/product.service";
 import { MatDrawer } from "@angular/material/sidenav";
+import { isPlatformBrowser } from "@angular/common";
 
 @Component({
   selector: "app-products",
@@ -26,12 +29,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
   totalProducts: number = 0;
   isLoading: boolean = true;
   isMobile: boolean = false;
-
-  // Pagination settings
+  private isBrowser: boolean;
   pageSize: number = 12;
   pageIndex: number = 0;
-
-  // Filter options
   categories: any[] = [];
   priceRange: { min: number; max: number } = { min: 0, max: 5000 };
   colors: any[] = [];
@@ -50,7 +50,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
     { label: "In Stock", value: "inStock", count: 0 },
   ];
 
-  // Current filter state
   filterState: ProductFilterState = {
     categories: [],
     priceRange: { min: 0, max: 5000 },
@@ -61,34 +60,38 @@ export class ProductsComponent implements OnInit, OnDestroy {
     sortBy: "popular",
   };
 
-  // Subscriptions
   private subscriptions: Subscription = new Subscription();
 
-  // View mode: 'grid' or 'list'
   viewMode: "grid" | "list" = "grid";
 
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
     private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
-    this.checkScreenSize();
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    if (this.isBrowser) {
+      this.checkScreenSize();
+    }
   }
 
   @HostListener("window:resize")
   onResize() {
-    this.checkScreenSize();
+    if (this.isBrowser) {
+      this.checkScreenSize();
+    }
   }
 
   checkScreenSize(): void {
-    this.isMobile = window.innerWidth < 992;
+    if (this.isBrowser) {
+      this.isMobile = window.innerWidth < 992;
+    }
   }
 
   ngOnInit(): void {
-    // Subscribe to query parameters
     this.subscriptions.add(
       this.route.queryParams.subscribe((params) => {
-        // Parse query parameters into filter state
         const filterState: Partial<ProductFilterState> = {};
 
         if (params["category"]) {
@@ -147,16 +150,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
           this.viewMode = params["viewMode"];
         }
 
-        // Update filter state in service
         this.productService.updateFilterState(filterState);
         this.filterState = this.productService.getFilterState();
 
-        // Load products with filters
         this.loadProducts();
       }),
     );
 
-    // Get filter options
     this.subscriptions.add(
       this.productService.categories$.subscribe((categories) => {
         this.categories = categories;
@@ -183,7 +183,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
     this.subscriptions.unsubscribe();
   }
 
@@ -194,7 +193,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
       this.productService.getProducts().subscribe((products) => {
         this.totalProducts = products.length;
 
-        // Apply pagination
         const startIndex = this.pageIndex * this.pageSize;
         this.products = products.slice(startIndex, startIndex + this.pageSize);
 
@@ -207,30 +205,25 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
 
-    // Update query parameters
     this.updateQueryParams({
       page: this.pageIndex + 1,
       pageSize: this.pageSize,
     });
 
-    // Load products with new pagination
     this.loadProducts();
   }
 
   setViewMode(mode: "grid" | "list"): void {
     this.viewMode = mode;
 
-    // Update query parameters
     this.updateQueryParams({
       viewMode: mode,
     });
   }
 
   applyFilters(filters: Partial<ProductFilterState>): void {
-    // Reset pagination when applying new filters
     this.pageIndex = 0;
 
-    // Update query parameters
     const queryParams: any = {
       page: 1,
     };
@@ -264,7 +257,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
       queryParams.sortBy = filters.sortBy;
     }
 
-    // If on mobile, close the filter drawer after applying filters
     if (this.isMobile && this.filterDrawer) {
       this.filterDrawer.close();
     }
@@ -279,10 +271,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
   clearFilters(): void {
     this.productService.resetFilters();
 
-    // Reset pagination
     this.pageIndex = 0;
 
-    // Clear query parameters except for view mode
     this.updateQueryParams(
       {
         page: 1,
@@ -293,22 +283,18 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   addToCart(product: Product): void {
-    // This will be implemented with the cart service
     console.log("Add to cart:", product);
   }
 
   addToWishlist(product: Product): void {
-    // This will be implemented with the wishlist service
     console.log("Add to wishlist:", product);
   }
 
   quickView(product: Product): void {
-    // This will open a quick view dialog
     console.log("Quick view:", product);
   }
 
   addToCompare(product: Product): void {
-    // This will be implemented with a compare service
     console.log("Add to compare:", product);
   }
 

@@ -68,7 +68,11 @@
       }
       
       .mat-mdc-tab-body-content {
-        overflow: hidden;
+      }
+
+      .mat-mdc-tab-label-container {
+        overflow: visible !important;
+        border-bottom-color: rgba(0,0,0,0)
       }
     }
   }
@@ -77,6 +81,9 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 30px;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
     
     @media (max-width: 1200px) {
       grid-template-columns: repeat(3, 1fr);
@@ -91,6 +98,13 @@
     }
   }
   
+  .product-card-wrapper {
+    padding-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  
   .product-card {
     position: relative;
     overflow: hidden;
@@ -98,7 +112,6 @@
     
     &:hover {
       transform: translateY(-10px);
-      
       .product-actions-overlay {
         opacity: 1;
         visibility: visible;
@@ -149,6 +162,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
+    overflow: hidden;
   }
   
   .product-actions-overlay {
@@ -192,7 +206,7 @@
     }
     
     &.wishlist-btn:hover {
-      background-color: #e57373; // Light red
+      background-color: #e57373;
     }
     
     &.quick-view-btn:hover {

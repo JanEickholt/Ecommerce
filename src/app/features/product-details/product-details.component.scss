@@ -51,7 +51,6 @@
       position: relative;
       margin-bottom: 20px;
       border-radius: 10px;
-      overflow: hidden;
       box-shadow: 
         inset 3px 3px 6px var(--shadow-dark),
         inset -3px -3px 6px var(--shadow-light);
@@ -513,7 +512,6 @@
       .mat-mdc-tab {
         height: 48px;
         border-radius: 5px;
-        overflow: hidden;
         transition: all 0.3s ease;
         opacity: 1;
         color: var(--text-secondary);
@@ -531,6 +529,11 @@
       
       .mdc-tab-indicator {
         display: none;
+      }
+
+      .mat-mdc-tab-label-container {
+        overflow: visible !important;
+        border-bottom-color: rgba(0,0,0,0);
       }
     }
     
@@ -597,8 +600,7 @@
           .spec-item {
             display: flex;
             padding: 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            
+            border-bottom: 0px solid rgba(0,0,0,0.05);
             &:last-child {
               border-bottom: none;
             }
