@@ -1,0 +1,193 @@
+<div class="product-details-tabs neumorph-card">
+  <mat-tab-group
+    [(selectedIndex)]="activeTabIndex"
+    animationDuration="300ms"
+    (selectedIndexChange)="onTabChange($event)"
+  >
+    <mat-tab label="Description">
+      <div class="tab-content">
+        <div
+          class="product-full-description"
+          [innerHTML]="product.description"
+        ></div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Specifications">
+      <div class="tab-content">
+        <div
+          class="product-specs"
+          *ngIf="product.specifications && product.specifications.length > 0"
+        >
+          <div *ngFor="let group of product.specifications" class="spec-group">
+            <h3 class="spec-group-title">{{ group.title }}</h3>
+            <div class="spec-list">
+              <div class="spec-item" *ngFor="let spec of group.items">
+                <div class="spec-name">{{ spec.name }}</div>
+                <div class="spec-value">{{ spec.value }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="!product.specifications || product.specifications.length === 0"
+          class="no-specs"
+        >
+          <p>No specifications available for this product.</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Reviews" id="reviews-tab">
+      <div class="tab-content">
+        <div class="product-reviews">
+          <div class="reviews-summary">
+            <div class="average-rating">
+              <div class="rating-value">{{ product.rating.toFixed(1) }}</div>
+              <div class="rating-stars">
+                <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                  <mat-icon *ngIf="i <= product.rating">star</mat-icon>
+                  <mat-icon *ngIf="i > product.rating && i - 1 < product.rating"
+                    >star_half</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="i > product.rating && i - 1 >= product.rating"
+                    >star_border</mat-icon
+                  >
+                </ng-container>
+              </div>
+              <div class="rating-count">
+                Based on {{ product.reviewCount }} reviews
+              </div>
+            </div>
+
+            <div class="rating-breakdown">
+              <div class="rating-bar" *ngFor="let i of [5, 4, 3, 2, 1]">
+                <div class="star-label">{{ i }} <mat-icon>star</mat-icon></div>
+                <div class="bar-container">
+                  <div
+                    class="bar"
+                    [style.width.%]="calculateRatingPercentage(i)"
+                  ></div>
+                </div>
+                <div class="bar-count">{{ getRatingCount(i) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="write-review-section">
+            <button
+              mat-raised-button
+              color="primary"
+              class="neumorph-button write-review-btn"
+              (click)="toggleReviewForm()"
+            >
+              {{ showReviewForm ? "Cancel Review" : "Write a Review" }}
+            </button>
+
+            <div class="review-form-section" *ngIf="showReviewForm">
+              <h3>Share Your Experience</h3>
+              <div class="review-form neumorph-card">
+                <div class="form-group">
+                  <label>Your Rating*</label>
+                  <div class="rating-selector">
+                    <mat-icon
+                      *ngFor="let i of [1, 2, 3, 4, 5]"
+                      [class.active]="userRating >= i"
+                      (click)="setRating(i)"
+                    >
+                      {{ userRating >= i ? "star" : "star_border" }}
+                    </mat-icon>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <mat-form-field appearance="outline" class="neumorph-input">
+                    <mat-label>Review Title</mat-label>
+                    <input
+                      matInput
+                      placeholder="Summarize your experience"
+                      [(ngModel)]="reviewTitle"
+                    />
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group">
+                  <mat-form-field appearance="outline" class="neumorph-input">
+                    <mat-label>Your Review</mat-label>
+                    <textarea
+                      matInput
+                      rows="5"
+                      placeholder="Share your thoughts about this product"
+                      [(ngModel)]="reviewContent"
+                    ></textarea>
+                  </mat-form-field>
+                </div>
+
+                <button
+                  mat-raised-button
+                  color="primary"
+                  class="neumorph-button submit-review-btn"
+                  [disabled]="!userRating || !reviewTitle || !reviewContent"
+                  (click)="submitReview()"
+                >
+                  Submit Review
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="customer-reviews">
+            <h3 *ngIf="product.reviews && product.reviews.length > 0">
+              Customer Reviews
+            </h3>
+
+            <div
+              *ngIf="!product.reviews || product.reviews.length === 0"
+              class="no-reviews"
+            >
+              <mat-icon>rate_review</mat-icon>
+              <p>No reviews yet. Be the first to share your experience!</p>
+            </div>
+
+            <div
+              *ngFor="let review of product.reviews"
+              class="review-item neumorph-card"
+            >
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <h4 class="reviewer-name">{{ review.name }}</h4>
+                  <span class="review-date">{{ review.date }}</span>
+                </div>
+                <div class="review-rating">
+                  <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                    <mat-icon *ngIf="i <= review.rating">star</mat-icon>
+                    <mat-icon *ngIf="i > review.rating && i - 1 < review.rating"
+                      >star_half</mat-icon
+                    >
+                    <mat-icon
+                      *ngIf="i > review.rating && i - 1 >= review.rating"
+                      >star_border</mat-icon
+                    >
+                  </ng-container>
+                </div>
+              </div>
+              <h3 class="review-title">{{ review.title }}</h3>
+              <p class="review-content">{{ review.content }}</p>
+              <div class="review-footer">
+                <button mat-button (click)="markReviewHelpful(review)">
+                  <mat-icon>thumb_up</mat-icon> Helpful ({{
+                    review.helpfulCount
+                  }})
+                </button>
+                <button mat-button class="report-btn">
+                  <mat-icon>flag</mat-icon> Report
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
