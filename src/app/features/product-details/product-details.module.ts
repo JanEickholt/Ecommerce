@@ -13,6 +13,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { ProductCardComponent } from "../../shared/components/product-card/product-card.component";
 
 @NgModule({
   declarations: [ProductDetailsComponent],
@@ -28,6 +30,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     MatTabsModule,
     MatDividerModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
+    ProductCardComponent,
   ],
 })
 export class ProductDetailsModule { }
