@@ -12,7 +12,7 @@ import { AuthService } from "../../../core/services/auth.service";
 @Component({
   selector: "app-checkout",
   templateUrl: "./checkout.component.html",
-  styleUrls: ["./checkout.component.scss"]
+  styleUrls: ["./checkout.component.scss"],
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
   @ViewChild("stepper") stepper: any;
@@ -215,6 +215,75 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   getShippingCost(): number {
     const shippingMethod = this.shippingForm.get("shippingMethod")?.value;
+
+    switch (shippingMethod) {
+      case "express":
+        return this.expressShippingCost;
+      case "overnight":
+        return this.overnightShippingCost;
+      case "standard":
+      default:
+        return this.standardShippingCost;
+    }
+  }
+
+  calculateTotal(): number {
+    return this.cartService.calculateTotal();
+  }
+
+  nextStep(): void {
+    if (this.stepper) {
+      this.stepper.next();
+    }
+  }
+
+  prevStep(): void {
+    if (this.stepper) {
+      this.stepper.previous();
+    }
+  }
+
+  editStep(index: number): void {
+    if (this.stepper) {
+      this.stepper.selectedIndex = index;
+    }
+  }
+
+  onSameAsShippingChange(): void {
+    const sameAsShipping = this.paymentForm.get("sameAsShipping")?.value;
+
+    if (sameAsShipping) {
+      this.paymentForm.patchValue({
+        billingAddress: this.shippingForm.get("address1")?.value,
+        billingCity: this.shippingForm.get("city")?.value,
+        billingState: this.shippingForm.get("state")?.value,
+        billingZipCode: this.shippingForm.get("zipCode")?.value,
+        billingCountry: this.shippingForm.get("country")?.value,
+      });
+    }
+  }
+
+  openTerms(event: Event): void {
+    event.preventDefault();
+    alert("Terms & Conditions");
+  }
+
+  openPrivacy(event: Event): void {
+    event.preventDefault();
+    alert("Privacy Policy");
+  }
+
+  completeOrder(): void {
+    if (!this.termsAgreed) {
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    this.orderNumber = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+    this.orderDate = new Date();
+
+    const shippingMethod = this.shippingForm.get("shippingMethod")?.value;
     const estDelivery = new Date();
 
     switch (shippingMethod) {
@@ -236,77 +305,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.stepper.next();
       }
       this.isSubmitting = false;
-
       this.cartService.clearCart();
     }, 2000);
-  } this.shippingForm.get("shippingMethod")?.value;
-
-switch (shippingMethod) {
-  case "express":
-    return this.expressShippingCost;
-  case "overnight":
-    return this.overnightShippingCost;
-  case "standard":
-  default:
-    return this.standardShippingCost;
-}
-  }
-
-calculateTotal(): number {
-  return this.cartService.calculateTotal();
-}
-
-nextStep(): void {
-  if(this.stepper) {
-  this.stepper.next();
-}
-  }
-
-prevStep(): void {
-  if(this.stepper) {
-  this.stepper.previous();
-}
-  }
-
-editStep(index: number): void {
-  if(this.stepper) {
-  this.stepper.selectedIndex = index;
-}
-  }
-
-onSameAsShippingChange(): void {
-  const sameAsShipping = this.paymentForm.get("sameAsShipping")?.value;
-
-  if(sameAsShipping) {
-    this.paymentForm.patchValue({
-      billingAddress: this.shippingForm.get("address1")?.value,
-      billingCity: this.shippingForm.get("city")?.value,
-      billingState: this.shippingForm.get("state")?.value,
-      billingZipCode: this.shippingForm.get("zipCode")?.value,
-      billingCountry: this.shippingForm.get("country")?.value,
-    });
   }
 }
-
-openTerms(event: Event): void {
-  event.preventDefault();
-  alert("Terms & Conditions");
-}
-
-openPrivacy(event: Event): void {
-  event.preventDefault();
-  alert("Privacy Policy");
-}
-
-completeOrder(): void {
-  if(!this.termsAgreed) {
-  return;
-}
-
-this.isSubmitting = true;
-
-this.orderNumber = "ORD-" + Math.floor(100000 + Math.random() * 900000);
-
-this.orderDate = new Date();
-
-const shippingMethod =
