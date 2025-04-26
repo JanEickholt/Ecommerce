@@ -1,236 +1,340 @@
 <div class="product-details-page">
   <div class="container">
+    <!-- Breadcrumb Navigation -->
     <div class="breadcrumb-nav">
-      <a routerLink="/home">Home</a>
-      <span> > </span>
-      <a routerLink="/products">Shop</a>
-      <span> > </span>
-      <a
-        routerLink="/products"
-        [queryParams]="{ category: product?.category }"
-        >{{ product?.category }}</a
-      >
-      <span> > </span>
+      <a routerLink="/">Home</a>
+      <mat-icon>navigate_next</mat-icon>
+      <a routerLink="/products">Products</a>
+      <mat-icon>navigate_next</mat-icon>
       <span class="current">{{ product?.name }}</span>
     </div>
 
-    <div class="product-wrapper neumorph-card">
-      <div class="product-gallery">
-        <div class="main-image-container">
-          <img
-            [src]="selectedImage || '/api/placeholder/600/450'"
-            [alt]="product?.name"
-            class="main-image"
-          />
-          <div class="image-badges" *ngIf="product?.badge">
-            <span class="badge" [ngClass]="product?.badgeType">{{
-              product?.badge
-            }}</span>
-          </div>
-        </div>
+    <!-- Loading and Error States -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      <p>Loading product...</p>
+    </div>
 
-        <div class="thumbnail-gallery">
-          <div
-            class="thumbnail"
-            *ngFor="let image of product?.images; let i = index"
-            [class.active]="selectedImage === image"
-            (click)="selectImage(image)"
-          >
-            <img
-              [src]="image || '/api/placeholder/100/100'"
-              [alt]="product?.name + ' view ' + (i + 1)"
-            />
-          </div>
-        </div>
-      </div>
+    <div *ngIf="errorMessage" class="error-container">
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" routerLink="/products">
+        Go back to products
+      </button>
+    </div>
 
-      <div class="product-info">
-        <h1 class="product-title">{{ product?.name }}</h1>
-
-        <div class="product-meta">
-          <div class="product-rating">
-            <div class="stars">
-              <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-                <span *ngIf="product && i <= product.rating">★</span>
-                <span *ngIf="product && i > product.rating && i - 1 < product.rating">★</span>
-                <span *ngIf="product && i > product.rating && i - 1 >= product.rating">☆</span>
-              </ng-container>
+    <!-- Product Content -->
+    <ng-container *ngIf="!isLoading && !errorMessage && product">
+      <div class="product-wrapper">
+        <!-- Product Gallery -->
+        <div class="product-gallery">
+          <div class="main-image-container">
+            <img [src]="selectedImage" [alt]="product.name" class="main-image" />
+            
+            <!-- Image Badges -->
+            <div class="image-badge" *ngIf="product.badge && product.badge.length > 0">
+              <span 
+                *ngFor="let badge of product.badge" 
+                class="badge {{ badge.toLowerCase() }}">
+                {{ badge }}
+              </span>
             </div>
-            <a href="#reviews" class="review-count"
-              >{{ product?.reviewCount }} Reviews</a
-            >
           </div>
 
-          <div
-            class="product-availability"
-            [ngClass]="{
-              'in-stock': product?.inStock,
-              'out-of-stock': !product?.inStock
-            }"
-          >
-            <span *ngIf="product?.inStock">✓</span>
-            <span *ngIf="!product?.inStock">✗</span>
-            <span>{{ product?.inStock ? "In Stock" : "Out of Stock" }}</span>
+          <!-- Thumbnail Gallery -->
+          <div class="thumbnail-gallery" *ngIf="product.images && product.images.length > 0">
+            <div 
+              *ngFor="let image of product.images" 
+              class="thumbnail" 
+              [class.active]="selectedImage === image" 
+              (click)="selectImage(image)">
+              <img [src]="image" [alt]="product.name" />
+            </div>
           </div>
         </div>
 
-        <div class="product-price">
-          <span class="current-price">${{ product?.price?.toFixed(2) }}</span>
-          <span class="old-price" *ngIf="product?.oldPrice"
-            >${{ product?.oldPrice?.toFixed(2) }}</span
-          >
-          <span class="discount-tag" *ngIf="product?.discount"
-            >{{ product?.discount }}% OFF</span
-          >
-        </div>
+        <!-- Product Info -->
+        <div class="product-info">
+          <h1 class="product-title">{{ product.name }}</h1>
 
-        <div class="product-description">
-          <p>{{ product?.shortDescription }}</p>
-        </div>
+          <!-- Product Meta -->
+          <div class="product-meta">
+            <!-- Product Rating -->
+            <div class="product-rating" *ngIf="product.rating">
+              <div class="stars">
+                <mat-icon *ngFor="let i of [1, 2, 3, 4, 5]">
+                  {{ i <= product.rating ? 'star' : (i - 0.5 <= product.rating ? 'star_half' : 'star_border') }}
+                </mat-icon>
+              </div>
+              <a [routerLink]="['#reviews']" class="review-count" *ngIf="product.reviews">
+                {{ product.reviews.length }} Reviews
+              </a>
+            </div>
 
-        <div class="product-options">
-          <!-- Use a safe check that Angular's type checker can understand -->
-          <div
-            class="option-group"
-            *ngIf="product && product.colors && product.colors.length > 0"
-          >
-            <h3 class="option-title">Color</h3>
-            <div class="color-options">
-              <div
-                *ngFor="let color of product.colors"
-                class="color-option"
-                [style.background-color]="color.code"
-                [class.selected]="selectedColor === color.name"
-                [attr.title]="color.name"
-                (click)="selectColor(color.name)"
-              >
-                <span *ngIf="selectedColor === color.name">✓</span>
+            <!-- Product Availability -->
+            <div class="product-availability" [class.in-stock]="product.inStock" [class.out-of-stock]="!product.inStock">
+              <mat-icon>{{ product.inStock ? 'check_circle' : 'highlight_off' }}</mat-icon>
+              <span>{{ product.inStock ? 'In Stock' : 'Out of Stock' }}</span>
+            </div>
+          </div>
+
+          <!-- Product Price -->
+          <div class="product-price">
+            <span class="current-price">{{ product.price | currency }}</span>
+            <span class="old-price" *ngIf="product.oldPrice">{{ product.oldPrice | currency }}</span>
+            <span class="discount-tag" *ngIf="product.discount">{{ product.discount }}% OFF</span>
+          </div>
+
+          <!-- Product Description (Short) -->
+          <div class="product-description" [innerHTML]="product.shortDescription"></div>
+
+          <!-- Product Options -->
+          <div class="product-options">
+            <!-- Color Options -->
+            <div class="option-group" *ngIf="product.colors && product.colors.length > 0">
+              <h3 class="option-title">Color</h3>
+              <div class="color-options">
+                <div 
+                  *ngFor="let color of product.colors" 
+                  class="color-option" 
+                  [style.background-color]="color"
+                  [class.selected]="selectedColor === color.name"
+                  (click)="selectColor(color.name)">
+                  <mat-icon *ngIf="selectedColor === color.name">check</mat-icon>
+                </div>
+              </div>
+            </div>
+
+            <!-- Material Options -->
+            <div class="option-group" *ngIf="product.materials && product.materials.length > 0">
+              <h3 class="option-title">Material</h3>
+              <div class="material-options">
+                <mat-button-toggle-group 
+                  [(ngModel)]="selectedMaterial" 
+                  name="materialOptions">
+                  <mat-button-toggle 
+                    *ngFor="let material of product.materials" 
+                    [value]="material">
+                    {{ material }}
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+            </div>
+
+            <!-- Quantity Selector -->
+            <div class="option-group">
+              <h3 class="option-title">Quantity</h3>
+              <div class="quantity-selector">
+                <button 
+                  mat-icon-button 
+                  (click)="decreaseQuantity()" 
+                  [disabled]="quantity <= 1">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <input 
+                  type="number" 
+                  [(ngModel)]="quantity" 
+                  min="1" 
+                  max="10" 
+                  readonly />
+                <button 
+                  mat-icon-button 
+                  (click)="increaseQuantity()" 
+                  [disabled]="quantity >= 10">
+                  <mat-icon>add</mat-icon>
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- Use a safe check that Angular's type checker can understand -->
-          <div
-            class="option-group"
-            *ngIf="product && product.materials && product.materials.length > 0"
-          >
-            <h3 class="option-title">Material</h3>
-            <div class="material-options">
-              <button
-                *ngFor="let material of product.materials"
-                [class.selected]="selectedMaterial === material"
-                (click)="selectedMaterial = material"
-              >
-                {{ material }}
-              </button>
+          <!-- Product Actions -->
+          <div class="product-actions">
+            <button 
+              mat-raised-button 
+              class="add-to-cart-btn" 
+              (click)="addToCart()" 
+              [disabled]="!product.inStock">
+              <mat-icon>shopping_cart</mat-icon>
+              Add to Cart
+            </button>
+            <button 
+              mat-stroked-button 
+              class="wishlist-btn" 
+              (click)="addToWishlist()">
+              <mat-icon>favorite_border</mat-icon>
+              Wishlist
+            </button>
+          </div>
+
+          <!-- Product Features -->
+          <div class="product-features" *ngIf="product.featured && product.features.length > 0">
+            <div class="feature" *ngFor="let feature of product.features">
+              <mat-icon>{{ feature.icon }}</mat-icon>
+              <div class="feature-text">
+                <h4>{{ feature.title }}</h4>
+                <p>{{ feature.description }}</p>
+              </div>
             </div>
           </div>
 
-          <div class="option-group">
-            <h3 class="option-title">Quantity</h3>
-            <div class="quantity-selector">
-              <button
-                (click)="decreaseQuantity()"
-                [disabled]="quantity <= 1"
-              >
-                -
-              </button>
-              <input type="number" [(ngModel)]="quantity" min="1" max="10" />
-              <button
-                (click)="increaseQuantity()"
-                [disabled]="quantity >= 10"
-              >
-                +
-              </button>
+          <!-- Social Share -->
+          <div class="social-share">
+            <span>Share:</span>
+            <div class="share-buttons">
+              <a href="javascript:void(0)" class="share-button">
+                <mat-icon>facebook</mat-icon>
+              </a>
+              <a href="javascript:void(0)" class="share-button">
+                <mat-icon>twitter</mat-icon>
+              </a>
+              <a href="javascript:void(0)" class="share-button">
+                <mat-icon>pinterest</mat-icon>
+              </a>
+              <a href="javascript:void(0)" class="share-button">
+                <mat-icon>mail</mat-icon>
+              </a>
             </div>
-          </div>
-        </div>
-
-        <div class="product-actions">
-          <button
-            class="neumorph-button add-to-cart-btn"
-            [disabled]="!product?.inStock"
-            (click)="addToCart()"
-          >
-            🛒 Add to Cart
-          </button>
-          <button
-            class="neumorph-button wishlist-btn"
-            (click)="addToWishlist()"
-          >
-            ♥ Add to Wishlist
-          </button>
-        </div>
-
-        <div class="product-features">
-          <div class="feature">
-            <span>🚚</span>
-            <div class="feature-text">
-              <h4>Free Shipping</h4>
-              <p>On orders over $999</p>
-            </div>
-          </div>
-          <div class="feature">
-            <span>⏱️</span>
-            <div class="feature-text">
-              <h4>Easy Returns</h4>
-              <p>30-day return policy</p>
-            </div>
-          </div>
-          <div class="feature">
-            <span>✓</span>
-            <div class="feature-text">
-              <h4>Warranty</h4>
-              <p>3-year warranty</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="social-share">
-          <span>Share:</span>
-          <div class="share-buttons">
-            <a href="#" class="share-button" title="Share on Facebook">
-              F
-            </a>
-            <a href="#" class="share-button" title="Share on Twitter">
-              T
-            </a>
-            <a href="#" class="share-button" title="Share on Pinterest">
-              P
-            </a>
-            <a href="#" class="share-button" title="Share by Email">
-              ✉
-            </a>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="product-details-tabs">
-      <div class="tabs-header">
-        <button class="tab-button active">Description</button>
-        <button class="tab-button">Specifications</button>
-        <button class="tab-button" id="reviews">Reviews</button>
+      <!-- Product Details Tabs -->
+      <div class="product-details-tabs">
+        <mat-tab-group animationDuration="300ms">
+          <!-- Description Tab -->
+          <mat-tab label="Description">
+            <div class="tab-content">
+              <div class="product-full-description" [innerHTML]="product.fullDescription"></div>
+            </div>
+          </mat-tab>
+
+          <!-- Specifications Tab -->
+          <mat-tab label="Specifications">
+            <div class="tab-content">
+              <div class="product-specs">
+                <div class="spec-group" *ngFor="let group of product.specifications">
+                  <h3 class="spec-group-title">{{ group.name }}</h3>
+                  <div class="spec-list">
+                    <div class="spec-item" *ngFor="let spec of group.specs">
+                      <div class="spec-name">{{ spec.name }}</div>
+                      <div class="spec-value">{{ spec.value }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+
+          <!-- Reviews Tab -->
+          <mat-tab label="Reviews ({{ product.reviews?.length || 0 }})" id="reviews">
+            <div class="tab-content">
+              <div class="product-reviews">
+                <!-- Reviews Summary -->
+                <div class="reviews-summary" *ngIf="product.reviews && product.reviews.length > 0">
+                  <div class="average-rating">
+                    <div class="rating-value">{{ product.rating | number:'1.1-1' }}</div>
+                    <div class="rating-stars">
+                      <mat-icon *ngFor="let i of [1, 2, 3, 4, 5]">
+                        {{ i <= product.rating ? 'star' : (i - 0.5 <= product.rating ? 'star_half' : 'star_border') }}
+                      </mat-icon>
+                    </div>
+                    <div class="rating-count">Based on {{ product.reviews.length }} reviews</div>
+                  </div>
+
+                  <div class="rating-breakdown">
+                    <div class="rating-bar" *ngFor="let i of [5, 4, 3, 2, 1]">
+                      <div class="star-label">
+                        {{ i }} <mat-icon>star</mat-icon>
+                      </div>
+                      <div class="bar-container">
+                        <div class="bar" [style.width.%]="calculateRatingPercentage(i)"></div>
+                      </div>
+                      <div class="bar-count">{{ getRatingCount(i) }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Write a Review Form -->
+                <div class="review-form-section">
+                  <h3>Write a Review</h3>
+                  <form class="review-form">
+                    <div class="form-group">
+                      <label>Your Rating</label>
+                      <div class="rating-selector">
+                        <mat-icon 
+                          *ngFor="let i of [1, 2, 3, 4, 5]" 
+                          [class.active]="userRating >= i"
+                          (click)="setRating(i)">
+                          {{ userRating >= i ? 'star' : 'star_border' }}
+                        </mat-icon>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Review Title</mat-label>
+                        <input matInput placeholder="Summarize your experience" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Review</mat-label>
+                        <textarea 
+                          matInput 
+                          placeholder="Share your experience with this product" 
+                          rows="5"></textarea>
+                      </mat-form-field>
+                    </div>
+
+                    <button mat-raised-button type="submit">Submit Review</button>
+                  </form>
+                </div>
+
+                <!-- Customer Reviews -->
+                <div class="customer-reviews" *ngIf="product.reviews && product.reviews.length > 0">
+                  <h3>Customer Reviews</h3>
+                  <div class="review-item" *ngFor="let review of product.reviews">
+                    <div class="review-header">
+                      <div class="reviewer-info">
+                        <h4 class="reviewer-name">{{ review.customerName }}</h4>
+                        <div class="review-date">{{ review.date | date }}</div>
+                      </div>
+                      <div class="review-rating">
+                        <mat-icon *ngFor="let i of [1, 2, 3, 4, 5]">
+                          {{ i <= review.rating ? 'star' : (i - 0.5 <= review.rating ? 'star_half' : 'star_border') }}
+                        </mat-icon>
+                      </div>
+                    </div>
+                    <h4 class="review-title">{{ review.title }}</h4>
+                    <p class="review-content">{{ review.content }}</p>
+                    <div class="review-footer">
+                      <button mat-button>
+                        <mat-icon>thumb_up</mat-icon> Helpful ({{ review.helpfulCount || 0 }})
+                      </button>
+                      <button mat-button class="report-btn">
+                        <mat-icon>flag</mat-icon> Report
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
       </div>
-      
-      <div class="tab-content">
-        <div class="product-full-description">
-          <div [innerHTML]="product?.description"></div>
+
+      <!-- Related Products -->
+      <div class="related-products" *ngIf="relatedProducts && relatedProducts.length > 0">
+        <h2 class="section-title">Related Products</h2>
+        <div class="products-grid">
+          <!-- You would need a product card component -->
+          <div class="product-card-wrapper" *ngFor="let product of relatedProducts">
+            <!-- Integrate your existing product card component here -->
+            <div>{{ product.name }}</div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="related-products">
-      <h2 class="section-title">You May Also Like</h2>
-      <div class="products-grid">
-        <!-- Product cards for related products -->
-        <div
-          *ngFor="let relatedProduct of relatedProducts"
-          class="product-card-wrapper"
-        >
-          <!-- Product card component would be here -->
-        </div>
-      </div>
-    </div>
+    </ng-container>
   </div>
 </div>

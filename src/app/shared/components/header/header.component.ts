@@ -1,30 +1,17 @@
 import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: "app-header",
   standalone: true,
-  imports: [CommonModule, RouterModule],
-  template: `
-    <header class="site-header">
-      <div class="toolbar">
-        <div class="container header-container">
-          <div class="logo-container">
-            <a routerLink="/">
-              <h1 class="logo">Comfort<span class="highlight">Haven</span></h1>
-            </a>
-          </div>
-          <div class="header-actions">
-            <button class="user-button">👤</button>
-            <button routerLink="/cart">🛒</button>
-          </div>
-        </div>
-      </div>
-    </header>
-  `,
+  imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule],
+  templateUrl: "./header.component.html",
   styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent {
-  // Minimal implementation
+  wishlistCount = 0;
+  cartItemCount = 0;
 }

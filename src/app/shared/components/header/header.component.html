@@ -1,41 +1,46 @@
 <header class="site-header">
-  <div class="toolbar">
-    <div class="container header-container">
-      <div class="logo-container">
-        <a routerLink="/">
-          <h1 class="logo">Comfort<span class="highlight">Haven</span></h1>
-        </a>
+      <div class="toolbar">
+        <div class="container header-container">
+          <div class="logo-container">
+            <a routerLink="/">
+              <h1 class="logo">Comfort<span class="highlight">Haven</span></h1>
+            </a>
+          </div>
+
+          <nav class="main-navigation">
+            <ul class="nav-links">
+              <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+              <li><a routerLink="/products" routerLinkActive="active">Shop</a></li>
+              <li><a routerLink="/about" routerLinkActive="active">About</a></li>
+              <li>
+                <a routerLink="/contact" routerLinkActive="active">Contact</a>
+              </li>
+            </ul>
+          </nav>
+
+          <div class="header-actions">
+            <button mat-icon-button aria-label="Search">
+              <mat-icon>search</mat-icon>
+            </button>
+            <button mat-icon-button routerLink="/wishlist" aria-label="Wishlist">
+              <mat-icon>favorite</mat-icon>
+              <span *ngIf="wishlistCount">{{ wishlistCount }}</span>
+            </button>
+            <button mat-icon-button routerLink="/cart" aria-label="Shopping cart">
+              <mat-icon>shopping_cart</mat-icon>
+              <span *ngIf="cartItemCount">{{ cartItemCount }}</span>
+            </button>
+            <button mat-icon-button class="user-button" aria-label="User account">
+              <mat-icon>person</mat-icon>
+            </button>
+          </div>
+
+          <button mat-icon-button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+            <mat-icon>menu</mat-icon>
+          </button>
+        </div>
       </div>
 
-      <nav class="main-navigation">
-        <ul class="nav-links">
-          <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
-          <li><a routerLink="/products" routerLinkActive="active">Shop</a></li>
-          <li><a routerLink="/about" routerLinkActive="active">About</a></li>
-          <li>
-            <a routerLink="/contact" routerLinkActive="active">Contact</a>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="header-actions">
-        <button class="search-button" aria-label="Search">🔍</button>
-        <button routerLink="/wishlist" aria-label="Wishlist">
-          ♥ <span *ngIf="wishlistCount">{{ wishlistCount }}</span>
-        </button>
-        <button routerLink="/cart" aria-label="Shopping cart">
-          🛒 <span *ngIf="cartItemCount">{{ cartItemCount }}</span>
-        </button>
-        <button class="user-button">👤</button>
+      <div class="mobile-nav">
       </div>
-
-      <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
-        ☰
-      </button>
-    </div>
-  </div>
-
-  <div class="mobile-nav">
-    <!-- Mobile navigation content here -->
-  </div>
-</header>
+    </header>

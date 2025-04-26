@@ -12,6 +12,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [ProductDetailsComponent],
@@ -26,6 +27,7 @@ import { MatDividerModule } from "@angular/material/divider";
     MatInputModule,
     MatTabsModule,
     MatDividerModule,
+    MatProgressSpinnerModule,
   ],
 })
-export class ProductDetailsModule {}
+export class ProductDetailsModule { }
