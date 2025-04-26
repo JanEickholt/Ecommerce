@@ -57,6 +57,10 @@ export class ProductFilterComponent {
     }
   }
 
+  clearAllFilters(): void {
+    this.clearFilters.emit();
+  }
+
   filterChange() {
     this.emitFilterChanges();
   }

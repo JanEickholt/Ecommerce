@@ -8,6 +8,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
 import { RouterModule } from "@angular/router";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { ProductCardComponent } from "../../../../shared/components/product-card/product-card.component";
 
 @Component({
   selector: "app-product-grid",
@@ -22,6 +23,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     MatFormFieldModule,
     MatSelectModule,
     MatTooltipModule,
+    ProductCardComponent,
   ],
   templateUrl: "./product-grid.component.html",
   styleUrl: "./product-grid.component.scss",
