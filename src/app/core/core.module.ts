@@ -1,11 +1,15 @@
-import { NgModule } from "@angular/core";
+import { NgModule, Optional, SkipSelf } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ProductService } from "../core/services/product.service";
-import { CartService } from "../core/services/cart.service";
-import { WishlistService } from "../core/services/wishlist.service";
 
 @NgModule({
   imports: [CommonModule],
-  providers: [ProductService, CartService, WishlistService],
 })
-export class CoreModule { }
+export class CoreModule {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+    if (parentModule) {
+      throw new Error(
+        "CoreModule is already loaded. Import it in the AppModule only",
+      );
+    }
+  }
+}

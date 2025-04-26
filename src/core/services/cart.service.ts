@@ -1,6 +1,7 @@
-import { Injectable } from "@angular/core";
+import { Injectable, PLATFORM_ID, Inject } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Product, ProductOption } from "./product.service";
+import { isPlatformBrowser } from "@angular/common";
 
 export interface CartItem {
   product: Product;
@@ -26,6 +27,8 @@ export class CartService {
   private appliedCouponSubject = new BehaviorSubject<Coupon | null>(null);
   public appliedCoupon$ = this.appliedCouponSubject.asObservable();
 
+  private isBrowser: boolean;
+
   private availableCoupons: Coupon[] = [
     {
       code: "WELCOME10",
@@ -49,24 +52,28 @@ export class CartService {
     },
   ];
 
-  constructor() {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      try {
-        this.cartItemsSubject.next(JSON.parse(savedCart));
-      } catch (error) {
-        console.error("Error parsing cart from localStorage", error);
-        this.cartItemsSubject.next([]);
-      }
-    }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
 
-    const savedCoupon = localStorage.getItem("appliedCoupon");
-    if (savedCoupon) {
-      try {
-        this.appliedCouponSubject.next(JSON.parse(savedCoupon));
-      } catch (error) {
-        console.error("Error parsing coupon from localStorage", error);
-        this.appliedCouponSubject.next(null);
+    if (this.isBrowser) {
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        try {
+          this.cartItemsSubject.next(JSON.parse(savedCart));
+        } catch (error) {
+          console.error("Error parsing cart from localStorage", error);
+          this.cartItemsSubject.next([]);
+        }
+      }
+
+      const savedCoupon = localStorage.getItem("appliedCoupon");
+      if (savedCoupon) {
+        try {
+          this.appliedCouponSubject.next(JSON.parse(savedCoupon));
+        } catch (error) {
+          console.error("Error parsing coupon from localStorage", error);
+          this.appliedCouponSubject.next(null);
+        }
       }
     }
   }
@@ -120,8 +127,10 @@ export class CartService {
     this.cartItemsSubject.next([]);
     this.appliedCouponSubject.next(null);
 
-    localStorage.removeItem("cart");
-    localStorage.removeItem("appliedCoupon");
+    if (this.isBrowser) {
+      localStorage.removeItem("cart");
+      localStorage.removeItem("appliedCoupon");
+    }
   }
 
   applyCoupon(code: string): boolean {
@@ -139,13 +148,15 @@ export class CartService {
     }
 
     this.appliedCouponSubject.next(coupon);
-    localStorage.setItem("appliedCoupon", JSON.stringify(coupon));
+    this.saveAppliedCouponToLocalStorage();
     return true;
   }
 
   removeCoupon(): void {
     this.appliedCouponSubject.next(null);
-    localStorage.removeItem("appliedCoupon");
+    if (this.isBrowser) {
+      localStorage.removeItem("appliedCoupon");
+    }
   }
 
   calculateSubtotal(): number {
@@ -230,6 +241,17 @@ export class CartService {
   }
 
   private saveCartToLocalStorage(): void {
-    localStorage.setItem("cart", JSON.stringify(this.cartItemsSubject.value));
+    if (this.isBrowser) {
+      localStorage.setItem("cart", JSON.stringify(this.cartItemsSubject.value));
+    }
+  }
+
+  private saveAppliedCouponToLocalStorage(): void {
+    if (this.isBrowser) {
+      localStorage.setItem(
+        "appliedCoupon",
+        JSON.stringify(this.appliedCouponSubject.value),
+      );
+    }
   }
 }

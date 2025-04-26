@@ -1,7 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Inject, PLATFORM_ID } from "@angular/core";
 import { BehaviorSubject, Observable, of, throwError } from "rxjs";
 import { delay, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { isPlatformBrowser } from "@angular/common";
 
 export interface User {
   id: string;
@@ -18,6 +19,7 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null> =
     this.currentUserSubject.asObservable();
+  private isBrowser: boolean;
 
   private mockUsers = [
     {
@@ -30,10 +32,17 @@ export class AuthService {
     },
   ];
 
-  constructor(private router: Router) {
-    const storedUser = localStorage.getItem("currentUser");
-    if (storedUser) {
-      this.currentUserSubject.next(JSON.parse(storedUser));
+  constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    if (this.isBrowser) {
+      const storedUser = localStorage.getItem("currentUser");
+      if (storedUser) {
+        this.currentUserSubject.next(JSON.parse(storedUser));
+      }
     }
   }
 
@@ -52,7 +61,9 @@ export class AuthService {
       return of(userWithoutPassword as User).pipe(
         delay(1000),
         tap((user) => {
-          localStorage.setItem("currentUser", JSON.stringify(user));
+          if (this.isBrowser) {
+            localStorage.setItem("currentUser", JSON.stringify(user));
+          }
           this.currentUserSubject.next(user);
         }),
       );
@@ -82,7 +93,9 @@ export class AuthService {
     return of(userWithoutPassword as User).pipe(
       delay(1000),
       tap((user) => {
-        localStorage.setItem("currentUser", JSON.stringify(user));
+        if (this.isBrowser) {
+          localStorage.setItem("currentUser", JSON.stringify(user));
+        }
         this.currentUserSubject.next(user);
       }),
     );
@@ -99,7 +112,9 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem("currentUser");
+    if (this.isBrowser) {
+      localStorage.removeItem("currentUser");
+    }
     this.currentUserSubject.next(null);
     this.router.navigate(["/auth/login"]);
   }

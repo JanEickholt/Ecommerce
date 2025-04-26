@@ -81,7 +81,8 @@ export class ProductService {
       id: "1",
       name: "Plush Comfort Sofa",
       price: 1299.99,
-      imageUrl: "/api/placeholder/300/300",
+      imageUrl:
+        "https://media.hoeffner.de/medias/large/29408640_7-202210072234.webp",
       shortDescription: "Premium quality sofa for ultimate comfort and style.",
       description:
         "<p>Experience unmatched comfort with our Plush Comfort Sofa. Made with high-density foam cushions and premium upholstery, this sofa is designed to provide exceptional support and relaxation.</p><p>Features include stain-resistant fabric, solid hardwood frame, and no-sag spring system for durability.</p>",
@@ -92,15 +93,15 @@ export class ProductService {
       rating: 4.5,
       reviewCount: 42,
       colors: [
-        { name: "Charcoal Gray", code: "#3C3C3C" },
-        { name: "Navy Blue", code: "#1F3A5F" },
-        { name: "Cream", code: "#FFFDD0" },
+        { name: "Charcoal Gray", code: "#6a676d" },
+        { name: "Comfort Brown", code: "#5d5850" },
+        { name: "Cloud White", code: "#acaaa6" },
       ],
       materials: ["Polyester", "Cotton", "Wood"],
       images: [
-        "/api/placeholder/600/450",
-        "/api/placeholder/600/450",
-        "/api/placeholder/600/450",
+        "https://media.hoeffner.de/medias/large/29408640_7-202210072234.webp",
+        "https://media.hoeffner.de/medias/large/29405138_20-202409271317.webp",
+        "https://media.hoeffner.de/medias/large/29408643_7-202409271317.webp",
       ],
       specifications: [
         {
@@ -147,6 +148,7 @@ export class ProductService {
       ],
       relatedProducts: ["2", "3", "4"],
       featured: true,
+      new: true,
     },
     {
       id: "2",
@@ -154,7 +156,8 @@ export class ProductService {
       price: 699.99,
       oldPrice: 899.99,
       discount: 22,
-      imageUrl: "/api/placeholder/300/300",
+      imageUrl:
+        "https://i.pinimg.com/736x/75/19/ac/7519ac455517df51bf7cf2145d69f285.jpg",
       shortDescription: "Stylish armchair that provides exceptional comfort.",
       category: "Armchairs",
       inStock: true,
@@ -166,22 +169,10 @@ export class ProductService {
     },
     {
       id: "3",
-      name: "Luxe Recliner",
-      price: 1099.99,
-      imageUrl: "/api/placeholder/300/300",
-      shortDescription:
-        "Premium recliner with multiple positions for ultimate relaxation.",
-      category: "Recliners",
-      inStock: true,
-      rating: 4,
-      reviewCount: 28,
-      featured: true,
-    },
-    {
-      id: "4",
       name: "Serenity Sectional",
       price: 2499.99,
-      imageUrl: "/api/placeholder/300/300",
+      imageUrl:
+        "https://khemlanimart.com/cdn/shop/files/SERENITY.jpg?v=1683236829&width=1206",
       shortDescription:
         "Modular sectional sofa perfect for large family spaces.",
       category: "Sectionals",
@@ -191,30 +182,51 @@ export class ProductService {
       rating: 4.5,
       reviewCount: 56,
       featured: true,
+      bestSeller: true,
+    },
+    {
+      id: "4",
+      name: "Luxe Recliner",
+      price: 1099.99,
+      imageUrl:
+        "https://foter.com/photos/419/bishop-40-5-wide-genuine-leather-power-standard-recliner.jpeg?s=l",
+      shortDescription:
+        "Premium recliner with multiple positions for ultimate relaxation.",
+      category: "Recliners",
+      inStock: true,
+      rating: 4,
+      reviewCount: 28,
+      featured: true,
     },
     {
       id: "5",
       name: "Modern Accent Chair",
       price: 499.99,
-      imageUrl: "/api/placeholder/300/300",
+      imageUrl:
+        "https://static.iwmbuzz.com/wp-content/uploads/2022/06/5-most-comfortable-sofas-for-your-living-room-2-920x920.jpg",
       shortDescription:
         "Eye-catching accent chair to add personality to any room.",
       category: "Accent Chairs",
       inStock: true,
       rating: 4.2,
       reviewCount: 19,
+      badge: "Bestseller",
+      badgeType: "bestseller",
       bestSeller: true,
     },
     {
       id: "6",
       name: "Cozy Loveseat",
       price: 899.99,
-      imageUrl: "/api/placeholder/300/300",
+      imageUrl:
+        "https://assets.ad-magazin.de/photos/6666ae63a527a30d56a7f3d1/16:9/w_2240,c_limit/ATD_Little%20Petra_VB2_Sillon_SC50_Drop%20Leaf_HM5_Tripod_HM8_Loafer_SC23_Lucca_SC51_Amore_SC50_&amp;Tradition%20Collect%20Cotton%20Throw%20SC32%20.jpg",
       shortDescription: "Compact two-seater perfect for smaller spaces.",
       category: "Loveseats",
       inStock: true,
       rating: 4.6,
       reviewCount: 31,
+      badge: "New",
+      badgeType: "new",
       new: true,
     },
   ];
