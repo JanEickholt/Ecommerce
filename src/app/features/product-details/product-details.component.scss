@@ -322,7 +322,7 @@
               font-weight: 500;
             }
           }
-          }
+        }
       }
       
       .quantity-selector {
@@ -653,6 +653,8 @@
             mat-icon {
               color: var(--warning);
               font-size: 24px;
+              width: 24px;
+              height: 24px;
             }
           }
           

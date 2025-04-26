@@ -109,24 +109,19 @@
             </div>
           </div>
 
-          <div class="option-group">
-            <h3 class="option-title">Quantity</h3>
-            <div class="quantity-selector">
-              <button
-                (click)="decreaseQuantity()"
-                [disabled]="quantity <= 1"
-              >
-                <mat-icon>remove</mat-icon>
-              </button>
-              <input type="number" [(ngModel)]="quantity" min="1" max="10" />
-              <button
-                (click)="increaseQuantity()"
-                [disabled]="quantity >= 10"
-              >
-                <mat-icon>add</mat-icon>
-              </button>
-            </div>
-          </div>
+          
+<div class="option-group">
+  <h3 class="option-title">Quantity</h3>
+  <div class="quantity-selector">
+    <button class="quantity-btn" (click)="decreaseQuantity()" [disabled]="quantity <= 1">
+      <mat-icon>remove</mat-icon>
+    </button>
+    <input type="number" [(ngModel)]="quantity" min="1" max="10" />
+    <button class="quantity-btn" (click)="increaseQuantity()" [disabled]="quantity >= 10">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>
         </div>
 
         <div class="product-actions">
@@ -171,24 +166,22 @@
         </div>
 
         <div class="social-share">
-          <span>Share:</span>
-          <div class="share-buttons">
-            <a href="#" class="share-button" title="Share on Facebook">
-              <mat-icon>facebook</mat-icon>
-            </a>
-            <a href="#" class="share-button" title="Share on Twitter">
-              <mat-icon>flutter_dash</mat-icon>
-            </a>
-            <a href="#" class="share-button" title="Share on Pinterest">
-              <mat-icon>pin_drop</mat-icon>
-            </a>
-            <a href="#" class="share-button" title="Share by Email">
-            <mat-icon>email</mat-icon>
-           </a>
-            </div>
-          </div>
-       </div>
-    </div>
+  <span>Share:</span>
+  <div class="share-buttons">
+    <a href="#" class="share-button" title="Share on Facebook">
+      <mat-icon>facebook</mat-icon>
+    </a>
+    <a href="#" class="share-button" title="Share on Twitter/X">
+      <span class="x-icon">✕</span>
+    </a>
+    <a href="#" class="share-button" title="Share on Pinterest">
+      <span class="pinterest-icon">P</span>
+    </a>
+    <a href="#" class="share-button" title="Share by Email">
+      <mat-icon>email</mat-icon>
+    </a>
+  </div>
+</div>    </div>
 
     <div class="product-details-tabs">
       <div class="tabs-header">
