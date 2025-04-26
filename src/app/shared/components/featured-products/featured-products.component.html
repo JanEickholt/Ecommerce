@@ -15,63 +15,75 @@
         (selectedIndexChange)="onTabChange($event)"
       >
         <mat-tab label="All">
-          <div *ngIf="isLoading" class="loading-container">
-            <div class="spinner"></div>
-            <p>Loading products...</p>
-          </div>
-          
-          <div *ngIf="!isLoading" class="products-grid">
-            <div *ngFor="let product of featuredProducts" class="product-card-wrapper">
-              <app-product-card 
-                [product]="product"
-                (quickViewClicked)="openQuickView($event)">
-              </app-product-card>
+          <ng-template matTabContent>
+            <div *ngIf="isLoading" class="loading-container">
+              <div class="spinner-container">
+                <div class="loading-spinner"></div>
+              </div>
+              <p>Loading products...</p>
             </div>
             
-            <div *ngIf="featuredProducts.length === 0" class="empty-tab-message">
-              <p>No featured products available at the moment.</p>
+            <div *ngIf="!isLoading" class="products-grid">
+              <div *ngFor="let product of featuredProducts" class="product-card-wrapper">
+                <app-product-card 
+                  [product]="product"
+                  (quickViewClicked)="openQuickView($event)">
+                </app-product-card>
+              </div>
+              
+              <div *ngIf="!isLoading && featuredProducts.length === 0" class="empty-tab-message">
+                <p>No featured products available at the moment.</p>
+              </div>
             </div>
-          </div>
+          </ng-template>
         </mat-tab>
 
         <mat-tab label="New Arrivals">
-          <div *ngIf="isLoading" class="loading-container">
-            <div class="spinner"></div>
-            <p>Loading products...</p>
-          </div>
-          
-          <div *ngIf="!isLoading" class="products-grid">
-            <div *ngFor="let product of newArrivals" class="product-card-wrapper">
-              <app-product-card 
-                [product]="product"
-                (quickViewClicked)="openQuickView($event)">
-              </app-product-card>
+          <ng-template matTabContent>
+            <div *ngIf="isLoading" class="loading-container">
+              <div class="spinner-container">
+                <div class="loading-spinner"></div>
+              </div>
+              <p>Loading products...</p>
             </div>
             
-            <div *ngIf="newArrivals.length === 0" class="empty-tab-message">
-              <p>No new arrivals available at the moment.</p>
+            <div *ngIf="!isLoading" class="products-grid">
+              <div *ngFor="let product of newArrivals" class="product-card-wrapper">
+                <app-product-card 
+                  [product]="product"
+                  (quickViewClicked)="openQuickView($event)">
+                </app-product-card>
+              </div>
+              
+              <div *ngIf="!isLoading && newArrivals.length === 0" class="empty-tab-message">
+                <p>No new arrivals available at the moment.</p>
+              </div>
             </div>
-          </div>
+          </ng-template>
         </mat-tab>
 
         <mat-tab label="Best Sellers">
-          <div *ngIf="isLoading" class="loading-container">
-            <div class="spinner"></div>
-            <p>Loading products...</p>
-          </div>
-          
-          <div *ngIf="!isLoading" class="products-grid">
-            <div *ngFor="let product of bestSellers" class="product-card-wrapper">
-              <app-product-card 
-                [product]="product"
-                (quickViewClicked)="openQuickView($event)">
-              </app-product-card>
+          <ng-template matTabContent>
+            <div *ngIf="isLoading" class="loading-container">
+              <div class="spinner-container">
+                <div class="loading-spinner"></div>
+              </div>
+              <p>Loading products...</p>
             </div>
             
-            <div *ngIf="bestSellers.length === 0" class="empty-tab-message">
-              <p>No best sellers available at the moment.</p>
+            <div *ngIf="!isLoading" class="products-grid">
+              <div *ngFor="let product of bestSellers" class="product-card-wrapper">
+                <app-product-card 
+                  [product]="product"
+                  (quickViewClicked)="openQuickView($event)">
+                </app-product-card>
+              </div>
+              
+              <div *ngIf="!isLoading && bestSellers.length === 0" class="empty-tab-message">
+                <p>No best sellers available at the moment.</p>
+              </div>
             </div>
-          </div>
+          </ng-template>
         </mat-tab>
       </mat-tab-group>
     </div>

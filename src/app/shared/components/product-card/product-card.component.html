@@ -4,15 +4,38 @@
   </div>
 
   <div class="product-img-container">
-    <img [src]="product.imageUrl || '/api/placeholder/300/300'" [alt]="product.name" class="product-img">
+    <!-- Use [attr.src] instead of [src] to avoid hydration issues -->
+    <img 
+      [attr.src]="product.imageUrl || '/api/placeholder/300/300'" 
+      [attr.alt]="product.name" 
+      class="product-img"
+      (error)="onImageError()"
+    >
     <div class="product-actions-overlay">
-      <button mat-mini-fab aria-label="Add to wishlist" class="action-button wishlist-btn" (click)="addToWishlist($event)">
+      <button 
+        mat-mini-fab 
+        aria-label="Add to wishlist" 
+        class="action-button wishlist-btn" 
+        (click)="addToWishlist($event)"
+        *ngIf="isBrowser"
+      >
         <mat-icon>{{ isInWishlist() ? 'favorite' : 'favorite_border' }}</mat-icon>
       </button>
-      <button mat-mini-fab aria-label="Quick view" class="action-button quick-view-btn" (click)="quickView($event)">
+      <button 
+        mat-mini-fab 
+        aria-label="Quick view" 
+        class="action-button quick-view-btn" 
+        (click)="quickView($event)"
+      >
         <mat-icon>visibility</mat-icon>
       </button>
-      <button mat-mini-fab aria-label="Add to cart" class="action-button cart-btn" (click)="addToCart($event)">
+      <button 
+        mat-mini-fab 
+        aria-label="Add to cart" 
+        class="action-button cart-btn" 
+        (click)="addToCart($event)"
+        *ngIf="isBrowser"
+      >
         <mat-icon>add_shopping_cart</mat-icon>
       </button>
     </div>
@@ -38,9 +61,12 @@
     </p>
 
     <div class="product-colors" *ngIf="product.colors && product.colors.length">
-      <span class="color-swatch" *ngFor="let color of product.colors | slice:0:4" 
-            [style.background-color]="color.code" 
-            [attr.title]="color.name">
+      <span 
+        class="color-swatch" 
+        *ngFor="let color of product.colors | slice:0:4" 
+        [style.background-color]="color.code" 
+        [attr.title]="color.name"
+      >
       </span>
       <span class="more-colors" *ngIf="product.colors.length > 4">+{{ product.colors.length - 4 }}</span>
     </div>

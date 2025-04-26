@@ -419,18 +419,36 @@ export class ProductService {
   }
 
   getFeaturedProducts(): Observable<Product[]> {
-    const featuredProducts = this.mockProducts.filter((p) => p.featured);
+    const featuredProducts = this.mockProducts
+      .filter((p) => p.featured)
+      .map((product) => this.ensureProductImage(product));
+
     return of(featuredProducts).pipe(delay(300));
   }
 
   getNewArrivals(): Observable<Product[]> {
-    const newArrivals = this.mockProducts.filter((p) => p.new);
+    const newArrivals = this.mockProducts
+      .filter((p) => p.new)
+      .map((product) => this.ensureProductImage(product));
+
     return of(newArrivals).pipe(delay(300));
   }
 
   getBestSellers(): Observable<Product[]> {
-    const bestSellers = this.mockProducts.filter((p) => p.bestSeller);
+    const bestSellers = this.mockProducts
+      .filter((p) => p.bestSeller)
+      .map((product) => this.ensureProductImage(product));
+
     return of(bestSellers).pipe(delay(300));
+  }
+
+  private ensureProductImage(product: Product): Product {
+    return {
+      ...product,
+      imageUrl: product.imageUrl || "/api/placeholder/300/300",
+      images:
+        product.images?.map((img) => img || "/api/placeholder/300/300") || [],
+    };
   }
 
   getRelatedProducts(productId: string): Observable<Product[]> {
