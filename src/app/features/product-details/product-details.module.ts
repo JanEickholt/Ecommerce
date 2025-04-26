@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 
 import { ProductDetailsRoutingModule } from "./product-details-routing.module";
 import { ProductDetailsComponent } from "./product-details.component";
+import { ProductDetailsTabsComponent } from "./components/product-details-tabs/product-details-tabs.component";
 
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -17,7 +18,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ProductCardComponent } from "../../shared/components/product-card/product-card.component";
 
 @NgModule({
-  declarations: [ProductDetailsComponent],
+  declarations: [ProductDetailsComponent, ProductDetailsTabsComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -34,4 +35,4 @@ import { ProductCardComponent } from "../../shared/components/product-card/produ
     ProductCardComponent,
   ],
 })
-export class ProductDetailsModule { }
+export class ProductDetailsModule {}

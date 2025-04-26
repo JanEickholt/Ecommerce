@@ -6,9 +6,12 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
+import { ProductDetailsTabsComponent } from '../features/product-details/components/product-details-tabs/product-details-tabs.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    ProductDetailsTabsComponent
+  ],
   imports: [
     CommonModule,
     AppRoutingModule,

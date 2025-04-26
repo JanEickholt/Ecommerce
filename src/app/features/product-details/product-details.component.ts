@@ -34,18 +34,12 @@ export class ProductDetailsComponent
   isLoading: boolean = true;
   errorMessage: string = "";
   activeTabIndex: number = 0;
-  showReviewForm: boolean = false;
 
   // Selected options
   selectedImage: string = "";
   selectedColor: string = "";
   selectedMaterial: string = "";
   quantity: number = 1;
-
-  // Review form
-  userRating: number = 0;
-  reviewTitle: string = "";
-  reviewContent: string = "";
 
   private subscriptions: Subscription = new Subscription();
 
@@ -229,108 +223,6 @@ export class ProductDetailsComponent
     return this.wishlistService.isInWishlist(this.product.id);
   }
 
-  setRating(rating: number): void {
-    this.userRating = rating;
-  }
-
-  toggleReviewForm(): void {
-    this.showReviewForm = !this.showReviewForm;
-    if (!this.showReviewForm) {
-      // Reset form when hiding
-      this.userRating = 0;
-      this.reviewTitle = "";
-      this.reviewContent = "";
-    }
-  }
-
-  submitReview(): void {
-    if (
-      !this.product ||
-      !this.userRating ||
-      !this.reviewTitle ||
-      !this.reviewContent
-    ) {
-      return;
-    }
-
-    // Create new review
-    const newReview: ProductReview = {
-      id: Date.now().toString(), // Generate a unique ID
-      name: "You", // In a real app, this would be the user's name
-      rating: this.userRating,
-      date: new Date().toISOString().split("T")[0], // Format as YYYY-MM-DD
-      title: this.reviewTitle,
-      content: this.reviewContent,
-      helpfulCount: 0,
-    };
-
-    // In a real app, you would send this to the server
-    // For now, just add it to the product's reviews array
-    if (!this.product.reviews) {
-      this.product.reviews = [];
-    }
-    this.product.reviews.unshift(newReview);
-
-    // Update the rating and review count
-    if (this.product.reviews.length > 0) {
-      const totalRating = this.product.reviews.reduce(
-        (sum, review) => sum + review.rating,
-        0,
-      );
-      this.product.rating = totalRating / this.product.reviews.length;
-      this.product.reviewCount = this.product.reviews.length;
-    }
-
-    // Hide the form and reset the fields
-    this.toggleReviewForm();
-
-    // Show a success message
-    this.snackBar.open("Your review has been submitted. Thank you!", "Close", {
-      duration: 5000,
-      horizontalPosition: "center",
-      verticalPosition: "top",
-      panelClass: "success-snackbar",
-    });
-  }
-
-  markReviewHelpful(review: ProductReview): void {
-    // In a real app, you would send this to the server
-    // For now, just increment the helpful count
-    review.helpfulCount++;
-
-    this.snackBar.open("You marked this review as helpful", "Close", {
-      duration: 2000,
-      horizontalPosition: "end",
-      verticalPosition: "bottom",
-    });
-  }
-
-  calculateRatingPercentage(stars: number): number {
-    if (
-      !this.product ||
-      !this.product.reviews ||
-      this.product.reviews.length === 0
-    ) {
-      return 0;
-    }
-
-    const starsCount = this.product.reviews.filter(
-      (review) => Math.floor(review.rating) === stars,
-    ).length;
-
-    return (starsCount / this.product.reviews.length) * 100;
-  }
-
-  getRatingCount(stars: number): number {
-    if (!this.product || !this.product.reviews) {
-      return 0;
-    }
-
-    return this.product.reviews.filter(
-      (review) => Math.floor(review.rating) === stars,
-    ).length;
-  }
-
   onTabChange(index: number): void {
     this.activeTabIndex = index;
   }
@@ -348,6 +240,35 @@ export class ProductDetailsComponent
         .getElementById("reviews-tab")
         ?.scrollIntoView({ behavior: "smooth" });
     }, 100);
+  }
+
+  onReviewSubmitted(review: ProductReview): void {
+    if (!this.product) return;
+
+    // In a real app, you would send this to the server
+    // For now, just add it to the product's reviews array
+    if (!this.product.reviews) {
+      this.product.reviews = [];
+    }
+    this.product.reviews.unshift(review);
+
+    // Update the rating and review count
+    if (this.product.reviews.length > 0) {
+      const totalRating = this.product.reviews.reduce(
+        (sum, review) => sum + review.rating,
+        0,
+      );
+      this.product.rating = totalRating / this.product.reviews.length;
+      this.product.reviewCount = this.product.reviews.length;
+    }
+
+    // Show a success message
+    this.snackBar.open("Your review has been submitted. Thank you!", "Close", {
+      duration: 5000,
+      horizontalPosition: "center",
+      verticalPosition: "top",
+      panelClass: "success-snackbar",
+    });
   }
 
   quickView(product: Product): void {
