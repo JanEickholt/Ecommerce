@@ -51,9 +51,9 @@
           <div class="product-rating">
             <div class="stars">
               <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-                <span *ngIf="product && i <= product.rating">★</span>
-                <span *ngIf="product && i > product.rating && i - 1 < product.rating">★</span>
-                <span *ngIf="product && i > product.rating && i - 1 >= product.rating">☆</span>
+                <mat-icon *ngIf="product && i <= product.rating">star</mat-icon>
+                <mat-icon *ngIf="product && i > product.rating && i - 1 < product.rating">star_half</mat-icon>
+                <mat-icon *ngIf="product && i > product.rating && i - 1 >= product.rating">star_border</mat-icon>
               </ng-container>
             </div>
             <a href="#reviews" class="review-count"
@@ -68,8 +68,8 @@
               'out-of-stock': !product?.inStock
             }"
           >
-            <span *ngIf="product?.inStock">✓</span>
-            <span *ngIf="!product?.inStock">✗</span>
+            <mat-icon *ngIf="product?.inStock">check_circle</mat-icon>
+            <mat-icon *ngIf="!product?.inStock">cancel</mat-icon>
             <span>{{ product?.inStock ? "In Stock" : "Out of Stock" }}</span>
           </div>
         </div>
@@ -104,25 +104,8 @@
                 [attr.title]="color.name"
                 (click)="selectColor(color.name)"
               >
-                <span *ngIf="selectedColor === color.name">✓</span>
+                <mat-icon *ngIf="selectedColor === color.name" style="width: auto; height:auto">check</mat-icon>
               </div>
-            </div>
-          </div>
-
-          <!-- Use a safe check that Angular's type checker can understand -->
-          <div
-            class="option-group"
-            *ngIf="product && product.materials && product.materials.length > 0"
-          >
-            <h3 class="option-title">Material</h3>
-            <div class="material-options">
-              <button
-                *ngFor="let material of product.materials"
-                [class.selected]="selectedMaterial === material"
-                (click)="selectedMaterial = material"
-              >
-                {{ material }}
-              </button>
             </div>
           </div>
 
@@ -133,14 +116,14 @@
                 (click)="decreaseQuantity()"
                 [disabled]="quantity <= 1"
               >
-                -
+                <mat-icon>remove</mat-icon>
               </button>
               <input type="number" [(ngModel)]="quantity" min="1" max="10" />
               <button
                 (click)="increaseQuantity()"
                 [disabled]="quantity >= 10"
               >
-                +
+                <mat-icon>add</mat-icon>
               </button>
             </div>
           </div>
@@ -152,37 +135,37 @@
             [disabled]="!product?.inStock"
             (click)="addToCart()"
           >
-            🛒 Add to Cart
+            <mat-icon>shopping_cart</mat-icon> Add to Cart
           </button>
           <button
             class="neumorph-button wishlist-btn"
             (click)="addToWishlist()"
           >
-            ♥ Add to Wishlist
+            <mat-icon>favorite</mat-icon> Add to Wishlist
           </button>
         </div>
 
         <!-- Fixed features section - using product features from the interface -->
         <div class="product-features">
           <div class="feature">
-            <span>🚚</span>
+            <mat-icon>local_shipping</mat-icon>
             <div class="feature-text">
               <h4>Free Shipping</h4>
               <p>On orders over $999</p>
             </div>
-          </div>
-          <div class="feature">
-            <span>⏱️</span>
-            <div class="feature-text">
-              <h4>Easy Returns</h4>
-              <p>30-day return policy</p>
             </div>
+            <div class="feature">
+              <mat-icon>schedule</mat-icon>
+              <div class="feature-text">
+           <h4>Easy Returns</h4>
+           <p>30-day return policy</p>
+          </div>
           </div>
           <div class="feature">
-            <span>✓</span>
-            <div class="feature-text">
-              <h4>Warranty</h4>
-              <p>3-year warranty</p>
+        <mat-icon>verified</mat-icon>
+        <div class="feature-text">
+        <h4>Warranty</h4>
+        <p>3-year warranty</p>
             </div>
           </div>
         </div>
@@ -191,20 +174,20 @@
           <span>Share:</span>
           <div class="share-buttons">
             <a href="#" class="share-button" title="Share on Facebook">
-              F
+              <mat-icon>facebook</mat-icon>
             </a>
             <a href="#" class="share-button" title="Share on Twitter">
-              T
+              <mat-icon>flutter_dash</mat-icon>
             </a>
             <a href="#" class="share-button" title="Share on Pinterest">
-              P
+              <mat-icon>pin_drop</mat-icon>
             </a>
             <a href="#" class="share-button" title="Share by Email">
-              ✉
-            </a>
+            <mat-icon>email</mat-icon>
+           </a>
+            </div>
           </div>
-        </div>
-      </div>
+       </div>
     </div>
 
     <div class="product-details-tabs">
@@ -242,9 +225,9 @@
           <div class="rating-value">{{ product.rating.toFixed(1) }}</div>
           <div class="rating-stars">
             <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-              <span *ngIf="i <= product.rating">★</span>
-              <span *ngIf="i > product.rating && i - 1 < product.rating">★</span>
-              <span *ngIf="i > product.rating && i - 1 >= product.rating">☆</span>
+              <mat-icon *ngIf="i <= product.rating">star</mat-icon>
+              <mat-icon *ngIf="i > product.rating && i - 1 < product.rating">star_half</mat-icon>
+              <mat-icon *ngIf="i > product.rating && i - 1 >= product.rating">star_border</mat-icon>
             </ng-container>
           </div>
           <div class="rating-count">Based on {{ product.reviewCount }} reviews</div>
@@ -262,9 +245,9 @@
             </div>
             <div class="review-rating">
               <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-                <span *ngIf="i <= review.rating">★</span>
-                <span *ngIf="i > review.rating && i - 1 < review.rating">★</span>
-                <span *ngIf="i > review.rating && i - 1 >= review.rating">☆</span>
+                <mat-icon *ngIf="i <= review.rating">star</mat-icon>
+                <mat-icon *ngIf="i > review.rating && i - 1 < review.rating">star_half</mat-icon>
+                <mat-icon *ngIf="i > review.rating && i - 1 >= review.rating">star_border</mat-icon>
               </ng-container>
             </div>
           </div>
@@ -272,10 +255,10 @@
           <p class="review-content">{{ review.content }}</p>
           <div class="review-footer">
             <button>
-              👍 Helpful ({{ review.helpfulCount }})
+              <mat-icon>thumb_up</mat-icon> Helpful ({{ review.helpfulCount }})
             </button>
             <button class="report-btn">
-              🚩 Report
+              <mat-icon>flag</mat-icon> Report
             </button>
           </div>
         </div>

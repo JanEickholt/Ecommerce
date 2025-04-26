@@ -4,13 +4,13 @@
       <h1 class="page-title">My Wishlist</h1>
       <div class="breadcrumb-nav">
         <a routerLink="/home">Home</a>
-        <span> > </span>
+        <mat-icon>chevron_right</mat-icon>
         <span class="current">Wishlist</span>
       </div>
     </div>
 
     <div *ngIf="isLoading" class="loading-container">
-      <div class="spinner"></div>
+      <mat-spinner diameter="50"></mat-spinner>
       <p>Loading wishlist...</p>
     </div>
 
@@ -20,7 +20,7 @@
     >
       <div class="empty-wishlist-content neumorph-card">
         <div class="empty-wishlist-icon">
-          <span>♡</span>
+          <mat-icon>favorite_border</mat-icon>
         </div>
         <h2>Your wishlist is empty</h2>
         <p>Items added to your wishlist will be saved here</p>
@@ -37,7 +37,7 @@
       <div class="wishlist-header">
         <h3>Saved Items ({{ wishlistItems.length }})</h3>
         <button class="clear-wishlist-btn" (click)="clearWishlist()">
-          <span>🗑</span>
+          <mat-icon>delete_outline</mat-icon>
           Clear All
         </button>
       </div>
@@ -69,9 +69,9 @@
             <div class="item-rating">
               <div class="stars">
                 <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-                  <span *ngIf="i <= item.rating">★</span>
-                  <span *ngIf="i > item.rating && i - 1 < item.rating">★</span>
-                  <span *ngIf="i > item.rating && i - 1 >= item.rating">☆</span>
+                  <mat-icon *ngIf="i <= item.rating">star</mat-icon>
+                  <mat-icon *ngIf="i > item.rating && i - 1 < item.rating">star_half</mat-icon>
+                  <mat-icon *ngIf="i > item.rating && i - 1 >= item.rating">star_border</mat-icon>
                 </ng-container>
               </div>
               <span class="rating-count" *ngIf="item.reviewCount"
@@ -93,8 +93,8 @@
                 'out-of-stock': !item.inStock,
               }"
             >
-              <span *ngIf="item.inStock">✓</span>
-              <span *ngIf="!item.inStock">✗</span>
+              <mat-icon *ngIf="item.inStock">check_circle</mat-icon>
+              <mat-icon *ngIf="!item.inStock">cancel</mat-icon>
               {{ item.inStock ? "In Stock" : "Out of Stock" }}
             </p>
 
@@ -104,13 +104,13 @@
                 [disabled]="!item.inStock"
                 (click)="addToCart(item)"
               >
-                🛒 Add to Cart
+                <mat-icon>add_shopping_cart</mat-icon> Add to Cart
               </button>
               <button
                 class="remove-btn"
                 (click)="removeFromWishlist(item.id)"
               >
-                🗑
+                <mat-icon>delete</mat-icon>
               </button>
             </div>
           </div>

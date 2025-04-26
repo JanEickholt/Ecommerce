@@ -3,6 +3,10 @@ import { Subscription } from "rxjs";
 import { WishlistService } from "../../../core/services/wishlist.service";
 import { CartService } from "../../../core/services/cart.service";
 import { Product } from "../../../core/services/product.service";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
   selector: "app-wishlist",
@@ -21,8 +25,6 @@ export class WishlistComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    // For simplicity, we'll set a mock list of products
-    // In a real app, this would come from the WishlistService
     setTimeout(() => {
       this.wishlistItems = [
         {
@@ -54,8 +56,6 @@ export class WishlistComponent implements OnInit, OnDestroy {
       product,
       quantity: 1,
     });
-    // Optionally remove from wishlist after adding to cart
-    // this.removeFromWishlist(product.id);
   }
 
   clearWishlist(): void {
