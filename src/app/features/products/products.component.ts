@@ -9,18 +9,25 @@ import {
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import {
-  ProductService,
-  Product,
-  ProductFilterState,
-} from "../../../core/services/product.service";
+import { ProductService } from "../../../core/services/product.service";
+import { Product } from "../../../core/models/product";
 import { MatDrawer } from "@angular/material/sidenav";
 import { isPlatformBrowser } from "@angular/common";
+
+export interface ProductFilterState {
+  categories: string[];
+  priceRange: { min: number; max: number };
+  colors: string[];
+  materials: string[];
+  rating: number;
+  features: string[];
+  sortBy: string;
+}
 
 @Component({
   selector: "app-products",
   templateUrl: "./products.component.html",
-  styleUrl: "./products.component.scss",
+  styleUrls: ["./products.component.scss"],
 })
 export class ProductsComponent implements OnInit, OnDestroy {
   @ViewChild("filterDrawer") filterDrawer!: MatDrawer;
@@ -147,7 +154,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
           params["viewMode"] &&
           (params["viewMode"] === "grid" || params["viewMode"] === "list")
         ) {
-          this.viewMode = params["viewMode"];
+          this.viewMode = params["viewMode"] as "grid" | "list";
         }
 
         this.productService.updateFilterState(filterState);

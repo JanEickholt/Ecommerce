@@ -1,7 +1,17 @@
 import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { Observable, of, BehaviorSubject } from "rxjs";
 import { delay } from "rxjs/operators";
 import { Product } from "../models/product";
+
+export interface ProductFilterState {
+  categories: string[];
+  priceRange: { min: number; max: number };
+  colors: string[];
+  materials: string[];
+  rating: number;
+  features: string[];
+  sortBy: string;
+}
 
 @Injectable({
   providedIn: "root",
@@ -78,6 +88,7 @@ export class ProductService {
         },
       ],
       relatedProducts: ["2", "3", "4"],
+      featured: true,
     },
     {
       id: "2",
@@ -94,6 +105,7 @@ export class ProductService {
       rating: 5,
       reviewCount: 37,
       relatedProducts: ["1", "3"],
+      new: true,
     },
     {
       id: "3",
@@ -110,6 +122,7 @@ export class ProductService {
       rating: 4.5,
       reviewCount: 56,
       relatedProducts: ["1", "2"],
+      bestSeller: true,
     },
     {
       id: "4",
@@ -124,10 +137,89 @@ export class ProductService {
       rating: 4,
       reviewCount: 28,
       relatedProducts: ["2", "3"],
+      featured: true,
     },
   ];
 
-  constructor() { }
+  // Filter state
+  private filterStateSubject = new BehaviorSubject<ProductFilterState>({
+    categories: [],
+    priceRange: { min: 0, max: 5000 },
+    colors: [],
+    materials: [],
+    rating: 0,
+    features: [],
+    sortBy: "popular",
+  });
+
+  // Observable filter state
+  private categoriesSubject = new BehaviorSubject<
+    { label: string; value: string; count: number }[]
+  >([
+    { label: "Sofas & Couches", value: "sofas", count: 12 },
+    { label: "Armchairs", value: "armchairs", count: 8 },
+    { label: "Recliners", value: "recliners", count: 6 },
+    { label: "Sectionals", value: "sectionals", count: 4 },
+    { label: "Accent Chairs", value: "accent-chairs", count: 7 },
+    { label: "Loveseats", value: "loveseats", count: 5 },
+  ]);
+
+  private colorsSubject = new BehaviorSubject<
+    { name: string; value: string; code: string }[]
+  >([
+    { name: "Gray", value: "gray", code: "#6a676d" },
+    { name: "Brown", value: "brown", code: "#5d5850" },
+    { name: "White", value: "white", code: "#ffffff" },
+    { name: "Black", value: "black", code: "#000000" },
+    { name: "Blue", value: "blue", code: "#4267B2" },
+    { name: "Green", value: "green", code: "#228B22" },
+  ]);
+
+  private materialsSubject = new BehaviorSubject<
+    { label: string; value: string; count: number }[]
+  >([
+    { label: "Polyester", value: "polyester", count: 15 },
+    { label: "Cotton", value: "cotton", count: 10 },
+    { label: "Leather", value: "leather", count: 8 },
+    { label: "Wood", value: "wood", count: 20 },
+    { label: "Metal", value: "metal", count: 12 },
+    { label: "Velvet", value: "velvet", count: 7 },
+  ]);
+
+  private priceRangeSubject = new BehaviorSubject<{ min: number; max: number }>(
+    { min: 0, max: 5000 },
+  );
+
+  // Public observables
+  public categories$ = this.categoriesSubject.asObservable();
+  public colors$ = this.colorsSubject.asObservable();
+  public materials$ = this.materialsSubject.asObservable();
+  public priceRange$ = this.priceRangeSubject.asObservable();
+
+  constructor() {}
+
+  updateFilterState(filterState: Partial<ProductFilterState>): void {
+    this.filterStateSubject.next({
+      ...this.filterStateSubject.value,
+      ...filterState,
+    });
+  }
+
+  getFilterState(): ProductFilterState {
+    return this.filterStateSubject.value;
+  }
+
+  resetFilters(): void {
+    this.filterStateSubject.next({
+      categories: [],
+      priceRange: { min: 0, max: 5000 },
+      colors: [],
+      materials: [],
+      rating: 0,
+      features: [],
+      sortBy: "popular",
+    });
+  }
 
   getProducts(): Observable<Product[]> {
     return of(this.mockProducts).pipe(delay(500));
@@ -136,6 +228,21 @@ export class ProductService {
   getProduct(id: string): Observable<Product | undefined> {
     const product = this.mockProducts.find((p) => p.id === id);
     return of(product).pipe(delay(300));
+  }
+
+  getFeaturedProducts(): Observable<Product[]> {
+    const featuredProducts = this.mockProducts.filter((p) => p.featured);
+    return of(featuredProducts).pipe(delay(300));
+  }
+
+  getNewArrivals(): Observable<Product[]> {
+    const newArrivals = this.mockProducts.filter((p) => p.new);
+    return of(newArrivals).pipe(delay(300));
+  }
+
+  getBestSellers(): Observable<Product[]> {
+    const bestSellers = this.mockProducts.filter((p) => p.bestSeller);
+    return of(bestSellers).pipe(delay(300));
   }
 
   getRelatedProducts(productId: string): Observable<Product[]> {

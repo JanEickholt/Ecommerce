@@ -13,9 +13,9 @@ import { CommonModule, isPlatformBrowser } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { Product } from "../../../../core/services/product.service";
-import { CartService } from "../../../../core/services/cart.service";
-import { WishlistService } from "../../../../core/services/wishlist.service";
+import { Product } from "../../../core/models/product";
+import { CartService } from "../../../core/services/cart.service";
+import { WishlistService } from "../../../core/services/wishlist.service";
 
 @Component({
   selector: "app-product-card",

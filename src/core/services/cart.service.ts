@@ -8,12 +8,23 @@ export interface CartItem {
   options?: ProductOption[];
 }
 
+export interface Coupon {
+  code: string;
+  description: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  minimumOrderValue?: number;
+}
+
 @Injectable({
   providedIn: "root",
 })
 export class CartService {
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
   public cartItems$ = this.cartItemsSubject.asObservable();
+
+  private appliedCouponSubject = new BehaviorSubject<Coupon | null>(null);
+  public appliedCoupon$ = this.appliedCouponSubject.asObservable();
 
   constructor() {
     // Load cart from localStorage if available
@@ -24,6 +35,17 @@ export class CartService {
       } catch (error) {
         console.error("Error parsing cart from localStorage", error);
         this.cartItemsSubject.next([]);
+      }
+    }
+
+    // Load applied coupon from localStorage if available
+    const savedCoupon = localStorage.getItem("appliedCoupon");
+    if (savedCoupon) {
+      try {
+        this.appliedCouponSubject.next(JSON.parse(savedCoupon));
+      } catch (error) {
+        console.error("Error parsing coupon from localStorage", error);
+        this.appliedCouponSubject.next(null);
       }
     }
   }
@@ -85,6 +107,19 @@ export class CartService {
     );
   }
 
+  calculateDiscount(): number {
+    const coupon = this.appliedCouponSubject.value;
+    if (!coupon) return 0;
+
+    const subtotal = this.calculateSubtotal();
+
+    if (coupon.discountType === "percentage") {
+      return subtotal * (coupon.discountValue / 100);
+    } else {
+      return coupon.discountValue;
+    }
+  }
+
   calculateTax(): number {
     const taxRate = 0.0825; // Example tax rate 8.25%
     return this.calculateSubtotal() * taxRate;
@@ -101,8 +136,58 @@ export class CartService {
 
   calculateTotal(): number {
     return (
-      this.calculateSubtotal() + this.calculateTax() + this.calculateShipping()
+      this.calculateSubtotal() -
+      this.calculateDiscount() +
+      this.calculateTax() +
+      this.calculateShipping()
     );
+  }
+
+  applyCoupon(code: string): boolean {
+    // Mock coupon validation - in a real app this would check against a database
+    const availableCoupons: Coupon[] = [
+      {
+        code: "WELCOME10",
+        description: "10% off your first order",
+        discountType: "percentage",
+        discountValue: 10,
+        minimumOrderValue: 50,
+      },
+      {
+        code: "SAVE20",
+        description: "20% off all furniture",
+        discountType: "percentage",
+        discountValue: 20,
+        minimumOrderValue: 100,
+      },
+      {
+        code: "FREESHIP",
+        description: "Free shipping on your order",
+        discountType: "fixed",
+        discountValue: 19.99,
+      },
+    ];
+
+    const coupon = availableCoupons.find((c) => c.code === code);
+
+    if (!coupon) return false;
+
+    // Check if order meets minimum value requirement
+    if (
+      coupon.minimumOrderValue &&
+      this.calculateSubtotal() < coupon.minimumOrderValue
+    ) {
+      return false;
+    }
+
+    this.appliedCouponSubject.next(coupon);
+    localStorage.setItem("appliedCoupon", JSON.stringify(coupon));
+    return true;
+  }
+
+  removeCoupon(): void {
+    this.appliedCouponSubject.next(null);
+    localStorage.removeItem("appliedCoupon");
   }
 
   private optionsMatch(

@@ -8,19 +8,16 @@ import {
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import {
-  ProductService,
-  Product,
-  ProductReview,
-} from "../../../core/services/product.service";
+import { ProductService } from "../../../core/services/product.service";
 import { CartService } from "../../../core/services/cart.service";
 import { WishlistService } from "../../../core/services/wishlist.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { Product, ProductReview } from "../../../core/models/product";
 
 @Component({
   selector: "app-product-details",
   templateUrl: "./product-details.component.html",
-  styleUrl: "./product-details.component.scss",
+  styleUrls: ["./product-details.component.scss"],
 })
 export class ProductDetailsComponent
   implements OnInit, OnDestroy, AfterViewInit {
@@ -255,7 +252,7 @@ export class ProductDetailsComponent
     // Update the rating and review count
     if (this.product.reviews.length > 0) {
       const totalRating = this.product.reviews.reduce(
-        (sum, review) => sum + review.rating,
+        (sum: number, review: ProductReview) => sum + review.rating,
         0,
       );
       this.product.rating = totalRating / this.product.reviews.length;

@@ -8,11 +8,6 @@ export interface ProductColor {
   code: string;
 }
 
-export interface ProductImage {
-  url: string;
-  alt: string;
-}
-
 export interface ProductSpecGroup {
   title: string;
   items: { name: string; value: string }[];

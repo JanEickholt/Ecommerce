@@ -12,7 +12,7 @@ import { WishlistService } from "../../../core/services/wishlist.service";
 @Component({
   selector: "app-cart",
   templateUrl: "./cart.component.html",
-  styleUrl: "./cart.component.scss",
+  styleUrls: ["./cart.component.scss"],
 })
 export class CartComponent implements OnInit, OnDestroy {
   cartItems: CartItem[] = [];
@@ -48,7 +48,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
     // Subscribe to applied coupon
     this.subscriptions.add(
-      this.cartService.appliedCoupon$.subscribe((coupon) => {
+      this.cartService.appliedCoupon$.subscribe((coupon: Coupon | null) => {
         this.appliedCoupon = coupon;
         this.updateOrderSummary();
       }),

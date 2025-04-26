@@ -12,10 +12,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatTabsModule } from "@angular/material/tabs";
 import { Subscription } from "rxjs";
 
-import {
-  ProductService,
-  Product,
-} from "../../../../core/services/product.service";
+import { ProductService } from "../../../../core/services/product.service";
+import { Product } from "../../../../core/models/product";
 import { ProductCardComponent } from "../product-card/product-card.component";
 import { inject } from "@angular/core";
 

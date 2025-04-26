@@ -1,15 +1,13 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
-import {
-  ProductService,
-  Product,
-} from "../../../core/services/product.service";
+import { ProductService } from "../../../core/services/product.service";
+import { Product } from "../../../core/models/product";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
-  styleUrl: "./home.component.scss",
+  styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit, OnDestroy {
   featuredProducts: Product[] = [];
@@ -24,22 +22,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Load featured products
     this.subscriptions.add(
-      this.productService.getFeaturedProducts().subscribe((products) => {
-        this.featuredProducts = products;
-        this.isLoading = false;
-      }),
+      this.productService
+        .getFeaturedProducts()
+        .subscribe((products: Product[]) => {
+          this.featuredProducts = products;
+          this.isLoading = false;
+        }),
     );
 
     // Load new arrivals
     this.subscriptions.add(
-      this.productService.getNewArrivals().subscribe((products) => {
+      this.productService.getNewArrivals().subscribe((products: Product[]) => {
         this.newArrivals = products;
       }),
     );
 
     // Load best sellers
     this.subscriptions.add(
-      this.productService.getBestSellers().subscribe((products) => {
+      this.productService.getBestSellers().subscribe((products: Product[]) => {
         this.bestSellers = products;
       }),
     );

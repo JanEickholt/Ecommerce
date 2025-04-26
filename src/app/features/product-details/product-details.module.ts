@@ -5,7 +5,6 @@ import { RouterModule } from "@angular/router";
 
 import { ProductDetailsRoutingModule } from "./product-details-routing.module";
 import { ProductDetailsComponent } from "./product-details.component";
-import { ProductDetailsTabsComponent } from "./components/product-details-tabs/product-details-tabs.component";
 
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -18,9 +17,10 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 import { ProductCardComponent } from "../../shared/components/product-card/product-card.component";
+import { ProductDetailsTabsComponent } from "./components/product-details-tabs/product-details-tabs.component";
 
 @NgModule({
-  declarations: [ProductDetailsComponent, ProductDetailsTabsComponent],
+  declarations: [ProductDetailsComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -36,6 +36,7 @@ import { ProductCardComponent } from "../../shared/components/product-card/produ
     MatProgressSpinnerModule,
     MatSnackBarModule,
     ProductCardComponent,
+    ProductDetailsTabsComponent,
   ],
 })
 export class ProductDetailsModule { }

@@ -50,6 +50,10 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  public get isLoggedIn(): boolean {
+    return !!this.currentUserValue;
+  }
+
   login(email: string, password: string): Observable<User> {
     const user = this.mockUsers.find(
       (u) => u.email === email && u.password === password,
@@ -117,9 +121,5 @@ export class AuthService {
     }
     this.currentUserSubject.next(null);
     this.router.navigate(["/auth/login"]);
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.currentUserValue;
   }
 }
