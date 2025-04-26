@@ -49,6 +49,12 @@ export class ProductDetailsComponent
     private snackBar: MatSnackBar,
   ) { }
 
+  // Helper method to format category parameter safely
+  formatCategoryParam(category?: string): string {
+    if (!category) return "";
+    return category.toLowerCase().replace(" ", "-");
+  }
+
   ngOnInit(): void {
     this.subscriptions.add(
       this.route.paramMap.subscribe((params) => {

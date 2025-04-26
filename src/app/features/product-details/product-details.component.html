@@ -5,9 +5,9 @@
       <mat-icon>chevron_right</mat-icon>
       <a routerLink="/products">Shop</a>
       <mat-icon>chevron_right</mat-icon>
-      <a
+      
         routerLink="/products"
-        [queryParams]="{category: product?.category ? product.category.toLowerCase().replace(' ', '-') : ''}"
+        [queryParams]="{category: formatCategoryParam(product?.category)}"
       >
         {{ product?.category || 'Category' }}
       </a>
