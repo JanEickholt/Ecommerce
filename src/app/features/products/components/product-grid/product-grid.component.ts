@@ -75,6 +75,6 @@ export class ProductGridComponent {
   }
 
   sortProducts(): void {
-    // Emit sort change through parent component
+    // This method would emit sort change through parent component
   }
 }

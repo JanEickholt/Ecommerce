@@ -21,7 +21,7 @@ import { ProductFilterState } from "../../products.component";
   styleUrls: ["./product-filters.component.scss"],
 })
 export class ProductFiltersComponent {
-  @Input() filters: ProductFilterState = {
+  @Input() filterState: ProductFilterState = {
     categories: [],
     priceRange: { min: 0, max: 5000 },
     colors: [],
@@ -59,27 +59,27 @@ export class ProductFiltersComponent {
 
   ngOnInit() {
     // Initialize from input filters
-    this.selectedCategories = [...this.filters.categories];
-    this.selectedColors = [...this.filters.colors];
-    this.selectedMaterials = [...this.filters.materials];
-    this.selectedFeatures = [...this.filters.features];
-    this.selectedRating = this.filters.rating;
-    this.selectedPriceRange = { ...this.filters.priceRange };
+    this.selectedCategories = [...this.filterState.categories];
+    this.selectedColors = [...this.filterState.colors];
+    this.selectedMaterials = [...this.filterState.materials];
+    this.selectedFeatures = [...this.filterState.features];
+    this.selectedRating = this.filterState.rating;
+    this.selectedPriceRange = { ...this.filterState.priceRange };
   }
 
   ngOnChanges() {
     // Update when filters change externally
-    this.selectedCategories = [...this.filters.categories];
-    this.selectedColors = [...this.filters.colors];
-    this.selectedMaterials = [...this.filters.materials];
-    this.selectedFeatures = [...this.filters.features];
-    this.selectedRating = this.filters.rating;
-    this.selectedPriceRange = { ...this.filters.priceRange };
+    this.selectedCategories = [...this.filterState.categories];
+    this.selectedColors = [...this.filterState.colors];
+    this.selectedMaterials = [...this.filterState.materials];
+    this.selectedFeatures = [...this.filterState.features];
+    this.selectedRating = this.filterState.rating;
+    this.selectedPriceRange = { ...this.filterState.priceRange };
   }
 
   updateFilters() {
     this.filterChange.emit({
-      ...this.filters,
+      ...this.filterState,
       categories: this.selectedCategories,
       colors: this.selectedColors,
       materials: this.selectedMaterials,

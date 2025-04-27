@@ -1,29 +1,89 @@
-<nav class="breadcrumb-container" aria-label="breadcrumb">
-  <ul class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a routerLink="/">Home</a>
-    </li>
-    <mat-icon>chevron_right</mat-icon>
-    <li class="breadcrumb-item">
-      <a routerLink="/products">Shop</a>
-    </li>
-    <ng-container *ngIf="category">
-      <mat-icon>chevron_right</mat-icon>
-      <li class="breadcrumb-item" [class.active]="!subcategory">
-        <a
-          *ngIf="subcategory"
-          [routerLink]="['/products']"
-          [queryParams]="{ category: category }"
-          >{{ getCategoryTitle() }}</a
-        >
-        <span *ngIf="!subcategory">{{ getCategoryTitle() }}</span>
-      </li>
-    </ng-container>
-    <ng-container *ngIf="subcategory">
-      <mat-icon>chevron_right</mat-icon>
-      <li class="breadcrumb-item active">
-        <span>{{ getSubcategoryTitle() }}</span>
-      </li>
-    </ng-container>
-  </ul>
-</nav>
+<div class="active-filters-container" *ngIf="filterState">
+  <div class="active-filters-header">
+    <h3>Active Filters</h3>
+    <button mat-button class="clear-all-btn" (click)="onClearAll()">
+      <mat-icon>delete_sweep</mat-icon> Clear All
+    </button>
+  </div>
+
+  <div class="filter-chips">
+    <!-- Category Filters -->
+    <mat-chip-set>
+      <mat-chip
+        *ngFor="let category of filterState.categories"
+        (removed)="onRemoveFilter('category', category)"
+      >
+        {{ getCategoryLabel(category) }}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+
+      <!-- Color Filters -->
+      <mat-chip 
+        *ngFor="let color of filterState.colors" 
+        (removed)="onRemoveFilter('color', color)"
+      >
+        <div class="color-chip-content">
+          <span class="color-dot" [style.background-color]="getColorCode(color)"></span>
+          {{ getColorLabel(color) }}
+        </div>
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+
+      <!-- Material Filters -->
+      <mat-chip
+        *ngFor="let material of filterState.materials"
+        (removed)="onRemoveFilter('material', material)"
+      >
+        {{ getMaterialLabel(material) }}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+
+      <!-- Feature Filters -->
+      <mat-chip
+        *ngFor="let feature of filterState.features"
+        (removed)="onRemoveFilter('feature', feature)"
+      >
+        {{ getFeatureLabel(feature) }}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+
+      <!-- Rating Filter -->
+      <mat-chip
+        *ngIf="filterState.rating > 0"
+        (removed)="onRemoveFilter('rating', '')"
+      >
+        <div class="rating-chip-content">
+          <div class="stars">
+            <mat-icon *ngFor="let i of [1, 2, 3, 4, 5]" 
+                      [ngClass]="{'selected': i <= filterState.rating}">
+              {{ i <= filterState.rating ? 'star' : 'star_border' }}
+            </mat-icon>
+          </div>
+          & Up
+        </div>
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+
+      <!-- Price Range Filter -->
+      <mat-chip
+        *ngIf="isPriceRangeModified()"
+        (removed)="onRemoveFilter('price', '')"
+      >
+        Price: {{ formatPriceRange() }}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+    </mat-chip-set>
+  </div>
+</div>

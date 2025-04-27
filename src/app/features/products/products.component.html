@@ -56,65 +56,21 @@
           (clearAllFilters)="clearFilters()">
         </app-active-filters>
 
-        <!-- Toolbar: Sort and View Options -->
-        <div class="products-toolbar">
-          <!-- Results Count -->
-          <div class="results-count">
-            Showing <span class="highlight">{{ products.length }}</span> of 
-            <span class="highlight">{{ totalProducts }}</span> products
-          </div>
-
-          <div class="toolbar-actions">
-            <!-- Sort Dropdown -->
-            <app-product-sort 
-              [sortOption]="filterState.sortBy"
-              (sortChanged)="sortProducts($event)">
-            </app-product-sort>
-
-            <!-- View Toggle (Grid/List) -->
-            <div class="view-toggle">
-              <button 
-                mat-icon-button 
-                [class.active]="viewMode === 'grid'"
-                (click)="setViewMode('grid')"
-                aria-label="Grid view">
-                <mat-icon>grid_view</mat-icon>
-              </button>
-              <button 
-                mat-icon-button 
-                [class.active]="viewMode === 'list'"
-                (click)="setViewMode('list')"
-                aria-label="List view">
-                <mat-icon>view_list</mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product List -->
-        <app-product-list
+        <!-- Product Grid -->
+        <app-product-grid
           [products]="products"
+          [totalProducts]="totalProducts"
           [isLoading]="isLoading"
           [viewMode]="viewMode"
-          [emptyMessage]="'No products match your current filters.'"
+          [pageSize]="pageSize"
+          (viewModeChanged)="setViewMode($event)"
+          (pageChanged)="onPageChange($event)"
           (productAdded)="addToCart($event)"
           (productWishlisted)="addToWishlist($event)"
           (productQuickViewed)="quickView($event)"
           (productCompared)="addToCompare($event)"
-          (clearFilters)="clearFilters()">
-        </app-product-list>
-
-        <!-- Pagination -->
-        <div class="pagination-container" *ngIf="totalProducts > 0">
-          <mat-paginator
-            [length]="totalProducts"
-            [pageSize]="pageSize"
-            [pageIndex]="pageIndex"
-            [pageSizeOptions]="[12, 24, 36, 48]"
-            (page)="onPageChange($event)"
-            aria-label="Select page">
-          </mat-paginator>
-        </div>
+          (clearAllFilters)="clearFilters()">
+        </app-product-grid>
       </mat-drawer-content>
     </mat-drawer-container>
   </div>

@@ -8,8 +8,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSliderModule } from "@angular/material/slider";
 
-import { ProductFilterState } from "./../../../features/products/products.component";
-import { ProductFiltersComponent } from "../../../features/products/components/product-filters/product-filters.component";
+import { ProductFilterState } from "../../../features/products/products.component";
 
 @Component({
   selector: "app-filter-sidebar",
@@ -23,7 +22,6 @@ import { ProductFiltersComponent } from "../../../features/products/components/p
     MatExpansionModule,
     MatCheckboxModule,
     MatSliderModule,
-    ProductFiltersComponent,
   ],
   templateUrl: "./filter-sidebar.component.html",
   styleUrls: ["./filter-sidebar.component.scss"],
@@ -62,26 +60,26 @@ export class FilterSidebarComponent {
   ngOnInit() {
     // Initialize selected values from filter state
     if (this.filterState) {
-      this.selectedCategories = this.filterState.categories || [];
-      this.selectedMaterials = this.filterState.materials || [];
-      this.selectedFeatures = this.filterState.features || [];
-      this.selectedColors = this.filterState.colors || [];
+      this.selectedCategories = [...this.filterState.categories] || [];
+      this.selectedMaterials = [...this.filterState.materials] || [];
+      this.selectedFeatures = [...this.filterState.features] || [];
+      this.selectedColors = [...this.filterState.colors] || [];
       this.selectedRating = this.filterState.rating || 0;
-      this.selectedPriceRange = this.filterState.priceRange || {
-        ...this.priceRange,
+      this.selectedPriceRange = {
+        ...(this.filterState.priceRange || this.priceRange),
       };
     }
   }
 
   ngOnChanges() {
     // Update local state when filter state changes
-    this.selectedCategories = this.filterState.categories || [];
-    this.selectedMaterials = this.filterState.materials || [];
-    this.selectedFeatures = this.filterState.features || [];
-    this.selectedColors = this.filterState.colors || [];
+    this.selectedCategories = [...this.filterState.categories] || [];
+    this.selectedMaterials = [...this.filterState.materials] || [];
+    this.selectedFeatures = [...this.filterState.features] || [];
+    this.selectedColors = [...this.filterState.colors] || [];
     this.selectedRating = this.filterState.rating || 0;
-    this.selectedPriceRange = this.filterState.priceRange || {
-      ...this.priceRange,
+    this.selectedPriceRange = {
+      ...(this.filterState.priceRange || this.priceRange),
     };
   }
 

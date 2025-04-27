@@ -24,7 +24,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatBadgeModule } from "@angular/material/badge";
 
 @NgModule({
-  declarations: [ProductsComponent],
+  declarations: [],
   imports: [
     CommonModule,
     FormsModule,
@@ -47,4 +47,4 @@ import { MatBadgeModule } from "@angular/material/badge";
     MatBadgeModule,
   ],
 })
-export class ProductsModule {}
+export class ProductsModule { }

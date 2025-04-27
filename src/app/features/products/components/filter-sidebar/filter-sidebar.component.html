@@ -1,1 +1,161 @@
-<p>filter-sidebar works!</p>
+<div class="sidebar-wrapper">
+  <div class="sidebar-header">
+    <h2 class="sidebar-title">Filter Products</h2>
+    <button
+      *ngIf="isMobile"
+      mat-icon-button
+      class="close-btn"
+      (click)="closeFilter()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Categories Filter -->
+  <mat-expansion-panel [expanded]="true" class="filter-panel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Categories</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="category-list">
+      <div *ngFor="let category of categories" class="category-item">
+        <mat-checkbox
+          [checked]="selectedCategories.includes(category.value)"
+          (change)="filterChange()"
+          [(ngModel)]="selectedCategories"
+          [value]="category.value"
+          class="neumorph-checkbox"
+        >
+          {{ category.label }}
+          <span class="item-count">({{ category.count }})</span>
+        </mat-checkbox>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Price Range Filter -->
+  <mat-expansion-panel [expanded]="true" class="filter-panel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Price Range</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="price-slider">
+      <mat-slider
+        [min]="priceRange.min"
+        [max]="priceRange.max"
+        [step]="10"
+        [discrete]="true"
+        class="neumorph-slider"
+        (change)="updatePriceRange($event)"
+      >
+        <input matSliderStartThumb [(ngModel)]="selectedPriceRange.min" />
+        <input matSliderEndThumb [(ngModel)]="selectedPriceRange.max" />
+      </mat-slider>
+
+      <div class="price-range-display">
+        <span class="price-value">${{ selectedPriceRange.min }}</span>
+        <span class="price-value">${{ selectedPriceRange.max }}</span>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Colors Filter -->
+  <mat-expansion-panel [expanded]="true" class="filter-panel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Colors</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="color-options">
+      <div
+        *ngFor="let color of colors"
+        class="color-option"
+        [class.selected]="isColorSelected(color)"
+        [style.background-color]="color.code"
+        (click)="toggleColor(color)"
+        [attr.title]="color.name"
+      >
+        <mat-icon *ngIf="isColorSelected(color)">check</mat-icon>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Materials Filter -->
+  <mat-expansion-panel [expanded]="true" class="filter-panel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Materials</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="material-list">
+      <div *ngFor="let material of materials" class="material-item">
+        <mat-checkbox
+          [checked]="selectedMaterials.includes(material.value)"
+          (change)="toggleMaterial(material.value, $event)"
+          class="neumorph-checkbox"
+        >
+          {{ material.label }}
+          <span class="item-count">({{ material.count }})</span>
+        </mat-checkbox>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Ratings Filter -->
+  <mat-expansion-panel [expanded]="true" class="filter-panel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Ratings</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="rating-options">
+      <div
+        *ngFor="let rating of ratings"
+        class="rating-option"
+        [class.selected]="selectedRating === rating.value"
+        (click)="selectRating(rating.value)"
+      >
+        <div class="stars">
+          <mat-icon *ngFor="let i of [1, 2, 3, 4, 5]">
+            {{ i <= rating.value ? "star" : "star_border" }}
+          </mat-icon>
+        </div>
+        <span class="rating-count">& up ({{ rating.count }})</span>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Features Filter -->
+  <mat-expansion-panel [expanded]="true" class="filter-panel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Features</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="feature-list">
+      <div *ngFor="let feature of features" class="feature-item">
+        <mat-checkbox
+          [checked]="selectedFeatures.includes(feature.value)"
+          (change)="toggleFeature(feature.value, $event)"
+          class="neumorph-checkbox"
+        >
+          {{ feature.label }}
+          <span class="item-count">({{ feature.count }})</span>
+        </mat-checkbox>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Action Buttons -->
+  <div class="filter-actions">
+    <button mat-stroked-button class="clear-btn" (click)="clearAllFilters()">
+      Clear All
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      class="apply-btn"
+      (click)="applyFilters()"
+    >
+      Apply Filters
+    </button>
+  </div>
+</div>

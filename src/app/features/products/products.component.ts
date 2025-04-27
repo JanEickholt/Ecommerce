@@ -17,7 +17,7 @@ import { Subscription } from "rxjs";
 import { ProductService } from "../../../core/services/product.service";
 import { Product } from "../../core/models/product";
 import { FilterSidebarComponent } from "./components/filter-sidebar/filter-sidebar.component";
-import { ProductListComponent } from "./components/product-list/product-list.component";
+import { ProductGridComponent } from "./components/product-grid/product-grid.component";
 import { ProductSortComponent } from "./components/product-sort/product-sort.component";
 import { CategoryBreadcrumbComponent } from "./components/category-breadcrumb/category-breadcrumb.component";
 import { ActiveFiltersComponent } from "./components/active-filters/active-filters.component";
@@ -41,7 +41,7 @@ export interface ProductFilterState {
     MatButtonModule,
     MatIconModule,
     FilterSidebarComponent,
-    ProductListComponent,
+    ProductGridComponent,
     ProductSortComponent,
     CategoryBreadcrumbComponent,
     ActiveFiltersComponent,

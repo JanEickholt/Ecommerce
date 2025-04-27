@@ -33,6 +33,11 @@ export class ActiveFiltersComponent {
     return color ? color.name : value;
   }
 
+  getColorCode(value: string): string {
+    const color = this.colors.find((c) => c.value === value);
+    return color ? color.code : "#cccccc";
+  }
+
   getMaterialLabel(value: string): string {
     const material = this.materials.find((m) => m.value === value);
     return material ? material.label : value;
