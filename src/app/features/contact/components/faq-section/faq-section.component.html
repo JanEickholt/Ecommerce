@@ -1,1 +1,84 @@
-<p>faq-section works!</p>
+<section class="faq-section section-padding">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-subtitle">
+        Find answers to common questions about our products, services, and
+        policies
+      </p>
+    </div>
+
+    <div class="faq-categories">
+      <div class="category-tabs">
+        <button
+          *ngFor="let category of categories; let i = index"
+          class="category-tab neumorph-button"
+          [class.active]="selectedCategory === i"
+          (click)="selectCategory(i)"
+        >
+          <mat-icon>{{ category.icon }}</mat-icon>
+          <span>{{ category.name }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="faq-container">
+      <mat-accordion class="neumorph-accordion">
+        <mat-expansion-panel
+          *ngFor="let faq of filteredFaqs"
+          class="neumorph-panel"
+          (opened)="onPanelOpen(faq)"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ faq.question }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="faq-answer" [innerHTML]="faq.answer"></div>
+          <mat-action-row>
+            <div class="action-row-content">
+              <div class="helpful-question">
+                <span>Was this helpful?</span>
+                <div class="helpful-buttons">
+                  <button mat-icon-button (click)="markHelpful(faq, true)">
+                    <mat-icon>thumb_up</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="markHelpful(faq, false)">
+                    <mat-icon>thumb_down</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <div *ngIf="filteredFaqs.length === 0" class="no-results">
+        <mat-icon>search_off</mat-icon>
+        <p>
+          No FAQs found in this category. Please try another category or contact
+          us directly.
+        </p>
+      </div>
+    </div>
+
+    <div class="faq-search">
+      <div class="search-container neumorph-card">
+        <h3>Can't find what you're looking for?</h3>
+        <p>
+          If you couldn't find the answer to your question, please reach out to
+          our customer service team.
+        </p>
+        <button
+          mat-flat-button
+          color="primary"
+          class="neumorph-button contact-btn"
+          routerLink="/contact"
+        >
+          <mat-icon>email</mat-icon>
+          Contact Us
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
