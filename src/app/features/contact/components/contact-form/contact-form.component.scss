@@ -1,0 +1,100 @@
+.contact-form-container {
+  padding: 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  @media (max-width: 768px) {
+    padding: 30px 20px;
+  }
+  
+  .form-title {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  
+  .form-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+  }
+  
+  .contact-form {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+      
+      @media (max-width: 576px) {
+        grid-template-columns: 1fr;
+      }
+      
+      .neumorph-input {
+        width: 100%;
+        
+        &.full-width {
+          grid-column: 1 / -1;
+        }
+        
+        ::ng-deep {
+          .mat-mdc-text-field-wrapper {
+            background-color: var(--neutral-light);
+            border-radius: 8px;
+            box-shadow: 
+              inset 3px 3px 6px var(--shadow-dark),
+              inset -3px -3px 6px var(--shadow-light);
+          }
+          
+          .mat-mdc-form-field-icon-prefix {
+            color: var(--primary-color);
+            padding-right: 12px;
+          }
+        }
+      }
+    }
+    
+    .form-actions {
+      margin-top: auto;
+      display: flex;
+      justify-content: flex-end;
+      
+      .submit-btn {
+        min-width: 180px;
+        padding: 10px 20px;
+        background-color: var(--primary-color);
+        color: var(--text-light);
+        font-size: 1rem;
+        position: relative;
+        
+        &:hover {
+          background-color: var(--primary-dark);
+        }
+        
+        &:disabled {
+          background-color: var(--neutral-medium);
+          color: var(--text-secondary);
+        }
+        
+        .spinner {
+          margin: 0 auto;
+          
+          ::ng-deep {
+            circle {
+              stroke: var(--text-light);
+            }
+          }
+        }
+        
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}
