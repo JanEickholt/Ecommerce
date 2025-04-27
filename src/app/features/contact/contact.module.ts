@@ -27,11 +27,8 @@ import { ContactInfoComponent } from "./components/contact-info/contact-info.com
 import { LocationMapComponent } from "./components/location-map/location-map.component";
 import { FaqSectionComponent } from "./components/faq-section/faq-section.component";
 
-// Pipe for safe URLs (needed for map iframe)
-import { SafeResourceUrlPipe } from "../../shared/pipes/safe-resource-url.pipe";
-
 @NgModule({
-  declarations: [ContactComponent, SafeResourceUrlPipe],
+  declarations: [ContactComponent],
   imports: [
     CommonModule,
     ContactRoutingModule,
