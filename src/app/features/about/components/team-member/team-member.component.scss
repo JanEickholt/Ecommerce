@@ -1,0 +1,204 @@
+.team-member-card {
+  perspective: 1000px;
+  height: 100%;
+  width: 100%;
+  
+  &.flipped {
+    .card-inner {
+      transform: rotateY(180deg);
+    }
+  }
+  
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    
+    .card-front,
+    .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .card-front {
+      .member-image {
+        height: 250px;
+        overflow: hidden;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease;
+          
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+      
+      .member-info {
+        padding: 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        
+        .member-name {
+          font-size: 1.3rem;
+          font-weight: 500;
+          margin-bottom: 5px;
+          color: var(--text-primary);
+        }
+        
+        .member-position {
+          font-size: 0.9rem;
+          color: var(--primary-color);
+          margin-bottom: 15px;
+        }
+        
+        .card-actions {
+          margin-top: auto;
+          
+          .flip-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background-color: var(--neutral-light);
+            border: none;
+            border-radius: 30px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+            
+            &:hover {
+              background-color: var(--primary-light);
+              color: var(--primary-dark);
+              transform: translateY(-3px);
+            }
+            
+            mat-icon {
+              font-size: 18px;
+              height: 18px;
+              width: 18px;
+            }
+          }
+        }
+      }
+    }
+    
+    .card-back {
+      transform: rotateY(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--neutral-light);
+      
+      .bio-content {
+        padding: 30px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        
+        .member-name {
+          font-size: 1.3rem;
+          font-weight: 500;
+          margin-bottom: 5px;
+          color: var(--text-primary);
+        }
+        
+        .member-position {
+          font-size: 0.9rem;
+          color: var(--primary-color);
+          margin-bottom: 15px;
+        }
+        
+        .member-bio {
+          font-size: 0.95rem;
+          line-height: 1.6;
+          color: var(--text-secondary);
+          margin-bottom: 20px;
+          text-align: left;
+          flex-grow: 1;
+        }
+        
+        .social-links {
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          margin-bottom: 20px;
+          
+          .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--neutral-medium);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            
+            &:hover {
+              background-color: var(--primary-color);
+              color: var(--text-light);
+              transform: translateY(-3px);
+            }
+            
+            mat-icon {
+              font-size: 18px;
+              height: 18px;
+              width: 18px;
+            }
+          }
+        }
+        
+        .card-actions {
+          margin-top: auto;
+          
+          .flip-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background-color: var(--neutral-medium);
+            border: none;
+            border-radius: 30px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+            
+            &:hover {
+              background-color: var(--primary-light);
+              color: var(--primary-dark);
+              transform: translateY(-3px);
+            }
+            
+            mat-icon {
+              font-size: 18px;
+              height: 18px;
+              width: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

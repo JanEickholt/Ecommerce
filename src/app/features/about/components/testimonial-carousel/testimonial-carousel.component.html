@@ -1,0 +1,79 @@
+<section class="testimonials-section section-padding">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">What Our Customers Say</h2>
+      <p class="section-subtitle">
+        Real experiences from people who've transformed their spaces with
+        ComfortHaven
+      </p>
+    </div>
+
+    <div class="testimonial-carousel neumorph-card">
+      <div class="carousel-container">
+        <div
+          class="carousel-track"
+          [style.transform]="
+            'translateX(-' + currentTestimonialIndex * 100 + '%)'
+          "
+        >
+          <div
+            *ngFor="let testimonial of testimonials"
+            class="testimonial-slide"
+          >
+            <div class="quote-icon">
+              <mat-icon>format_quote</mat-icon>
+            </div>
+            <blockquote class="testimonial-quote">
+              {{ testimonial.quote }}
+            </blockquote>
+            <div class="rating">
+              <mat-icon
+                *ngFor="let star of [1, 2, 3, 4, 5]"
+                [class.filled]="star <= testimonial.rating"
+              >
+                {{ star <= testimonial.rating ? "star" : "star_border" }}
+              </mat-icon>
+            </div>
+            <div class="testimonial-author">
+              <div class="author-image">
+                <img [src]="testimonial.image" [alt]="testimonial.author" />
+              </div>
+              <div class="author-info">
+                <h4 class="author-name">{{ testimonial.author }}</h4>
+                <p class="author-position">{{ testimonial.position }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-controls">
+        <button
+          mat-mini-fab
+          class="control-button prev-button"
+          (click)="previousTestimonial()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <div class="carousel-indicators">
+          <span
+            *ngFor="let testimonial of testimonials; let i = index"
+            class="indicator"
+            [class.active]="i === currentTestimonialIndex"
+            (click)="setCurrentTestimonial(i)"
+          >
+          </span>
+        </div>
+
+        <button
+          mat-mini-fab
+          class="control-button next-button"
+          (click)="nextTestimonial()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
