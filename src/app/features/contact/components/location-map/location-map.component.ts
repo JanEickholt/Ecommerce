@@ -3,11 +3,18 @@ import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTabsModule } from "@angular/material/tabs";
+import { SafeResourceUrlPipe } from "../../../../shared/pipes/safe-resource-url.pipe";
 
 @Component({
   selector: "app-location-map",
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatTabsModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTabsModule,
+    SafeResourceUrlPipe,
+  ],
   templateUrl: "./location-map.component.html",
   styleUrls: ["./location-map.component.scss"],
 })
