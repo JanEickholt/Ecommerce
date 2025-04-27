@@ -1,1 +1,29 @@
-<p>active-filters works!</p>
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a routerLink="/">Home</a>
+    </li>
+    <mat-icon>chevron_right</mat-icon>
+    <li class="breadcrumb-item">
+      <a routerLink="/products">Shop</a>
+    </li>
+    <ng-container *ngIf="category">
+      <mat-icon>chevron_right</mat-icon>
+      <li class="breadcrumb-item" [class.active]="!subcategory">
+        <a
+          *ngIf="subcategory"
+          [routerLink]="['/products']"
+          [queryParams]="{ category: category }"
+          >{{ getCategoryTitle() }}</a
+        >
+        <span *ngIf="!subcategory">{{ getCategoryTitle() }}</span>
+      </li>
+    </ng-container>
+    <ng-container *ngIf="subcategory">
+      <mat-icon>chevron_right</mat-icon>
+      <li class="breadcrumb-item active">
+        <span>{{ getSubcategoryTitle() }}</span>
+      </li>
+    </ng-container>
+  </ul>
+</nav>

@@ -1,1 +1,15 @@
+<div class="sort-container">
+  <span class="sort-label">Sort By:</span>
 
+  <mat-form-field appearance="outline" class="sort-dropdown">
+    <mat-select
+      [(value)]="sortOption"
+      (selectionChange)="onSortChange($event)"
+      panelClass="neumorph-select-panel"
+    >
+      <mat-option *ngFor="let option of sortOptions" [value]="option.value">
+        {{ option.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

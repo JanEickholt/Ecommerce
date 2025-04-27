@@ -1,0 +1,206 @@
+.filters-container {
+  padding: 15px 0;
+  
+  .filter-section {
+    margin-bottom: 25px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin: 0 0 15px;
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--primary-color);
+      }
+    }
+  }
+  
+  // Categories, Materials, Features
+  .filter-item {
+    margin-bottom: 10px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    // Checkbox styling
+    ::ng-deep {
+      .neumorph-checkbox {
+        .mdc-checkbox {
+          &__background {
+            border-radius: 4px;
+            border-color: var(--text-secondary) !important;
+          }
+          
+          &__checkmark {
+            color: var(--text-light);
+          }
+        }
+        
+        .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+          background-color: var(--primary-color) !important;
+          border-color: var(--primary-color) !important;
+        }
+        
+        .mdc-form-field {
+          color: var(--text-secondary);
+        }
+        
+        .item-count {
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+  
+  // Price Range
+  .price-filter {
+    .neumorph-slider {
+      width: 100%;
+      margin-bottom: 15px;
+      
+      ::ng-deep {
+        .mdc-slider__track--active {
+          background-color: var(--primary-color);
+        }
+        
+        .mdc-slider__thumb {
+          background-color: var(--neutral-light);
+          border: 2px solid var(--primary-color);
+          
+          .mdc-slider__thumb-knob {
+            box-shadow: 
+              2px 2px 5px var(--shadow-dark),
+              -2px -2px 5px var(--shadow-light);
+          }
+        }
+      }
+    }
+    
+    .price-display {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      
+      .price-value {
+        padding: 5px 10px;
+        background-color: var(--neutral-light);
+        border-radius: 5px;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        box-shadow: 
+          inset 2px 2px 5px var(--shadow-dark),
+          inset -2px -2px 5px var(--shadow-light);
+      }
+      
+      .price-separator {
+        color: var(--text-secondary);
+      }
+    }
+  }
+  
+  // Colors
+  .color-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    
+    .color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 
+        2px 2px 5px var(--shadow-dark),
+        -2px -2px 5px var(--shadow-light);
+      transition: transform 0.3s ease;
+      border: 2px solid var(--neutral-light);
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+      
+      &.selected {
+        border: 2px solid var(--primary-color);
+        
+        mat-icon {
+          color: white;
+          font-size: 16px;
+          filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+        }
+      }
+    }
+  }
+  
+  // Ratings
+  .rating-filters {
+    .rating-option {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: var(--neutral-light);
+        box-shadow: 
+          inset 2px 2px 5px var(--shadow-dark),
+          inset -2px -2px 5px var(--shadow-light);
+      }
+      
+      &.selected {
+        background-color: var(--neutral-light);
+        box-shadow: 
+          inset 2px 2px 5px var(--shadow-dark),
+          inset -2px -2px 5px var(--shadow-light);
+        
+        .stars {
+          mat-icon {
+            color: var(--warning);
+          }
+        }
+      }
+      
+      .stars {
+        display: flex;
+        
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: var(--text-secondary);
+          
+          &:not(:last-child) {
+            margin-right: -4px;
+          }
+        }
+      }
+      
+      .rating-text {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-left: 5px;
+      }
+    }
+  }
+}

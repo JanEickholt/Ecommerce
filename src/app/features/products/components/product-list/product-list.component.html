@@ -1,1 +1,266 @@
-<p>product-list works!</p>
+<div class="product-list-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner [diameter]="50" class="loading-spinner"></mat-spinner>
+    <p>Loading products...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && products.length === 0" class="empty-state">
+    <div class="empty-content neumorph-card">
+      <div class="empty-icon">
+        <mat-icon>search_off</mat-icon>
+      </div>
+      <h3>{{ emptyMessage }}</h3>
+      <p>Try adjusting your filters to find what you're looking for.</p>
+      <button
+        mat-raised-button
+        color="primary"
+        class="neumorph-button"
+        (click)="onClearFilters()"
+      >
+        Clear All Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Product Grid View -->
+  <div
+    *ngIf="!isLoading && products.length > 0 && viewMode === 'grid'"
+    class="product-grid"
+  >
+    <div
+      *ngFor="let product of products; trackBy: trackById"
+      class="product-card neumorph-card"
+    >
+      <div class="product-badges" *ngIf="product.badge">
+        <span class="badge" [ngClass]="product.badgeType">{{
+          product.badge
+        }}</span>
+      </div>
+
+      <a [routerLink]="['/product', product.id]" class="product-link">
+        <div class="product-image">
+          <img
+            [src]="product.imageUrl || '/api/placeholder/300/300'"
+            [alt]="product.name"
+          />
+
+          <!-- Quick Actions Overlay -->
+          <div class="quick-actions">
+            <button
+              mat-mini-fab
+              matTooltip="Add to Wishlist"
+              class="wishlist-btn"
+              (click)="addToWishlist($event, product)"
+            >
+              <mat-icon>favorite_border</mat-icon>
+            </button>
+            <button
+              mat-mini-fab
+              matTooltip="Quick View"
+              class="quick-view-btn"
+              (click)="quickView($event, product)"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button
+              mat-mini-fab
+              matTooltip="Compare"
+              class="compare-btn"
+              (click)="addToCompare($event, product)"
+            >
+              <mat-icon>compare_arrows</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="product-info">
+          <h3 class="product-title">{{ product.name }}</h3>
+
+          <div class="product-rating" *ngIf="product.rating">
+            <div class="stars">
+              <mat-icon *ngFor="let i of [1, 2, 3, 4, 5]">
+                {{
+                  i <= product.rating
+                    ? "star"
+                    : i > product.rating && i - 1 < product.rating
+                      ? "star_half"
+                      : "star_border"
+                }}
+              </mat-icon>
+            </div>
+            <span class="review-count" *ngIf="product.reviewCount"
+              >({{ product.reviewCount }})</span
+            >
+          </div>
+
+          <div class="product-price">
+            <span class="original-price" *ngIf="product.oldPrice"
+              >${{ product.oldPrice.toFixed(2) }}</span
+            >
+            <span class="current-price">${{ product.price.toFixed(2) }}</span>
+          </div>
+
+          <!-- Color Options (if available) -->
+          <div
+            class="color-options"
+            *ngIf="product.colors && product.colors.length > 0"
+          >
+            <span
+              *ngFor="let color of product.colors.slice(0, 4)"
+              class="color-swatch"
+              [style.background-color]="color.code"
+              [matTooltip]="color.name"
+            >
+            </span>
+            <span class="more-colors" *ngIf="product.colors.length > 4"
+              >+{{ product.colors.length - 4 }}</span
+            >
+          </div>
+        </div>
+      </a>
+
+      <div class="product-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          class="add-to-cart-btn"
+          [disabled]="!product.inStock"
+          (click)="addToCart($event, product)"
+        >
+          <mat-icon>shopping_cart</mat-icon>
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product List View -->
+  <div
+    *ngIf="!isLoading && products.length > 0 && viewMode === 'list'"
+    class="product-list"
+  >
+    <div
+      *ngFor="let product of products; trackBy: trackById"
+      class="product-list-item neumorph-card"
+    >
+      <div class="product-badges" *ngIf="product.badge">
+        <span class="badge" [ngClass]="product.badgeType">{{
+          product.badge
+        }}</span>
+      </div>
+
+      <div class="product-image">
+        <a [routerLink]="['/product', product.id]">
+          <img
+            [src]="product.imageUrl || '/api/placeholder/300/300'"
+            [alt]="product.name"
+          />
+        </a>
+      </div>
+
+      <div class="product-details">
+        <a [routerLink]="['/product', product.id]" class="product-title">{{
+          product.name
+        }}</a>
+
+        <div class="product-rating">
+          <div class="stars">
+            <mat-icon *ngFor="let i of [1, 2, 3, 4, 5]">
+              {{
+                i <= product.rating
+                  ? "star"
+                  : i > product.rating && i - 1 < product.rating
+                    ? "star_half"
+                    : "star_border"
+              }}
+            </mat-icon>
+          </div>
+          <span class="review-count" *ngIf="product.reviewCount"
+            >({{ product.reviewCount }})</span
+          >
+        </div>
+
+        <p class="product-description">{{ product.shortDescription }}</p>
+
+        <div class="product-meta">
+          <!-- Color Options -->
+          <div
+            class="color-options"
+            *ngIf="product.colors && product.colors.length > 0"
+          >
+            <span
+              *ngFor="let color of product.colors.slice(0, 4)"
+              class="color-swatch"
+              [style.background-color]="color.code"
+              [matTooltip]="color.name"
+            >
+            </span>
+            <span class="more-colors" *ngIf="product.colors.length > 4"
+              >+{{ product.colors.length - 4 }}</span
+            >
+          </div>
+
+          <!-- Stock Status -->
+          <div
+            class="stock-status"
+            [ngClass]="{
+              'in-stock': product.inStock,
+              'out-of-stock': !product.inStock,
+            }"
+          >
+            <mat-icon>{{
+              product.inStock ? "check_circle" : "highlight_off"
+            }}</mat-icon>
+            <span>{{ product.inStock ? "In Stock" : "Out of Stock" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-actions">
+        <div class="product-price">
+          <span class="original-price" *ngIf="product.oldPrice"
+            >${{ product.oldPrice.toFixed(2) }}</span
+          >
+          <span class="current-price">${{ product.price.toFixed(2) }}</span>
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="add-to-cart-btn"
+          [disabled]="!product.inStock"
+          (click)="addToCart($event, product)"
+        >
+          <mat-icon>shopping_cart</mat-icon>
+          Add to Cart
+        </button>
+
+        <div class="quick-actions">
+          <button
+            mat-icon-button
+            matTooltip="Add to Wishlist"
+            (click)="addToWishlist($event, product)"
+          >
+            <mat-icon>favorite_border</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Quick View"
+            (click)="quickView($event, product)"
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Compare"
+            (click)="addToCompare($event, product)"
+          >
+            <mat-icon>compare_arrows</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

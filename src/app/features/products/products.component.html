@@ -1,57 +1,121 @@
-<div class="products-page-container">
-  <mat-drawer-container class="drawer-container">
-    <!-- Filter Sidebar -->
-    <mat-drawer #filterDrawer mode="side" [opened]="!isMobile" class="filter-drawer">
-      <app-product-filter
-        [categories]="categories"
-        [priceRange]="priceRange"
-        [colors]="colors" 
-        [materials]="materials"
-        [ratings]="ratings"
-        [features]="features"
-        [filterState]="filterState"
-        (filterChanged)="applyFilters($event)"
-        (clearFilters)="clearFilters()"
-        [isMobile]="isMobile"
-        (close)="filterDrawer.close()"
-      ></app-product-filter>
-    </mat-drawer>
+<div class="products-page">
+  <div class="container">
+    <!-- Category Breadcrumb -->
+    <app-category-breadcrumb 
+      [category]="selectedCategory" 
+      [subcategory]="selectedSubcategory">
+    </app-category-breadcrumb>
 
-    <!-- Main Content -->
-    <mat-drawer-content class="main-content">
-      <div class="toolbar">
-        <!-- Mobile Filter Toggle -->
-        <button 
-          *ngIf="isMobile" 
-          mat-raised-button 
-          color="primary" 
-          class="filter-toggle-btn"
-          (click)="filterDrawer.toggle()">
-          <mat-icon>filter_list</mat-icon> Filters
-        </button>
+    <!-- Main Content Area with Sidebar -->
+    <mat-drawer-container class="products-container">
+      <!-- Filter Sidebar -->
+      <mat-drawer #filterDrawer mode="side" [opened]="!isMobile" class="filter-sidebar">
+        <app-filter-sidebar
+          [categories]="categories"
+          [priceRange]="priceRange"
+          [colors]="colors"
+          [materials]="materials"
+          [ratings]="ratings"
+          [features]="features"
+          [filterState]="filterState"
+          (filterChanged)="applyFilters($event)"
+          (clearFilters)="clearFilters()"
+          [isMobile]="isMobile"
+          (close)="filterDrawer.close()">
+        </app-filter-sidebar>
+      </mat-drawer>
 
-        <!-- Product Sort -->
-        <app-product-sort
-          [sortOption]="filterState.sortBy"
-          (sortChanged)="sortProducts($event)"
-        ></app-product-sort>
-      </div>
+      <!-- Main Products Area -->
+      <mat-drawer-content class="main-content">
+        <!-- Page Header: Title and Filter Toggle -->
+        <div class="page-header">
+          <h1 class="page-title">
+            {{ selectedCategory ? (selectedCategory | titlecase) : 'All Products' }}
+            <span *ngIf="selectedSubcategory"> - {{ selectedSubcategory | titlecase }}</span>
+          </h1>
+          
+          <button *ngIf="isMobile" mat-stroked-button class="filter-toggle" (click)="toggleFilterDrawer()">
+            <mat-icon>filter_list</mat-icon> Filters
+          </button>
+        </div>
 
-      <!-- Product Grid -->
-      <app-product-grid
-        [products]="products"
-        [totalProducts]="totalProducts"
-        [isLoading]="isLoading"
-        [viewMode]="viewMode"
-        [pageSize]="pageSize"
-        (viewModeChanged)="setViewMode($event)"
-        (pageChanged)="onPageChange($event)"
-        (productAdded)="addToCart($event)"
-        (productWishlisted)="addToWishlist($event)"
-        (productQuickViewed)="quickView($event)"
-        (productCompared)="addToCompare($event)"
-        (clearAllFilters)="clearFilters()"
-      ></app-product-grid>
-    </mat-drawer-content>
-  </mat-drawer-container>
+        <!-- Active Filters Section -->
+        <app-active-filters 
+          *ngIf="filterState.categories.length > 0 || 
+                filterState.colors.length > 0 || 
+                filterState.materials.length > 0 || 
+                filterState.features.length > 0 || 
+                filterState.rating > 0 ||
+                (filterState.priceRange.min > 0 || filterState.priceRange.max < 5000)"
+          [filterState]="filterState"
+          [categories]="categories"
+          [colors]="colors" 
+          [materials]="materials"
+          [features]="features"
+          (removeFilter)="removeFilter($event.type, $event.value)"
+          (clearAllFilters)="clearFilters()">
+        </app-active-filters>
+
+        <!-- Toolbar: Sort and View Options -->
+        <div class="products-toolbar">
+          <!-- Results Count -->
+          <div class="results-count">
+            Showing <span class="highlight">{{ products.length }}</span> of 
+            <span class="highlight">{{ totalProducts }}</span> products
+          </div>
+
+          <div class="toolbar-actions">
+            <!-- Sort Dropdown -->
+            <app-product-sort 
+              [sortOption]="filterState.sortBy"
+              (sortChanged)="sortProducts($event)">
+            </app-product-sort>
+
+            <!-- View Toggle (Grid/List) -->
+            <div class="view-toggle">
+              <button 
+                mat-icon-button 
+                [class.active]="viewMode === 'grid'"
+                (click)="setViewMode('grid')"
+                aria-label="Grid view">
+                <mat-icon>grid_view</mat-icon>
+              </button>
+              <button 
+                mat-icon-button 
+                [class.active]="viewMode === 'list'"
+                (click)="setViewMode('list')"
+                aria-label="List view">
+                <mat-icon>view_list</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product List -->
+        <app-product-list
+          [products]="products"
+          [isLoading]="isLoading"
+          [viewMode]="viewMode"
+          [emptyMessage]="'No products match your current filters.'"
+          (productAdded)="addToCart($event)"
+          (productWishlisted)="addToWishlist($event)"
+          (productQuickViewed)="quickView($event)"
+          (productCompared)="addToCompare($event)"
+          (clearFilters)="clearFilters()">
+        </app-product-list>
+
+        <!-- Pagination -->
+        <div class="pagination-container" *ngIf="totalProducts > 0">
+          <mat-paginator
+            [length]="totalProducts"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex"
+            [pageSizeOptions]="[12, 24, 36, 48]"
+            (page)="onPageChange($event)"
+            aria-label="Select page">
+          </mat-paginator>
+        </div>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </div>
 </div>

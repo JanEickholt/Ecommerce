@@ -1,116 +1,183 @@
-.products-page-container {
-  width: 100%;
-  min-height: calc(100vh - 64px);
+.products-page {
+  padding: 40px 0 80px;
 
-  .drawer-container {
-    width: 100%;
-    height: 100%;
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    
+    .page-title {
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin: 0;
+      
+      @media (max-width: 768px) {
+        font-size: 1.6rem;
+      }
+    }
+    
+    .filter-toggle {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-primary);
+      background-color: var(--neutral-light);
+      box-shadow: 
+        3px 3px 6px var(--shadow-dark),
+        -3px -3px 6px var(--shadow-light);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: var(--neutral-medium);
+      }
+    }
+  }
+
+  .products-container {
+    min-height: 600px;
     background-color: transparent;
     
-    .filter-drawer {
-      width: 280px;
-      border-right: none;
-      background-color: var(--background-primary);
-      height: 100%;
-      overflow-y: auto;
-      
-      @media (max-width: 992px) {
-        width: 100%;
-      }
-    }    
+    // Hide the default sidenav backdrop
+    ::ng-deep .mat-drawer-backdrop {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
 
-     .main-content {
-      padding: 0 20px;
-      background-color: transparent;
-      height: 100%;
-      overflow-y: auto; 
+  .filter-sidebar {
+    width: 300px;
+    background-color: var(--background-primary);
+    border-right: none;
+    
+    @media (max-width: 992px) {
+      width: 320px;
+    }
+    
+    @media (max-width: 480px) {
+      width: 90%;
+      max-width: 320px;
+    }
+  }
+
+  .main-content {
+    padding: 0 0 0 30px;
+    background-color: transparent;
+    
+    @media (max-width: 992px) {
+      padding: 0;
+    }
+  }
+
+  .products-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--neutral-light);
+    border-radius: 12px;
+    box-shadow: 
+      3px 3px 6px var(--shadow-dark),
+      -3px -3px 6px var(--shadow-light);
+    
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    
+    .results-count {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
       
-      .toolbar {
-        position: sticky;
-        top: 0;
-        background-color: var(--background-primary);
-        display: flex;
-        align-items: center;
+      .highlight {
+        color: var(--primary-color);
+        font-weight: 500;
+      }
+    }
+    
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      
+      @media (max-width: 576px) {
+        width: 100%;
         justify-content: space-between;
-        margin-bottom: 1rem;
-        padding: 1rem 0;
+      }
+    }
+    
+    .view-toggle {
+      display: flex;
+      background-color: var(--background-primary);
+      border-radius: 8px;
+      box-shadow: 
+        inset 2px 2px 5px var(--shadow-dark),
+        inset -2px -2px 5px var(--shadow-light);
+      
+      button {
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
         
-        .filter-toggle-btn {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          
-          mat-icon {
-            font-size: 18px;
-          }
+        &.active {
+          color: var(--primary-color);
+        }
+        
+        &:hover {
+          color: var(--primary-color);
         }
       }
     }
   }
-}
 
-::ng-deep app-product-grid {
-  display: block;
-  min-height: calc(100vh - 120px); 
-}
-
-::ng-deep {
-  .mat-drawer-backdrop.mat-drawer-shown {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-  
-  .mat-drawer-container {
-    background-color: transparent;
-  }
-  
-  .mat-drawer {
-    border-radius: 8px;
-  }
-  
-  .mat-drawer-content {
-  }
-}
-
-@media (max-width: 992px) {
-  .products-page-container {
-    height: calc(100vh - 56px); 
+  .pagination-container {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
     
-    .drawer-container {
-      .filter-drawer {
-        width: 100%;
-        max-width: 100%;
-      }
-      
-      .main-content {
-        padding: 0 10px;
+    ::ng-deep {
+      .mat-mdc-paginator {
+        background-color: transparent;
+        
+        .mat-mdc-paginator-container {
+          min-height: 48px;
+          background-color: var(--neutral-light);
+          border-radius: 50px;
+          box-shadow: 
+            3px 3px 6px var(--shadow-dark),
+            -3px -3px 6px var(--shadow-light);
+          padding: 0 15px;
+        }
+        
+        .mat-mdc-icon-button {
+          background-color: var(--background-primary);
+          box-shadow: 
+            2px 2px 5px var(--shadow-dark),
+            -2px -2px 5px var(--shadow-light);
+          margin: 0 5px;
+          
+          &:disabled {
+            opacity: 0.5;
+            box-shadow: none;
+          }
+        }
+        
+        .mat-mdc-select-value {
+          color: var(--text-primary);
+        }
+        
+        .mat-mdc-paginator-range-label {
+          margin: 0 15px;
+          color: var(--text-secondary);
+        }
       }
     }
-  }
-}
-
-.neumorph-card {
-  background-color: var(--background-light, #f0f4f8);
-  border-radius: 12px;
-  box-shadow: 
-    8px 8px 16px rgba(174, 174, 192, 0.4),
-    -8px -8px 16px rgba(255, 255, 255, 0.8);
-}
-
-.neumorph-button {
-  box-shadow: 
-    4px 4px 8px rgba(174, 174, 192, 0.4),
-    -4px -4px 8px rgba(255, 255, 255, 0.8);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    box-shadow: 
-      6px 6px 12px rgba(174, 174, 192, 0.5),
-      -6px -6px 12px rgba(255, 255, 255, 0.9);
-  }
-  
-  &:active {
-    box-shadow: 
-      inset 4px 4px 8px rgba(174, 174, 192, 0.5),
-      inset -4px -4px 8px rgba(255, 255, 255, 0.8);
   }
 }

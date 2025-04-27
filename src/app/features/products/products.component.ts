@@ -8,11 +8,19 @@ import {
   Inject,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { MatSidenavModule, MatDrawer } from "@angular/material/sidenav";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
 import { Subscription } from "rxjs";
+
 import { ProductService } from "../../../core/services/product.service";
 import { Product } from "../../core/models/product";
-import { MatDrawer } from "@angular/material/sidenav";
-import { isPlatformBrowser } from "@angular/common";
+import { FilterSidebarComponent } from "./components/filter-sidebar/filter-sidebar.component";
+import { ProductListComponent } from "./components/product-list/product-list.component";
+import { ProductSortComponent } from "./components/product-sort/product-sort.component";
+import { CategoryBreadcrumbComponent } from "./components/category-breadcrumb/category-breadcrumb.component";
+import { ActiveFiltersComponent } from "./components/active-filters/active-filters.component";
 
 export interface ProductFilterState {
   categories: string[];
@@ -26,6 +34,18 @@ export interface ProductFilterState {
 
 @Component({
   selector: "app-products",
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule,
+    FilterSidebarComponent,
+    ProductListComponent,
+    ProductSortComponent,
+    CategoryBreadcrumbComponent,
+    ActiveFiltersComponent,
+  ],
   templateUrl: "./products.component.html",
   styleUrls: ["./products.component.scss"],
 })
@@ -36,9 +56,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
   totalProducts: number = 0;
   isLoading: boolean = true;
   isMobile: boolean = false;
-  private isBrowser: boolean;
   pageSize: number = 12;
   pageIndex: number = 0;
+  viewMode: "grid" | "list" = "grid";
+  selectedCategory: string | null = null;
+  selectedSubcategory: string | null = null;
+  private isBrowser: boolean;
+
   categories: any[] = [];
   priceRange: { min: number; max: number } = { min: 0, max: 5000 };
   colors: any[] = [];
@@ -69,8 +93,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
-  viewMode: "grid" | "list" = "grid";
-
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
@@ -91,9 +113,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   checkScreenSize(): void {
-    if (this.isBrowser) {
-      this.isMobile = window.innerWidth < 992;
-    }
+    this.isMobile = window.innerWidth < 992;
   }
 
   ngOnInit(): void {
@@ -102,9 +122,18 @@ export class ProductsComponent implements OnInit, OnDestroy {
         const filterState: Partial<ProductFilterState> = {};
 
         if (params["category"]) {
+          this.selectedCategory = params["category"];
           filterState.categories = Array.isArray(params["category"])
             ? params["category"]
             : [params["category"]];
+        } else {
+          this.selectedCategory = null;
+        }
+
+        if (params["subcategory"]) {
+          this.selectedSubcategory = params["subcategory"];
+        } else {
+          this.selectedSubcategory = null;
         }
 
         if (params["minPrice"] && params["maxPrice"]) {
@@ -164,6 +193,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
       }),
     );
 
+    this.loadFilterData();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  loadFilterData(): void {
     this.subscriptions.add(
       this.productService.categories$.subscribe((categories) => {
         this.categories = categories;
@@ -187,10 +224,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
         this.priceRange = priceRange;
       }),
     );
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   loadProducts(): void {
@@ -277,7 +310,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   clearFilters(): void {
     this.productService.resetFilters();
-
     this.pageIndex = 0;
 
     this.updateQueryParams(
@@ -303,6 +335,39 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   addToCompare(product: Product): void {
     console.log("Add to compare:", product);
+  }
+
+  removeFilter(filterType: string, value: string): void {
+    // Handle removing filters
+    const newFilterState = { ...this.filterState };
+
+    if (filterType === "category") {
+      newFilterState.categories = newFilterState.categories.filter(
+        (c) => c !== value,
+      );
+    } else if (filterType === "color") {
+      newFilterState.colors = newFilterState.colors.filter((c) => c !== value);
+    } else if (filterType === "material") {
+      newFilterState.materials = newFilterState.materials.filter(
+        (m) => m !== value,
+      );
+    } else if (filterType === "feature") {
+      newFilterState.features = newFilterState.features.filter(
+        (f) => f !== value,
+      );
+    } else if (filterType === "rating") {
+      newFilterState.rating = 0;
+    } else if (filterType === "price") {
+      newFilterState.priceRange = { min: 0, max: 5000 };
+    }
+
+    this.applyFilters(newFilterState);
+  }
+
+  toggleFilterDrawer(): void {
+    if (this.filterDrawer) {
+      this.filterDrawer.toggle();
+    }
   }
 
   private updateQueryParams(params: any, replace: boolean = false): void {

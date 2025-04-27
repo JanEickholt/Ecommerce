@@ -4,63 +4,93 @@
   gap: 10px;
   
   .sort-label {
-    color: var(--text-secondary, #697386);
-    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
     white-space: nowrap;
   }
   
-  .sort-selector {
+  .sort-dropdown {
     width: 180px;
-    margin-bottom: -1.25em;
+    margin-bottom: -1.25em; // Adjust for Angular Material's bottom margin
     
     ::ng-deep {
+      // Remove bottom spacing
       .mat-mdc-form-field-subscript-wrapper {
         display: none;
       }
       
-      .mat-mdc-form-field-infix {
-        min-height: auto;
-        padding: 8px 0;
+      // Custom field appearance
+      .mat-mdc-text-field-wrapper {
+        background-color: var(--background-primary);
+        border-radius: 8px;
+        box-shadow: 
+          inset 3px 3px 6px var(--shadow-dark),
+          inset -3px -3px 6px var(--shadow-light);
+        padding: 0 15px;
       }
       
-      .mat-mdc-form-field-flex {
-        min-height: auto;
-      }
-      
+      // Style for the selector value
       .mat-mdc-select-value {
-        color: var(--text-primary, #374151);
-        font-weight: 500;
+        color: var(--text-primary);
+        font-size: 0.95rem;
       }
       
-      .mat-mdc-form-field-outline {
-        color: var(--border-color, #e2e8f0);
+      // Arrow icon color
+      .mat-mdc-select-arrow {
+        color: var(--text-secondary);
       }
       
+      // Adjust the height of the field
+      .mat-mdc-form-field-infix {
+        padding: 10px 0;
+        min-height: auto;
+      }
+      
+      // No outline
       .mdc-notched-outline__leading,
       .mdc-notched-outline__notch,
       .mdc-notched-outline__trailing {
-        border-color: var(--border-color, #e2e8f0);
-        border-width: 1px;
+        border-color: transparent !important;
       }
-      
-      .mat-mdc-form-field:hover .mdc-notched-outline__leading,
-      .mat-mdc-form-field:hover .mdc-notched-outline__notch,
-      .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
-        border-color: var(--primary-light, #90caf9);
-      }
+    }
+  }
+
+  // Responsive handling
+  @media (max-width: 576px) {
+    .sort-dropdown {
+      width: 160px;
     }
   }
 }
 
-// Responsive styles
-@media (max-width: 576px) {
-  .sort-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
+// Global styles for the dropdown panel
+::ng-deep {
+  .neumorph-select-panel {
+    background-color: var(--background-primary);
+    border-radius: 8px;
+    box-shadow: 
+      5px 5px 10px var(--shadow-dark),
+      -5px -5px 10px var(--shadow-light);
+    overflow: hidden;
     
-    .sort-selector {
-      width: 100%;
+    .mat-mdc-option {
+      color: var(--text-primary);
+      
+      &:hover:not(.mdc-list-item--disabled) {
+        background-color: var(--neutral-light);
+      }
+      
+      &.mat-mdc-option-active {
+        background-color: var(--primary-light);
+      }
+      
+      &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+        background-color: var(--primary-light);
+        
+        .mdc-list-item__primary-text {
+          color: var(--primary-dark);
+        }
+      }
     }
   }
 }
