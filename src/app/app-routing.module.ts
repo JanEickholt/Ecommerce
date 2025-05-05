@@ -34,11 +34,6 @@ const routes: Routes = [
       import("./features/auth/auth.module").then((m) => m.AuthModule),
   },
   {
-    path: "about",
-    loadChildren: () =>
-      import("./features/about/about.module").then((m) => m.AboutModule),
-  },
-  {
     path: "orders",
     loadChildren: () =>
       import("./features/orders/orders.module").then((m) => m.OrdersModule),
