@@ -17,7 +17,6 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AuthService } from "../../../../core/services/auth.service";
 import { first } from "rxjs/operators";
-import GoogleIcon from "@mui/icons-material/Google";
 
 @Component({
   selector: "app-register",
@@ -32,7 +31,6 @@ import GoogleIcon from "@mui/icons-material/Google";
     MatButtonModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-    GoogleIcon,
   ],
   templateUrl: "./register.component.html",
   styleUrl: "./register.component.scss",

@@ -12,7 +12,6 @@ import { ProductService } from "../../../core/services/product.service";
 import { CartService } from "../../../core/services/cart.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Product, ProductReview } from "../../core/models/product";
-import PinterestIcon from "@mui/icons-material/Pinterest";
 
 @Component({
   selector: "app-product-details",
@@ -20,7 +19,8 @@ import PinterestIcon from "@mui/icons-material/Pinterest";
   styleUrls: ["./product-details.component.scss"],
 })
 export class ProductDetailsComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild("reviewsTab") reviewsTab?: ElementRef;
 
   // Product data
@@ -46,7 +46,7 @@ export class ProductDetailsComponent
     private productService: ProductService,
     private cartService: CartService,
     private snackBar: MatSnackBar,
-  ) { }
+  ) {}
 
   // Helper method to format category parameter safely
   formatCategoryParam(category?: string): string {

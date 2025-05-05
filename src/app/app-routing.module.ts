@@ -27,41 +27,16 @@ const routes: Routes = [
     loadChildren: () =>
       import("./features/cart/cart.module").then((m) => m.CartModule),
   },
-  {
-    path: "checkout",
-    loadChildren: () =>
-      import("./features/checkout/checkout.module").then(
-        (m) => m.CheckoutModule,
-      ),
-  },
+  {},
   {
     path: "auth",
     loadChildren: () =>
       import("./features/auth/auth.module").then((m) => m.AuthModule),
   },
   {
-    path: "contact",
-    loadChildren: () =>
-      import("./features/contact/contact.module").then((m) => m.ContactModule),
-  },
-  {
     path: "about",
     loadChildren: () =>
       import("./features/about/about.module").then((m) => m.AboutModule),
-  },
-  {
-    path: "profile",
-    loadChildren: () =>
-      import("./features/user-profile/user-profile.module").then(
-        (m) => m.UserProfileModule,
-      ),
-  },
-  {
-    path: "wishlist",
-    loadChildren: () =>
-      import("./features/wishlist/wishlist.module").then(
-        (m) => m.WishlistModule,
-      ),
   },
   {
     path: "orders",
