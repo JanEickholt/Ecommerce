@@ -10,7 +10,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { ProductService } from "../../../core/services/product.service";
 import { CartService } from "../../../core/services/cart.service";
-import { WishlistService } from "../../../core/services/wishlist.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Product, ProductReview } from "../../core/models/product";
 
@@ -45,7 +44,6 @@ export class ProductDetailsComponent
     private router: Router,
     private productService: ProductService,
     private cartService: CartService,
-    private wishlistService: WishlistService,
     private snackBar: MatSnackBar,
   ) { }
 
@@ -187,43 +185,6 @@ export class ProductDetailsComponent
       .subscribe(() => {
         this.router.navigate(["/cart"]);
       });
-  }
-
-  addToWishlist(): void {
-    if (!this.product) return;
-
-    const isAlreadyInWishlist = this.isInWishlist();
-
-    if (isAlreadyInWishlist) {
-      this.wishlistService.removeFromWishlist(this.product.id);
-      this.snackBar.open(
-        `${this.product.name} removed from wishlist`,
-        "Close",
-        {
-          duration: 3000,
-          horizontalPosition: "end",
-          verticalPosition: "top",
-        },
-      );
-    } else {
-      this.wishlistService.addToWishlist(this.product);
-      this.snackBar
-        .open(`${this.product.name} added to wishlist`, "View Wishlist", {
-          duration: 3000,
-          horizontalPosition: "end",
-          verticalPosition: "top",
-          panelClass: "success-snackbar",
-        })
-        .onAction()
-        .subscribe(() => {
-          this.router.navigate(["/wishlist"]);
-        });
-    }
-  }
-
-  isInWishlist(): boolean {
-    if (!this.product) return false;
-    return this.wishlistService.isInWishlist(this.product.id);
   }
 
   onTabChange(index: number): void {

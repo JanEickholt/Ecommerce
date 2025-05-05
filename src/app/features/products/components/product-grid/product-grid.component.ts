@@ -38,9 +38,7 @@ export class ProductGridComponent {
   @Output() viewModeChanged = new EventEmitter<"grid" | "list">();
   @Output() pageChanged = new EventEmitter<any>();
   @Output() productAdded = new EventEmitter<any>();
-  @Output() productWishlisted = new EventEmitter<any>();
   @Output() productQuickViewed = new EventEmitter<any>();
-  @Output() productCompared = new EventEmitter<any>();
   @Output() clearAllFilters = new EventEmitter<void>();
 
   sortOption: string = "popular";
@@ -58,23 +56,13 @@ export class ProductGridComponent {
     this.productAdded.emit(product);
   }
 
-  addToWishlist(product: any): void {
-    this.productWishlisted.emit(product);
-  }
-
   quickView(product: any): void {
     this.productQuickViewed.emit(product);
-  }
-
-  addToCompare(product: any): void {
-    this.productCompared.emit(product);
   }
 
   clearFilters(): void {
     this.clearAllFilters.emit();
   }
 
-  sortProducts(): void {
-    // This method would emit sort change through parent component
-  }
+  sortProducts(): void { }
 }

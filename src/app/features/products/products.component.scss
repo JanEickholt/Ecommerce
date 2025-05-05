@@ -23,56 +23,10 @@
         font-size: 1.6rem;
       }
     }
-    
-    .filter-toggle {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      color: var(--text-primary);
-      background-color: var(--neutral-light);
-      box-shadow: 
-        3px 3px 6px var(--shadow-dark),
-        -3px -3px 6px var(--shadow-light);
-      transition: all 0.3s ease;
-      
-      &:hover {
-        background-color: var(--neutral-medium);
-      }
-    }
-  }
-
-  .products-container {
-    min-height: 600px;
-    background-color: transparent;
-    
-    // Hide the default sidenav backdrop
-    ::ng-deep .mat-drawer-backdrop {
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-  }
-
-  .filter-sidebar {
-    width: 300px;
-    background-color: var(--background-primary);
-    border-right: none;
-    
-    @media (max-width: 992px) {
-      width: 320px;
-    }
-    
-    @media (max-width: 480px) {
-      width: 90%;
-      max-width: 320px;
-    }
   }
 
   .main-content {
-    padding: 0 0 0 30px;
     background-color: transparent;
-    
-    @media (max-width: 992px) {
-      padding: 0;
-    }
   }
 
   .products-toolbar {

@@ -2,56 +2,36 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
-  HostListener,
   PLATFORM_ID,
   Inject,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommonModule, isPlatformBrowser } from "@angular/common";
-import { MatSidenavModule, MatDrawer } from "@angular/material/sidenav";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { Subscription } from "rxjs";
 
 import { ProductService } from "../../../core/services/product.service";
 import { Product } from "../../core/models/product";
-import { FilterSidebarComponent } from "./components/filter-sidebar/filter-sidebar.component";
 import { ProductGridComponent } from "./components/product-grid/product-grid.component";
 import { ProductSortComponent } from "./components/product-sort/product-sort.component";
 import { CategoryBreadcrumbComponent } from "./components/category-breadcrumb/category-breadcrumb.component";
-import { ActiveFiltersComponent } from "./components/active-filters/active-filters.component";
-
-export interface ProductFilterState {
-  categories: string[];
-  priceRange: { min: number; max: number };
-  colors: string[];
-  materials: string[];
-  rating: number;
-  features: string[];
-  sortBy: string;
-}
 
 @Component({
   selector: "app-products",
   standalone: true,
   imports: [
     CommonModule,
-    MatSidenavModule,
     MatButtonModule,
     MatIconModule,
-    FilterSidebarComponent,
     ProductGridComponent,
     ProductSortComponent,
     CategoryBreadcrumbComponent,
-    ActiveFiltersComponent,
   ],
   templateUrl: "./products.component.html",
   styleUrls: ["./products.component.scss"],
 })
 export class ProductsComponent implements OnInit, OnDestroy {
-  @ViewChild("filterDrawer") filterDrawer!: MatDrawer;
-
   products: Product[] = [];
   totalProducts: number = 0;
   isLoading: boolean = true;
@@ -62,34 +42,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
   selectedCategory: string | null = null;
   selectedSubcategory: string | null = null;
   private isBrowser: boolean;
-
-  categories: any[] = [];
-  priceRange: { min: number; max: number } = { min: 0, max: 5000 };
-  colors: any[] = [];
-  materials: any[] = [];
-  ratings: any[] = [
-    { value: 5, count: 0 },
-    { value: 4, count: 0 },
-    { value: 3, count: 0 },
-    { value: 2, count: 0 },
-    { value: 1, count: 0 },
-  ];
-  features: any[] = [
-    { label: "Featured", value: "featured", count: 0 },
-    { label: "New Arrivals", value: "new", count: 0 },
-    { label: "Best Sellers", value: "bestseller", count: 0 },
-    { label: "In Stock", value: "inStock", count: 0 },
-  ];
-
-  filterState: ProductFilterState = {
-    categories: [],
-    priceRange: { min: 0, max: 5000 },
-    colors: [],
-    materials: [],
-    rating: 0,
-    features: [],
-    sortBy: "popular",
-  };
 
   private subscriptions: Subscription = new Subscription();
 
@@ -105,13 +57,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener("window:resize")
-  onResize() {
-    if (this.isBrowser) {
-      this.checkScreenSize();
-    }
-  }
-
   checkScreenSize(): void {
     this.isMobile = window.innerWidth < 992;
   }
@@ -119,13 +64,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions.add(
       this.route.queryParams.subscribe((params) => {
-        const filterState: Partial<ProductFilterState> = {};
-
         if (params["category"]) {
           this.selectedCategory = params["category"];
-          filterState.categories = Array.isArray(params["category"])
-            ? params["category"]
-            : [params["category"]];
         } else {
           this.selectedCategory = null;
         }
@@ -134,39 +74,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
           this.selectedSubcategory = params["subcategory"];
         } else {
           this.selectedSubcategory = null;
-        }
-
-        if (params["minPrice"] && params["maxPrice"]) {
-          filterState.priceRange = {
-            min: parseInt(params["minPrice"]),
-            max: parseInt(params["maxPrice"]),
-          };
-        }
-
-        if (params["color"]) {
-          filterState.colors = Array.isArray(params["color"])
-            ? params["color"]
-            : [params["color"]];
-        }
-
-        if (params["material"]) {
-          filterState.materials = Array.isArray(params["material"])
-            ? params["material"]
-            : [params["material"]];
-        }
-
-        if (params["rating"]) {
-          filterState.rating = parseInt(params["rating"]);
-        }
-
-        if (params["feature"]) {
-          filterState.features = Array.isArray(params["feature"])
-            ? params["feature"]
-            : [params["feature"]];
-        }
-
-        if (params["sortBy"]) {
-          filterState.sortBy = params["sortBy"];
         }
 
         if (params["page"]) {
@@ -186,44 +93,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
           this.viewMode = params["viewMode"] as "grid" | "list";
         }
 
-        this.productService.updateFilterState(filterState);
-        this.filterState = this.productService.getFilterState();
-
         this.loadProducts();
       }),
     );
-
-    this.loadFilterData();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  loadFilterData(): void {
-    this.subscriptions.add(
-      this.productService.categories$.subscribe((categories) => {
-        this.categories = categories;
-      }),
-    );
-
-    this.subscriptions.add(
-      this.productService.colors$.subscribe((colors) => {
-        this.colors = colors;
-      }),
-    );
-
-    this.subscriptions.add(
-      this.productService.materials$.subscribe((materials) => {
-        this.materials = materials;
-      }),
-    );
-
-    this.subscriptions.add(
-      this.productService.priceRange$.subscribe((priceRange) => {
-        this.priceRange = priceRange;
-      }),
-    );
   }
 
   loadProducts(): void {
@@ -261,55 +137,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     });
   }
 
-  applyFilters(filters: Partial<ProductFilterState>): void {
-    this.pageIndex = 0;
-
-    const queryParams: any = {
-      page: 1,
-    };
-
-    if (filters.categories && filters.categories.length > 0) {
-      queryParams.category = filters.categories;
-    }
-
-    if (filters.priceRange) {
-      queryParams.minPrice = filters.priceRange.min;
-      queryParams.maxPrice = filters.priceRange.max;
-    }
-
-    if (filters.colors && filters.colors.length > 0) {
-      queryParams.color = filters.colors;
-    }
-
-    if (filters.materials && filters.materials.length > 0) {
-      queryParams.material = filters.materials;
-    }
-
-    if (filters.rating) {
-      queryParams.rating = filters.rating;
-    }
-
-    if (filters.features && filters.features.length > 0) {
-      queryParams.feature = filters.features;
-    }
-
-    if (filters.sortBy) {
-      queryParams.sortBy = filters.sortBy;
-    }
-
-    if (this.isMobile && this.filterDrawer) {
-      this.filterDrawer.close();
-    }
-
-    this.updateQueryParams(queryParams);
-  }
-
-  sortProducts(sortOption: string): void {
-    this.applyFilters({ sortBy: sortOption });
-  }
-
   clearFilters(): void {
-    this.productService.resetFilters();
     this.pageIndex = 0;
 
     this.updateQueryParams(
@@ -335,39 +163,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   addToCompare(product: Product): void {
     console.log("Add to compare:", product);
-  }
-
-  removeFilter(filterType: string, value: string): void {
-    // Handle removing filters
-    const newFilterState = { ...this.filterState };
-
-    if (filterType === "category") {
-      newFilterState.categories = newFilterState.categories.filter(
-        (c) => c !== value,
-      );
-    } else if (filterType === "color") {
-      newFilterState.colors = newFilterState.colors.filter((c) => c !== value);
-    } else if (filterType === "material") {
-      newFilterState.materials = newFilterState.materials.filter(
-        (m) => m !== value,
-      );
-    } else if (filterType === "feature") {
-      newFilterState.features = newFilterState.features.filter(
-        (f) => f !== value,
-      );
-    } else if (filterType === "rating") {
-      newFilterState.rating = 0;
-    } else if (filterType === "price") {
-      newFilterState.priceRange = { min: 0, max: 5000 };
-    }
-
-    this.applyFilters(newFilterState);
-  }
-
-  toggleFilterDrawer(): void {
-    if (this.filterDrawer) {
-      this.filterDrawer.toggle();
-    }
   }
 
   private updateQueryParams(params: any, replace: boolean = false): void {

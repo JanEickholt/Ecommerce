@@ -159,15 +159,6 @@
           >
             <mat-icon>shopping_cart</mat-icon> Add to Cart
           </button>
-          <button
-            mat-stroked-button
-            class="neumorph-button wishlist-btn"
-            (click)="addToWishlist()"
-            [class.in-wishlist]="isInWishlist()"
-          >
-            <mat-icon>{{ isInWishlist() ? 'favorite' : 'favorite_border' }}</mat-icon>
-            {{ isInWishlist() ? 'In Wishlist' : 'Add to Wishlist' }}
-          </button>
         </div>
 
         <div class="product-features">

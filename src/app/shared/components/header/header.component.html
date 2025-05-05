@@ -22,15 +22,11 @@
             <button mat-icon-button aria-label="Search">
               <mat-icon>search</mat-icon>
             </button>
-            <button mat-icon-button routerLink="/wishlist" aria-label="Wishlist">
-              <mat-icon>favorite</mat-icon>
-              <span *ngIf="wishlistCount">{{ wishlistCount }}</span>
-            </button>
             <button mat-icon-button routerLink="/cart" aria-label="Shopping cart">
               <mat-icon>shopping_cart</mat-icon>
               <span *ngIf="cartItemCount">{{ cartItemCount }}</span>
             </button>
-            <button mat-icon-button class="user-button" aria-label="User account">
+            <button mat-icon-button class="user-button" aria-label="User account" routerLink="/auth/login">
               <mat-icon>person</mat-icon>
             </button>
           </div>
