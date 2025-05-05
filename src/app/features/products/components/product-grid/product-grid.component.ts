@@ -1,79 +1,47 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatPaginatorModule } from "@angular/material/paginator";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatSelectModule } from "@angular/material/select";
 import { RouterModule } from "@angular/router";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { ProductCardComponent } from "../../../../shared/components/product-card/product-card.component";
+import { ProductService } from "../../../../../core/services/product.service";
 import { Product } from "../../../../core/models/product";
+import { CartService } from "../../../../../core/services/cart.service";
 
 @Component({
   selector: "app-product-grid",
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatIconModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatTooltipModule,
-    ProductCardComponent,
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: "./product-grid.component.html",
-  styleUrl: "./product-grid.component.scss",
+  styleUrls: ["./product-grid.component.scss"],
 })
-export class ProductGridComponent {
-  @Input() products: Product[] = [];
-  @Input() totalProducts: number = 0;
-  @Input() isLoading: boolean = false;
-  @Input() viewMode: "grid" | "list" = "grid";
-  @Input() pageSize: number = 12;
+export class ProductGridComponent implements OnInit {
+  products: Product[] = [];
+  isLoading: boolean = true;
 
-  @Output() viewModeChanged = new EventEmitter<"grid" | "list">();
-  @Output() pageChanged = new EventEmitter<any>();
-  @Output() productAdded = new EventEmitter<Product>();
-  @Output() productWishlisted = new EventEmitter<Product>();
-  @Output() productQuickViewed = new EventEmitter<Product>();
-  @Output() productCompared = new EventEmitter<Product>();
-  @Output() clearAllFilters = new EventEmitter<void>();
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService,
+  ) {}
 
-  sortOption: string = "popular";
-
-  setViewMode(mode: "grid" | "list"): void {
-    this.viewMode = mode;
-    this.viewModeChanged.emit(mode);
+  ngOnInit(): void {
+    this.loadProducts();
   }
 
-  onPageChange(event: any): void {
-    this.pageChanged.emit(event);
+  loadProducts(): void {
+    this.productService.getProducts().subscribe({
+      next: (products: Product[]) => {
+        this.products = products;
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        console.error("Error loading products:", error);
+        this.isLoading = false;
+      },
+    });
   }
 
   addToCart(product: Product): void {
-    this.productAdded.emit(product);
+    this.cartService.addToCart({
+      product: product,
+      quantity: 1,
+    });
   }
-
-  addToWishlist(product: Product): void {
-    this.productWishlisted.emit(product);
-  }
-
-  quickView(product: Product): void {
-    this.productQuickViewed.emit(product);
-  }
-
-  addToCompare(product: Product): void {
-    this.productCompared.emit(product);
-  }
-
-  clearFilters(): void {
-    this.clearAllFilters.emit();
-  }
-
-  sortProducts(): void { }
 }

@@ -1,182 +1,48 @@
-<div class="product-grid-container">
-  <div class="grid-header">
-    <div class="results-count">
-      Showing <span class="highlight">{{ products.length }}</span> of
-      <span class="highlight">{{ totalProducts }}</span> products
-    </div>
-
-    <div class="grid-actions">
-      <div class="view-toggle">
-        <button
-          mat-icon-button
-          [class.active]="viewMode === 'grid'"
-          (click)="setViewMode('grid')"
-        >
-          <mat-icon>grid_view</mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          [class.active]="viewMode === 'list'"
-          (click)="setViewMode('list')"
-        >
-          <mat-icon>view_list</mat-icon>
-        </button>
-      </div>
-
-      <mat-form-field appearance="outline" class="sort-selector">
-        <mat-label>Sort By</mat-label>
-        <mat-select [(value)]="sortOption" (selectionChange)="sortProducts()">
-          <mat-option value="popular">Most Popular</mat-option>
-          <mat-option value="newest">Newest First</mat-option>
-          <mat-option value="price-low">Price: Low to High</mat-option>
-          <mat-option value="price-high">Price: High to Low</mat-option>
-          <mat-option value="rating">Highest Rated</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-
+<div class="products-container">
+  <h1 class="page-title">Our Collection</h1>
+  
   <div *ngIf="isLoading" class="loading-container">
-    <mat-spinner diameter="50"></mat-spinner>
+    <div class="spinner"></div>
     <p>Loading products...</p>
   </div>
 
-  <div *ngIf="!isLoading && products.length === 0" class="no-results">
-    <mat-icon>search_off</mat-icon>
-    <h3>No products found</h3>
-    <p>Try adjusting your filters or search criteria</p>
-    <button
-      mat-raised-button
-      color="primary"
-      class="neumorph-button"
-      (click)="clearFilters()"
-    >
-      Clear Filters
-    </button>
+  <div *ngIf="!isLoading && products.length === 0" class="empty-state">
+    <p>No products found.</p>
   </div>
 
-  <div
-    *ngIf="!isLoading && products.length > 0"
-    class="products-grid"
-    [ngClass]="{ 'list-view': viewMode === 'list' }"
-  >
-    <div *ngFor="let product of products" class="product-item">
-      <!-- Grid view product card -->
-      <div *ngIf="viewMode === 'grid'" class="product-card-wrapper">
-        <app-product-card [product]="product"></app-product-card>
+  <div *ngIf="!isLoading && products.length > 0" class="product-grid">
+    <div *ngFor="let product of products" class="product-card">
+      <div class="product-image-container">
+        <img [src]="product.imageUrl || '/api/placeholder/300/300'" [alt]="product.name" class="product-image">
+        <div *ngIf="product.badge" class="product-badge" [ngClass]="product.badgeType">
+          {{ product.badge }}
+        </div>
       </div>
-
-      <!-- List view product card -->
-      <div *ngIf="viewMode === 'list'" class="product-list-item neumorph-card">
-        <div class="product-img-container">
-          <img
-            [src]="product.imageUrl || '/api/placeholder/200/200'"
-            [alt]="product.name"
-            class="product-img"
-          />
-          <div
-            *ngIf="product.badge"
-            class="product-badge"
-            [ngClass]="product.badgeType"
-          >
-            {{ product.badge }}
-          </div>
+      
+      <div class="product-content">
+        <h3 class="product-title">
+          <a [routerLink]="['/product', product.id]">{{ product.name }}</a>
+        </h3>
+        
+        <div class="product-rating" *ngIf="product.rating">
+          <span *ngFor="let i of [1, 2, 3, 4, 5]">
+            <i class="star" [ngClass]="{'filled': i <= product.rating, 'half': i > product.rating && i - 1 < product.rating}"></i>
+          </span>
+          <span class="rating-count" *ngIf="product.reviewCount">({{ product.reviewCount }})</span>
         </div>
-
-        <div class="product-details">
-          <h3 class="product-title">
-            <a [routerLink]="['/product', product.id]">{{ product.name }}</a>
-          </h3>
-
-          <div class="product-rating">
-            <div class="stars">
-              <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
-                <mat-icon *ngIf="i <= product.rating">star</mat-icon>
-                <mat-icon *ngIf="i > product.rating && i - 1 < product.rating"
-                  >star_half</mat-icon
-                >
-                <mat-icon *ngIf="i > product.rating && i - 1 >= product.rating"
-                  >star_outline</mat-icon
-                >
-              </ng-container>
-            </div>
-            <span class="rating-count" *ngIf="product.reviewCount"
-              >({{ product.reviewCount }})</span
-            >
-          </div>
-
-          <p class="product-description">{{ product.shortDescription }}</p>
-
-          <div class="product-meta">
-            <div
-              class="product-colors"
-              *ngIf="product.colors && product.colors.length"
-            >
-              <span
-                class="color-swatch"
-                *ngFor="let color of product.colors.slice(0, 4)"
-                [style.background-color]="color.code"
-                [attr.title]="color.name"
-              >
-              </span>
-              <span class="more-colors" *ngIf="product.colors.length > 4"
-                >+{{ product.colors.length - 4 }}</span
-              >
-            </div>
-
-            <div
-              class="product-availability"
-              [ngClass]="{
-                'in-stock': product.inStock,
-                'out-of-stock': !product.inStock,
-              }"
-            >
-              <mat-icon *ngIf="product.inStock">check_circle</mat-icon>
-              <mat-icon *ngIf="!product.inStock">cancel</mat-icon>
-              <span>{{ product.inStock ? "In Stock" : "Out of Stock" }}</span>
-            </div>
-          </div>
+        
+        <div class="product-price">
+          <span class="current-price">${{ product.price.toFixed(2) }}</span>
+          <span class="old-price" *ngIf="product.oldPrice">${{ product.oldPrice.toFixed(2) }}</span>
         </div>
-
+        
         <div class="product-actions">
-          <p class="product-price">
-            <span class="old-price" *ngIf="product.oldPrice"
-              >${{ product.oldPrice.toFixed(2) }}</span
-            >
-            ${{ product.price.toFixed(2) }}
-          </p>
-
-          <button
-            mat-raised-button
-            color="primary"
-            class="neumorph-button add-to-cart-btn"
-            [disabled]="!product.inStock"
-            (click)="addToCart(product)"
-          >
-            <mat-icon>shopping_cart</mat-icon>
-            Add to Cart
+          <button class="view-btn" [routerLink]="['/product', product.id]">View Details</button>
+          <button class="cart-btn" (click)="addToCart(product)" [disabled]="!product.inStock">
+            <i class="cart-icon"></i> Add to Cart
           </button>
-
-          <div class="quick-actions">
-            <button
-              mat-icon-button
-              matTooltip="Quick View"
-              (click)="quickView(product)"
-            >
-              <mat-icon>visibility</mat-icon>
-            </button>
-          </div>
         </div>
       </div>
     </div>
   </div>
-
-  <mat-paginator
-    [length]="totalProducts"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="[12, 24, 36, 48]"
-    (page)="onPageChange($event)"
-    class="neumorph-paginator"
-  >
-  </mat-paginator>
 </div>

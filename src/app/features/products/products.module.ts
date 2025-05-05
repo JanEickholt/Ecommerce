@@ -3,9 +3,6 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 
 import { ProductsRoutingModule } from "./products-routing.module";
-import { ProductsComponent } from "./products.component";
-
-import { ProductFilterComponent } from "./components/product-filter/product-filter.component";
 import { ProductGridComponent } from "./components/product-grid/product-grid.component";
 import { ProductSortComponent } from "./components/product-sort/product-sort.component";
 
@@ -29,7 +26,6 @@ import { MatBadgeModule } from "@angular/material/badge";
     CommonModule,
     FormsModule,
     ProductsRoutingModule,
-    ProductFilterComponent,
     ProductGridComponent,
     ProductSortComponent,
     MatSidenavModule,
