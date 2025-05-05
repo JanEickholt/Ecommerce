@@ -15,6 +15,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import XIcon from "@mui/icons-material/X";
 
 import { ProductCardComponent } from "../../shared/components/product-card/product-card.component";
 import { ProductDetailsTabsComponent } from "./components/product-details-tabs/product-details-tabs.component";
@@ -37,6 +38,7 @@ import { ProductDetailsTabsComponent } from "./components/product-details-tabs/p
     MatSnackBarModule,
     ProductCardComponent,
     ProductDetailsTabsComponent,
+    XIcon,
   ],
 })
 export class ProductDetailsModule { }

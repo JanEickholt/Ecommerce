@@ -15,6 +15,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AuthService } from "../../../../core/services/auth.service";
 import { first } from "rxjs/operators";
+import GoogleIcon from "@mui/icons-material/Google";
 
 @Component({
   selector: "app-login",

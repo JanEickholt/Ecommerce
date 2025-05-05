@@ -12,6 +12,7 @@ import { ProductService } from "../../../core/services/product.service";
 import { CartService } from "../../../core/services/cart.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Product, ProductReview } from "../../core/models/product";
+import PinterestIcon from "@mui/icons-material/Pinterest";
 
 @Component({
   selector: "app-product-details",

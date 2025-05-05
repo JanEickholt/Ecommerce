@@ -9,6 +9,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { RouterModule } from "@angular/router";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ProductCardComponent } from "../../../../shared/components/product-card/product-card.component";
+import { Product } from "../../../../core/models/product";
 
 @Component({
   selector: "app-product-grid",
@@ -29,7 +30,7 @@ import { ProductCardComponent } from "../../../../shared/components/product-card
   styleUrl: "./product-grid.component.scss",
 })
 export class ProductGridComponent {
-  @Input() products: any[] = [];
+  @Input() products: Product[] = [];
   @Input() totalProducts: number = 0;
   @Input() isLoading: boolean = false;
   @Input() viewMode: "grid" | "list" = "grid";
@@ -37,8 +38,10 @@ export class ProductGridComponent {
 
   @Output() viewModeChanged = new EventEmitter<"grid" | "list">();
   @Output() pageChanged = new EventEmitter<any>();
-  @Output() productAdded = new EventEmitter<any>();
-  @Output() productQuickViewed = new EventEmitter<any>();
+  @Output() productAdded = new EventEmitter<Product>();
+  @Output() productWishlisted = new EventEmitter<Product>();
+  @Output() productQuickViewed = new EventEmitter<Product>();
+  @Output() productCompared = new EventEmitter<Product>();
   @Output() clearAllFilters = new EventEmitter<void>();
 
   sortOption: string = "popular";
@@ -52,12 +55,20 @@ export class ProductGridComponent {
     this.pageChanged.emit(event);
   }
 
-  addToCart(product: any): void {
+  addToCart(product: Product): void {
     this.productAdded.emit(product);
   }
 
-  quickView(product: any): void {
+  addToWishlist(product: Product): void {
+    this.productWishlisted.emit(product);
+  }
+
+  quickView(product: Product): void {
     this.productQuickViewed.emit(product);
+  }
+
+  addToCompare(product: Product): void {
+    this.productCompared.emit(product);
   }
 
   clearFilters(): void {
