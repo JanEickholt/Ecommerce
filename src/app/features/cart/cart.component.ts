@@ -56,6 +56,61 @@ export class CartComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  // Method to update order summary values
+  updateOrderSummary(): void {
+    this.subtotal = this.calculateSubtotal();
+    this.discount = this.cartService.calculateDiscount();
+    this.shipping = this.cartService.calculateShipping();
+    this.tax = this.cartService.calculateTax();
+  }
+
+  // Methods missing from the component that are used in the template
+  clearCart(): void {
+    this.cartService.clearCart();
+  }
+
+  decreaseQuantity(index: number): void {
+    if (this.cartItems[index].quantity > 1) {
+      this.cartService.updateQuantity(
+        index,
+        this.cartItems[index].quantity - 1,
+      );
+    }
+  }
+
+  increaseQuantity(index: number): void {
+    if (this.cartItems[index].quantity < 10) {
+      this.cartService.updateQuantity(
+        index,
+        this.cartItems[index].quantity + 1,
+      );
+    }
+  }
+
+  updateQuantity(index: number): void {
+    // Ensure quantity is between 1 and 10
+    const quantity = Math.max(1, Math.min(10, this.cartItems[index].quantity));
+    this.cartService.updateQuantity(index, quantity);
+  }
+
+  removeItem(index: number): void {
+    this.cartService.removeItem(index);
+  }
+
+  moveToWishlist(index: number): void {
+    const item = this.cartItems[index];
+    this.wishlistService.addToWishlist(item.product);
+    this.cartService.removeItem(index);
+  }
+
+  calculateSubtotal(): number {
+    return this.cartService.calculateSubtotal();
+  }
+
+  calculateTotal(): number {
+    return this.cartService.calculateTotal();
+  }
+
   applyCoupon(): void {
     if (!this.couponCode) return;
 
@@ -63,6 +118,7 @@ export class CartComponent implements OnInit, OnDestroy {
     if (!success) {
       alert("Invalid coupon code or minimum order amount not met.");
     }
+    this.couponCode = ""; // Clear the input field after applying
   }
 
   removeCoupon(): void {
