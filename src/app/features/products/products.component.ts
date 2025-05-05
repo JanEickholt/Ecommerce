@@ -24,7 +24,7 @@ import { CategoryBreadcrumbComponent } from "./components/category-breadcrumb/ca
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    ProductGridComponent,
+    ProductGridComponent, // Make sure this is imported
     ProductSortComponent,
     CategoryBreadcrumbComponent,
   ],

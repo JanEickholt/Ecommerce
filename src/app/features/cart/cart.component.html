@@ -181,43 +181,42 @@
             </div>
 
             <div class="coupon-section">
-              <h4>Apply Coupon</h4>
-              <div class="coupon-form">
-                <mat-form-field appearance="outline" class="neumorph-input">
-                  <mat-label>Coupon Code</mat-label>
-                  <input
-                    matInput
-                    [(ngModel)]="couponCode"
-                    placeholder="Enter coupon code"
-                  />
-                </mat-form-field>
-                <button
-                  mat-stroked-button
-                  class="neumorph-button apply-btn"
-                  (click)="applyCoupon()"
-                >
-                  Apply
-                </button>
-              </div>
+  <h4>Apply Coupon</h4>
+  <div class="coupon-form">
+    <mat-form-field appearance="outline" class="neumorph-input">
+      <mat-label>Coupon Code</mat-label>
+      <input
+        matInput
+        [(ngModel)]="couponCode"
+        placeholder="Enter coupon code"
+      />
+    </mat-form-field>
+    <button
+      mat-stroked-button
+      class="neumorph-button apply-btn"
+      (click)="applyCoupon()"
+    >
+      Apply
+    </button>
+  </div>
 
-              <div *ngIf="appliedCoupon" class="applied-coupon">
-                <div class="coupon-info">
-                  <mat-icon>confirmation_number</mat-icon>
-                  <div class="coupon-details">
-                    <p class="coupon-name">{{ appliedCoupon.code }}</p>
-                    <p class="coupon-value">{{ appliedCoupon.description }}</p>
-                  </div>
-                </div>
-                <button
-                  mat-icon-button
-                  matTooltip="Remove Coupon"
-                  (click)="removeCoupon()"
-                >
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
-            </div>
-
+  <div *ngIf="appliedCoupon" class="applied-coupon">
+    <div class="coupon-info">
+      <mat-icon>confirmation_number</mat-icon>
+      <div class="coupon-details">
+        <p class="coupon-name">{{ appliedCoupon.code }}</p>
+        <p class="coupon-value">{{ appliedCoupon.description }}</p>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      matTooltip="Remove Coupon"
+      (click)="removeCoupon()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
             <button
               mat-raised-button
               color="primary"

@@ -1,48 +1,45 @@
-<div class="products-container">
-  <h1 class="page-title">Our Collection</h1>
-  
+<div class="product-grid-container">
+  <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
-    <div class="spinner"></div>
+    <mat-spinner diameter="50"></mat-spinner>
     <p>Loading products...</p>
   </div>
 
+  <!-- Empty State -->
   <div *ngIf="!isLoading && products.length === 0" class="empty-state">
-    <p>No products found.</p>
+    <div class="empty-content">
+      <div class="empty-icon">
+        <mat-icon>search_off</mat-icon>
+      </div>
+      <h3>No products found</h3>
+      <p>Try adjusting your filters to find what you're looking for.</p>
+      <button mat-raised-button color="primary" (click)="clearFilters()">
+        Clear All Filters
+      </button>
+    </div>
   </div>
 
-  <div *ngIf="!isLoading && products.length > 0" class="product-grid">
-    <div *ngFor="let product of products" class="product-card">
-      <div class="product-image-container">
-        <img [src]="product.imageUrl || '/api/placeholder/300/300'" [alt]="product.name" class="product-image">
-        <div *ngIf="product.badge" class="product-badge" [ngClass]="product.badgeType">
-          {{ product.badge }}
-        </div>
-      </div>
-      
-      <div class="product-content">
-        <h3 class="product-title">
-          <a [routerLink]="['/product', product.id]">{{ product.name }}</a>
-        </h3>
-        
-        <div class="product-rating" *ngIf="product.rating">
-          <span *ngFor="let i of [1, 2, 3, 4, 5]">
-            <i class="star" [ngClass]="{'filled': i <= product.rating, 'half': i > product.rating && i - 1 < product.rating}"></i>
-          </span>
-          <span class="rating-count" *ngIf="product.reviewCount">({{ product.reviewCount }})</span>
-        </div>
-        
-        <div class="product-price">
-          <span class="current-price">${{ product.price.toFixed(2) }}</span>
-          <span class="old-price" *ngIf="product.oldPrice">${{ product.oldPrice.toFixed(2) }}</span>
-        </div>
-        
-        <div class="product-actions">
-          <button class="view-btn" [routerLink]="['/product', product.id]">View Details</button>
-          <button class="cart-btn" (click)="addToCart(product)" [disabled]="!product.inStock">
-            <i class="cart-icon"></i> Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
+  <!-- Product List when in List View Mode -->
+  <app-product-list
+    *ngIf="!isLoading && products.length > 0"
+    [products]="products"
+    [viewMode]="viewMode"
+    (productAdded)="addToCart($event)"
+    (productWishlisted)="addToWishlist($event)"
+    (productQuickViewed)="quickView($event)"
+    (productCompared)="addToCompare($event)"
+    (clearFilters)="clearFilters()"
+  ></app-product-list>
+
+  <!-- Pagination -->
+  <div class="pagination-container" *ngIf="!isLoading && totalProducts > 0">
+    <mat-paginator
+      [length]="totalProducts"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[12, 24, 36, 48]"
+      (page)="onPageChange($event)"
+      aria-label="Select page"
+    >
+    </mat-paginator>
   </div>
 </div>

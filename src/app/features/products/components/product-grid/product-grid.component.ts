@@ -1,47 +1,70 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
-import { ProductService } from "../../../../../core/services/product.service";
 import { Product } from "../../../../core/models/product";
-import { CartService } from "../../../../../core/services/cart.service";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { ProductListComponent } from "../product-list/product-list.component";
 
 @Component({
   selector: "app-product-grid",
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatPaginatorModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    ProductListComponent,
+  ],
   templateUrl: "./product-grid.component.html",
   styleUrls: ["./product-grid.component.scss"],
 })
-export class ProductGridComponent implements OnInit {
-  products: Product[] = [];
-  isLoading: boolean = true;
+export class ProductGridComponent {
+  // Inputs needed based on the error messages
+  @Input() products: Product[] = [];
+  @Input() totalProducts: number = 0;
+  @Input() isLoading: boolean = false;
+  @Input() viewMode: "grid" | "list" = "grid";
+  @Input() pageSize: number = 12;
 
-  constructor(
-    private productService: ProductService,
-    private cartService: CartService,
-  ) {}
+  // Outputs needed based on the error messages
+  @Output() viewModeChanged = new EventEmitter<"grid" | "list">();
+  @Output() pageChanged = new EventEmitter<any>();
+  @Output() productAdded = new EventEmitter<Product>();
+  @Output() productWishlisted = new EventEmitter<Product>();
+  @Output() productQuickViewed = new EventEmitter<Product>();
+  @Output() productCompared = new EventEmitter<Product>();
+  @Output() clearAllFilters = new EventEmitter<void>();
 
-  ngOnInit(): void {
-    this.loadProducts();
+  onViewModeChange(mode: "grid" | "list"): void {
+    this.viewModeChanged.emit(mode);
   }
 
-  loadProducts(): void {
-    this.productService.getProducts().subscribe({
-      next: (products: Product[]) => {
-        this.products = products;
-        this.isLoading = false;
-      },
-      error: (error: any) => {
-        console.error("Error loading products:", error);
-        this.isLoading = false;
-      },
-    });
+  onPageChange(event: any): void {
+    this.pageChanged.emit(event);
   }
 
   addToCart(product: Product): void {
-    this.cartService.addToCart({
-      product: product,
-      quantity: 1,
-    });
+    this.productAdded.emit(product);
+  }
+
+  addToWishlist(product: Product): void {
+    this.productWishlisted.emit(product);
+  }
+
+  quickView(product: Product): void {
+    this.productQuickViewed.emit(product);
+  }
+
+  addToCompare(product: Product): void {
+    this.productCompared.emit(product);
+  }
+
+  clearFilters(): void {
+    this.clearAllFilters.emit();
   }
 }
