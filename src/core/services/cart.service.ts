@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Inject, PLATFORM_ID } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Product, ProductOption } from "../../app/core/models/product";
 
@@ -26,26 +27,30 @@ export class CartService {
   private appliedCouponSubject = new BehaviorSubject<Coupon | null>(null);
   public appliedCoupon$ = this.appliedCouponSubject.asObservable();
 
-  constructor() {
-    // Load cart from localStorage if available
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      try {
-        this.cartItemsSubject.next(JSON.parse(savedCart));
-      } catch (error) {
-        console.error("Error parsing cart from localStorage", error);
-        this.cartItemsSubject.next([]);
-      }
-    }
+  private isBrowser: boolean;
 
-    // Load applied coupon from localStorage if available
-    const savedCoupon = localStorage.getItem("appliedCoupon");
-    if (savedCoupon) {
-      try {
-        this.appliedCouponSubject.next(JSON.parse(savedCoupon));
-      } catch (error) {
-        console.error("Error parsing coupon from localStorage", error);
-        this.appliedCouponSubject.next(null);
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    if (this.isBrowser) {
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        try {
+          this.cartItemsSubject.next(JSON.parse(savedCart));
+        } catch (error) {
+          console.error("Error parsing cart from localStorage", error);
+          this.cartItemsSubject.next([]);
+        }
+      }
+
+      const savedCoupon = localStorage.getItem("appliedCoupon");
+      if (savedCoupon) {
+        try {
+          this.appliedCouponSubject.next(JSON.parse(savedCoupon));
+        } catch (error) {
+          console.error("Error parsing coupon from localStorage", error);
+          this.appliedCouponSubject.next(null);
+        }
       }
     }
   }
@@ -97,7 +102,9 @@ export class CartService {
 
   clearCart(): void {
     this.cartItemsSubject.next([]);
-    localStorage.removeItem("cart");
+    if (this.isBrowser) {
+      localStorage.removeItem("cart");
+    }
   }
 
   calculateSubtotal(): number {
@@ -121,17 +128,16 @@ export class CartService {
   }
 
   calculateTax(): number {
-    const taxRate = 0.0825; // Example tax rate 8.25%
+    const taxRate = 0.0825;
     return this.calculateSubtotal() * taxRate;
   }
 
   calculateShipping(): number {
-    // Free shipping over $999
     const subtotal = this.calculateSubtotal();
     if (subtotal >= 999) {
       return 0;
     }
-    return 19.99; // Default shipping cost
+    return 19.99;
   }
 
   calculateTotal(): number {
@@ -144,7 +150,6 @@ export class CartService {
   }
 
   applyCoupon(code: string): boolean {
-    // Mock coupon validation - in a real app this would check against a database
     const availableCoupons: Coupon[] = [
       {
         code: "WELCOME10",
@@ -172,7 +177,6 @@ export class CartService {
 
     if (!coupon) return false;
 
-    // Check if order meets minimum value requirement
     if (
       coupon.minimumOrderValue &&
       this.calculateSubtotal() < coupon.minimumOrderValue
@@ -181,13 +185,17 @@ export class CartService {
     }
 
     this.appliedCouponSubject.next(coupon);
-    localStorage.setItem("appliedCoupon", JSON.stringify(coupon));
+    if (this.isBrowser) {
+      localStorage.setItem("appliedCoupon", JSON.stringify(coupon));
+    }
     return true;
   }
 
   removeCoupon(): void {
     this.appliedCouponSubject.next(null);
-    localStorage.removeItem("appliedCoupon");
+    if (this.isBrowser) {
+      localStorage.removeItem("appliedCoupon");
+    }
   }
 
   private optionsMatch(
@@ -213,6 +221,8 @@ export class CartService {
   }
 
   private saveCartToLocalStorage(): void {
-    localStorage.setItem("cart", JSON.stringify(this.cartItemsSubject.value));
+    if (this.isBrowser) {
+      localStorage.setItem("cart", JSON.stringify(this.cartItemsSubject.value));
+    }
   }
 }
